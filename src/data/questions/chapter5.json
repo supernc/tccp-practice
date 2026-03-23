@@ -1,18 +1,933 @@
 [
-  {"id":"ch5-method-001","stem":"腾讯云迁移方法论中的 4P 模型是？","options":[{"label":"A","text":"Plan（规划）、Prepare（准备）、Perform（执行）、Perfect（优化）"},{"label":"B","text":"Product（产品）、Price（价格）、Place（渠道）、Promotion（促销）"},{"label":"C","text":"People（人员）、Process（流程）、Platform（平台）、Performance（性能）"},{"label":"D","text":"Private（私有）、Public（公有）、Platform（平台）、Partner（合作伙伴）"}],"answer":["A"],"type":"single","chapter":5,"subChapter":"ch5-method","tags":["4P模型","迁移方法论"],"analysis":"腾讯云迁移4P模型：Plan（规划评估，梳理资产确定迁移策略）→ Prepare（准备，环境搭建网络打通）→ Perform（执行迁移，数据同步割接）→ Perfect（优化，性能调优成本优化）。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter5/5.1_%E8%BF%81%E7%A7%BB%E6%96%B9%E6%B3%95%E8%AE%BA%E6%A6%82%E8%BF%B0/","difficulty":1},
-  {"id":"ch5-method-002","stem":"停服迁移和平滑迁移的最大区别是？","options":[{"label":"A","text":"停服迁移需要停止业务进行迁移，平滑迁移可以在业务不停的情况下完成"},{"label":"B","text":"两者没有区别"},{"label":"C","text":"停服迁移更安全"},{"label":"D","text":"平滑迁移不需要任何准备工作"}],"answer":["A"],"type":"single","chapter":5,"subChapter":"ch5-method","tags":["停服迁移","平滑迁移"],"analysis":"停服迁移需要停止业务服务后进行数据搬迁，适合对连续性要求不高的系统。平滑迁移（在线迁移）通过增量同步等技术在业务持续运行时完成迁移，割接时仅有极短暂的切换窗口。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter5/5.1_%E8%BF%81%E7%A7%BB%E6%96%B9%E6%B3%95%E8%AE%BA%E6%A6%82%E8%BF%B0/","difficulty":1},
-  {"id":"ch5-method-003","stem":"迁移割接时必须准备回滚方案的原因是什么？","options":[{"label":"A","text":"割接可能出现意外问题，回滚方案确保可以恢复到迁移前的状态"},{"label":"B","text":"回滚方案是为了测试目的"},{"label":"C","text":"法律法规强制要求"},{"label":"D","text":"仅为了编写文档"}],"answer":["A"],"type":"single","chapter":5,"subChapter":"ch5-method","tags":["割接","回滚"],"analysis":"迁移割接是高风险操作，可能出现数据不一致、网络不通、应用兼容性问题等意外。回滚方案是风险兜底策略，确保在割接失败时能快速恢复到迁移前的可用状态，最大限度减少业务影响。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter5/5.1_%E8%BF%81%E7%A7%BB%E6%96%B9%E6%B3%95%E8%AE%BA%E6%A6%82%E8%BF%B0/","difficulty":1},
-  {"id":"ch5-tools-001","stem":"腾讯云数据传输服务 DTS 的核心能力是？","options":[{"label":"A","text":"支持数据库的全量+增量数据迁移和持续同步"},{"label":"B","text":"仅支持文件传输"},{"label":"C","text":"仅支持物理机搬迁"},{"label":"D","text":"仅支持腾讯云内部数据库之间迁移"}],"answer":["A"],"type":"single","chapter":5,"subChapter":"ch5-tools","tags":["DTS","数据迁移"],"analysis":"DTS支持多种数据库的全量迁移+增量同步+数据校验，支持从自建/其他云/腾讯云到腾讯云的迁移（不限于内部）。全量+增量模式可实现业务不停服的平滑迁移。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter5/5.2_%E4%BA%91%E7%BB%84%E4%BB%B6%E4%B8%8E%E8%BF%81%E7%A7%BB%E5%B7%A5%E5%85%B7/","difficulty":1},
-  {"id":"ch5-tools-002","stem":"以下哪些工具可用于服务器迁移上云？","options":[{"label":"A","text":"服务器迁移中心 SMC"},{"label":"B","text":"数据传输服务 DTS"},{"label":"C","text":"COS 迁移工具"},{"label":"D","text":"CDN 加速"}],"answer":["A","B","C"],"type":"multiple","chapter":5,"subChapter":"ch5-tools","tags":["迁移工具"],"analysis":"A SMC用于整机迁移（将源服务器系统盘和数据盘迁移到云CVM）；B DTS用于数据库迁移；C COS迁移工具用于对象存储数据迁移。D CDN是内容分发加速，不是迁移工具。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter5/5.2_%E4%BA%91%E7%BB%84%E4%BB%B6%E4%B8%8E%E8%BF%81%E7%A7%BB%E5%B7%A5%E5%85%B7/","difficulty":1},
-  {"id":"ch5-cost-001","stem":"FinOps 云成本优化的核心理念是什么？","options":[{"label":"A","text":"让每一分钱的云支出都产生业务价值，实现成本可见、可优化、可运营"},{"label":"B","text":"尽可能减少所有云支出"},{"label":"C","text":"只使用免费的云产品"},{"label":"D","text":"将所有服务迁回自建机房"}],"answer":["A"],"type":"single","chapter":5,"subChapter":"ch5-cost","tags":["FinOps","成本优化"],"analysis":"FinOps 不是单纯省钱，而是让云支出与业务价值对齐。核心三步：成本可见（清楚钱花在哪里）→ 成本可优化（Right-sizing/预留/竞价等手段）→ 成本可运营（持续监控优化形成闭环）。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter5/5.3_%E8%BF%81%E7%A7%BB%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BA%91%E4%B8%8A%E8%B5%84%E6%BA%90%E6%88%90%E6%9C%AC%E7%AE%A1%E7%90%86/","difficulty":1},
-  {"id":"ch5-cost-002","stem":"以下哪些是有效的云成本优化措施？","options":[{"label":"A","text":"Right-sizing：选择与负载匹配的实例规格"},{"label":"B","text":"对稳定负载使用预留实例/包年包月"},{"label":"C","text":"使用 COS 生命周期管理自动降冷数据存储等级"},{"label":"D","text":"始终选择最高配置确保性能"}],"answer":["A","B","C"],"type":"multiple","chapter":5,"subChapter":"ch5-cost","tags":["成本优化","FinOps"],"analysis":"A Right-sizing避免过度配置浪费；B预留实例节省30-60%长期成本；C生命周期管理将不常访问数据自动转为低成本存储。D过度配置是最常见的云成本浪费行为。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter5/5.3_%E8%BF%81%E7%A7%BB%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BA%91%E4%B8%8A%E8%B5%84%E6%BA%90%E6%88%90%E6%9C%AC%E7%AE%A1%E7%90%86/","difficulty":1},
-  {"id":"ch5-method-004","stem":"在 4P 迁移模型的 Plan 阶段，核心工作包括哪些？","options":[{"label":"A","text":"梳理现有IT资产和应用依赖关系"},{"label":"B","text":"确定迁移策略（Rehost/Replatform/Refactor等）"},{"label":"C","text":"直接开始数据搬迁"},{"label":"D","text":"制定迁移时间表和风险评估"}],"answer":["A","B","D"],"type":"multiple","chapter":5,"subChapter":"ch5-method","tags":["4P模型","Plan"],"analysis":"Plan阶段的核心工作：A梳理资产清单和依赖关系（哪些系统迁移、什么顺序）；B选择迁移策略（直接搬迁/平台迁移/重构）；D制定时间表和识别风险。C数据搬迁属于Perform执行阶段。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter5/5.1_%E8%BF%81%E7%A7%BB%E6%96%B9%E6%B3%95%E8%AE%BA%E6%A6%82%E8%BF%B0/","difficulty":2},
-  {"id":"ch5-cost-003","stem":"某公司发现月度云费用中 60% 是 CVM 费用，其中有 30% 的实例平均 CPU 使用率低于 10%。最优的优化建议是？","options":[{"label":"A","text":"将低利用率实例降配到合适规格（Right-sizing），部分可考虑 Serverless 替代"},{"label":"B","text":"全部删除低利用率实例"},{"label":"C","text":"增加更多实例分担负载"},{"label":"D","text":"不做任何调整"}],"answer":["A"],"type":"single","chapter":5,"subChapter":"ch5-cost","tags":["成本优化","Right-sizing"],"analysis":"CPU使用率长期低于10%说明过度配置，Right-sizing将实例降到合适规格可节省大量成本。部分非核心业务可考虑Serverless按调用计费。直接删除可能影响业务；增加实例更浪费。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter5/5.3_%E8%BF%81%E7%A7%BB%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BA%91%E4%B8%8A%E8%B5%84%E6%BA%90%E6%88%90%E6%9C%AC%E7%AE%A1%E7%90%86/","difficulty":2},
-  {"id":"ch5-tools-003","stem":"使用 DTS 进行数据库平滑迁移的典型流程是？","options":[{"label":"A","text":"全量数据迁移 → 增量数据同步 → 数据校验 → 业务割接"},{"label":"B","text":"直接停机导出导入"},{"label":"C","text":"仅复制表结构不迁移数据"},{"label":"D","text":"先割接业务再迁移数据"}],"answer":["A"],"type":"single","chapter":5,"subChapter":"ch5-tools","tags":["DTS","平滑迁移"],"analysis":"DTS平滑迁移流程：1)全量迁移（将存量数据完整同步到目标库）→ 2)增量同步（持续同步新增和变更数据）→ 3)数据校验（确认源和目标数据一致）→ 4)业务割接（将应用连接切到新库，仅需极短停机窗口）。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter5/5.2_%E4%BA%91%E7%BB%84%E4%BB%B6%E4%B8%8E%E8%BF%81%E7%A7%BB%E5%B7%A5%E5%85%B7/","difficulty":2},
-  {"id":"ch5-method-005","stem":"迁移策略中的 6R 不包括以下哪个？","options":[{"label":"A","text":"Rehost（重新托管，直接搬迁）"},{"label":"B","text":"Replatform（重新平台化）"},{"label":"C","text":"Rebuild（重新构建）"},{"label":"D","text":"Refactor（重构优化）"}],"answer":["C"],"type":"single","chapter":5,"subChapter":"ch5-method","tags":["迁移策略","6R"],"analysis":"迁移6R策略：Rehost（直接搬迁）、Replatform（平台迁移，如换DB）、Refactor（重构优化）、Repurchase（替换为SaaS）、Retain（保留不迁移）、Retire（淘汰下线）。Rebuild不在标准6R中。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter5/5.1_%E8%BF%81%E7%A7%BB%E6%96%B9%E6%B3%95%E8%AE%BA%E6%A6%82%E8%BF%B0/","difficulty":2},
-  {"id":"ch5-cost-004","stem":"云上资源成本管理中，以下哪些是标签（Tag）管理的最佳实践？","options":[{"label":"A","text":"为所有资源打上项目/部门标签便于成本分摊"},{"label":"B","text":"为不同环境（生产/测试/开发）打标签区分"},{"label":"C","text":"标签越少越好，最好不打"},{"label":"D","text":"为资源标注负责人标签便于治理"}],"answer":["A","B","D"],"type":"multiple","chapter":5,"subChapter":"ch5-cost","tags":["标签管理","成本治理"],"analysis":"标签管理是FinOps的基础：A按部门/项目标签实现成本分摊；B按环境标签区分生产和非生产资源（非生产可降配节省）；D负责人标签便于追踪和治理。C标签体系应完善，不打标签无法做精细化成本管理。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter5/5.3_%E8%BF%81%E7%A7%BB%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BA%91%E4%B8%8A%E8%B5%84%E6%BA%90%E6%88%90%E6%9C%AC%E7%AE%A1%E7%90%86/","difficulty":2},
-
-  {"id":"ch5-tools-004","stem":"服务器迁移中心 SMC 的工作原理是什么？","options":[{"label":"A","text":"在源服务器安装 Agent，通过网络将系统盘和数据盘增量同步到腾讯云 CVM"},{"label":"B","text":"物理搬运服务器硬盘"},{"label":"C","text":"仅复制应用代码不迁移系统"},{"label":"D","text":"需要完全停机才能开始迁移"}],"answer":["A"],"type":"single","chapter":5,"subChapter":"ch5-tools","tags":["SMC","服务器迁移","整机迁移"],"analysis":"SMC 在源服务器安装轻量 Agent，先进行全量同步（系统盘+数据盘），再持续增量同步变化数据。业务可在迁移过程中继续运行，最终割接时仅需短暂停机切换。支持从物理机、VMware、其他云平台迁移到腾讯云 CVM。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter5/5.2_%E4%BA%91%E7%BB%84%E4%BB%B6%E4%B8%8E%E8%BF%81%E7%A7%BB%E5%B7%A5%E5%85%B7/","difficulty":2},
-  {"id":"ch5-tools-005","stem":"DTS 数据校验的核心目的是什么？","options":[{"label":"A","text":"在割接前确认源库和目标库的数据完全一致"},{"label":"B","text":"测试数据库性能"},{"label":"C","text":"清理重复数据"},{"label":"D","text":"优化数据库索引"}],"answer":["A"],"type":"single","chapter":5,"subChapter":"ch5-tools","tags":["DTS","数据校验"],"analysis":"DTS 数据校验在全量和增量同步完成后，逐表逐行比对源库和目标库的数据是否一致（包括行数校验和内容校验）。只有校验通过后才能安全地进行业务割接，否则可能出现数据不一致导致业务异常。这是平滑迁移不可或缺的步骤。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter5/5.2_%E4%BA%91%E7%BB%84%E4%BB%B6%E4%B8%8E%E8%BF%81%E7%A7%BB%E5%B7%A5%E5%85%B7/","difficulty":1},
-  {"id":"ch5-tools-006","stem":"COS 迁移工具支持从以下哪些数据源迁移对象存储数据？","options":[{"label":"A","text":"AWS S3"},{"label":"B","text":"阿里云 OSS"},{"label":"C","text":"本地文件系统（NAS/磁盘）"},{"label":"D","text":"仅支持腾讯云内部 COS 之间迁移"}],"answer":["A","B","C"],"type":"multiple","chapter":5,"subChapter":"ch5-tools","tags":["COS迁移","对象存储","跨云迁移"],"analysis":"COS 迁移工具支持多种数据源：A AWS S3（兼容 S3 协议）；B 阿里云 OSS；C 本地文件系统（通过 COS Migration 工具或 COSCLI）。还支持 Azure Blob、华为 OBS 等。D 错误，COS 迁移工具的核心价值就是支持跨云和本地到云的迁移。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter5/5.2_%E4%BA%91%E7%BB%84%E4%BB%B6%E4%B8%8E%E8%BF%81%E7%A7%BB%E5%B7%A5%E5%85%B7/","difficulty":1}
+  {
+    "id": "ch5-method-001",
+    "stem": "腾讯云迁移方法论中的 4P 模型是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "Plan（规划）、Prepare（准备）、Perform（执行）、Perfect（优化）"
+      },
+      {
+        "label": "B",
+        "text": "Product（产品）、Price（价格）、Place（渠道）、Promotion（促销）"
+      },
+      {
+        "label": "C",
+        "text": "People（人员）、Process（流程）、Platform（平台）、Performance（性能）"
+      },
+      {
+        "label": "D",
+        "text": "Private（私有）、Public（公有）、Platform（平台）、Partner（合作伙伴）"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-method",
+    "tags": [
+      "4P模型",
+      "迁移方法论"
+    ],
+    "analysis": "腾讯云迁移4P模型：Plan（规划评估，梳理资产确定迁移策略）→ Prepare（准备，环境搭建网络打通）→ Perform（执行迁移，数据同步割接）→ Perfect（优化，性能调优成本优化）。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.1_%E8%BF%81%E7%A7%BB%E6%96%B9%E6%B3%95%E8%AE%BA%E6%A6%82%E8%BF%B0/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch5-method-002",
+    "stem": "停服迁移和平滑迁移的最大区别是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "停服迁移需要停止业务进行迁移，平滑迁移可以在业务不停的情况下完成"
+      },
+      {
+        "label": "B",
+        "text": "两者没有区别"
+      },
+      {
+        "label": "C",
+        "text": "停服迁移更安全"
+      },
+      {
+        "label": "D",
+        "text": "平滑迁移不需要任何准备工作"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-method",
+    "tags": [
+      "停服迁移",
+      "平滑迁移"
+    ],
+    "analysis": "停服迁移需要停止业务服务后进行数据搬迁，适合对连续性要求不高的系统。平滑迁移（在线迁移）通过增量同步等技术在业务持续运行时完成迁移，割接时仅有极短暂的切换窗口。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.1_%E8%BF%81%E7%A7%BB%E6%96%B9%E6%B3%95%E8%AE%BA%E6%A6%82%E8%BF%B0/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch5-method-003",
+    "stem": "迁移割接时必须准备回滚方案的原因是什么？",
+    "options": [
+      {
+        "label": "A",
+        "text": "割接可能出现意外问题，回滚方案确保可以恢复到迁移前的状态"
+      },
+      {
+        "label": "B",
+        "text": "回滚方案是为了测试目的"
+      },
+      {
+        "label": "C",
+        "text": "法律法规强制要求"
+      },
+      {
+        "label": "D",
+        "text": "仅为了编写文档"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-method",
+    "tags": [
+      "割接",
+      "回滚"
+    ],
+    "analysis": "迁移割接是高风险操作，可能出现数据不一致、网络不通、应用兼容性问题等意外。回滚方案是风险兜底策略，确保在割接失败时能快速恢复到迁移前的可用状态，最大限度减少业务影响。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.1_%E8%BF%81%E7%A7%BB%E6%96%B9%E6%B3%95%E8%AE%BA%E6%A6%82%E8%BF%B0/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch5-tools-001",
+    "stem": "腾讯云数据传输服务 DTS 的核心能力是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "支持数据库的全量+增量数据迁移和持续同步"
+      },
+      {
+        "label": "B",
+        "text": "仅支持文件传输"
+      },
+      {
+        "label": "C",
+        "text": "仅支持物理机搬迁"
+      },
+      {
+        "label": "D",
+        "text": "仅支持腾讯云内部数据库之间迁移"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-tools",
+    "tags": [
+      "DTS",
+      "数据迁移"
+    ],
+    "analysis": "DTS支持多种数据库的全量迁移+增量同步+数据校验，支持从自建/其他云/腾讯云到腾讯云的迁移（不限于内部）。全量+增量模式可实现业务不停服的平滑迁移。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.2_%E4%BA%91%E7%BB%84%E4%BB%B6%E4%B8%8E%E8%BF%81%E7%A7%BB%E5%B7%A5%E5%85%B7/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch5-tools-002",
+    "stem": "以下哪些工具可用于服务器迁移上云？",
+    "options": [
+      {
+        "label": "A",
+        "text": "服务器迁移中心 SMC"
+      },
+      {
+        "label": "B",
+        "text": "数据传输服务 DTS"
+      },
+      {
+        "label": "C",
+        "text": "COS 迁移工具"
+      },
+      {
+        "label": "D",
+        "text": "CDN 加速"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 5,
+    "subChapter": "ch5-tools",
+    "tags": [
+      "迁移工具"
+    ],
+    "analysis": "A SMC用于整机迁移（将源服务器系统盘和数据盘迁移到云CVM）；B DTS用于数据库迁移；C COS迁移工具用于对象存储数据迁移。D CDN是内容分发加速，不是迁移工具。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.2_%E4%BA%91%E7%BB%84%E4%BB%B6%E4%B8%8E%E8%BF%81%E7%A7%BB%E5%B7%A5%E5%85%B7/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch5-cost-001",
+    "stem": "FinOps 云成本优化的核心理念是什么？",
+    "options": [
+      {
+        "label": "A",
+        "text": "让每一分钱的云支出都产生业务价值，实现成本可见、可优化、可运营"
+      },
+      {
+        "label": "B",
+        "text": "尽可能减少所有云支出"
+      },
+      {
+        "label": "C",
+        "text": "只使用免费的云产品"
+      },
+      {
+        "label": "D",
+        "text": "将所有服务迁回自建机房"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-cost",
+    "tags": [
+      "FinOps",
+      "成本优化"
+    ],
+    "analysis": "FinOps 不是单纯省钱，而是让云支出与业务价值对齐。核心三步：成本可见（清楚钱花在哪里）→ 成本可优化（Right-sizing/预留/竞价等手段）→ 成本可运营（持续监控优化形成闭环）。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.3_%E8%BF%81%E7%A7%BB%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BA%91%E4%B8%8A%E8%B5%84%E6%BA%90%E6%88%90%E6%9C%AC%E7%AE%A1%E7%90%86/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch5-cost-002",
+    "stem": "以下哪些是有效的云成本优化措施？",
+    "options": [
+      {
+        "label": "A",
+        "text": "Right-sizing：选择与负载匹配的实例规格"
+      },
+      {
+        "label": "B",
+        "text": "对稳定负载使用预留实例/包年包月"
+      },
+      {
+        "label": "C",
+        "text": "使用 COS 生命周期管理自动降冷数据存储等级"
+      },
+      {
+        "label": "D",
+        "text": "始终选择最高配置确保性能"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 5,
+    "subChapter": "ch5-cost",
+    "tags": [
+      "成本优化",
+      "FinOps"
+    ],
+    "analysis": "A Right-sizing避免过度配置浪费；B预留实例节省30-60%长期成本；C生命周期管理将不常访问数据自动转为低成本存储。D过度配置是最常见的云成本浪费行为。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.3_%E8%BF%81%E7%A7%BB%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BA%91%E4%B8%8A%E8%B5%84%E6%BA%90%E6%88%90%E6%9C%AC%E7%AE%A1%E7%90%86/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch5-method-004",
+    "stem": "在 4P 迁移模型的 Plan 阶段，核心工作包括哪些？",
+    "options": [
+      {
+        "label": "A",
+        "text": "梳理现有IT资产和应用依赖关系"
+      },
+      {
+        "label": "B",
+        "text": "确定迁移策略（Rehost/Replatform/Refactor等）"
+      },
+      {
+        "label": "C",
+        "text": "直接开始数据搬迁"
+      },
+      {
+        "label": "D",
+        "text": "制定迁移时间表和风险评估"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D"
+    ],
+    "type": "multiple",
+    "chapter": 5,
+    "subChapter": "ch5-method",
+    "tags": [
+      "4P模型",
+      "Plan"
+    ],
+    "analysis": "Plan阶段的核心工作：A梳理资产清单和依赖关系（哪些系统迁移、什么顺序）；B选择迁移策略（直接搬迁/平台迁移/重构）；D制定时间表和识别风险。C数据搬迁属于Perform执行阶段。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.1_%E8%BF%81%E7%A7%BB%E6%96%B9%E6%B3%95%E8%AE%BA%E6%A6%82%E8%BF%B0/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch5-cost-003",
+    "stem": "某公司发现月度云费用中 60% 是 CVM 费用，其中有 30% 的实例平均 CPU 使用率低于 10%。最优的优化建议是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "将低利用率实例降配到合适规格（Right-sizing），部分可考虑 Serverless 替代"
+      },
+      {
+        "label": "B",
+        "text": "全部删除低利用率实例"
+      },
+      {
+        "label": "C",
+        "text": "增加更多实例分担负载"
+      },
+      {
+        "label": "D",
+        "text": "不做任何调整"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-cost",
+    "tags": [
+      "成本优化",
+      "Right-sizing"
+    ],
+    "analysis": "CPU使用率长期低于10%说明过度配置，Right-sizing将实例降到合适规格可节省大量成本。部分非核心业务可考虑Serverless按调用计费。直接删除可能影响业务；增加实例更浪费。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.3_%E8%BF%81%E7%A7%BB%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BA%91%E4%B8%8A%E8%B5%84%E6%BA%90%E6%88%90%E6%9C%AC%E7%AE%A1%E7%90%86/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch5-tools-003",
+    "stem": "使用 DTS 进行数据库平滑迁移的典型流程是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "全量数据迁移 → 增量数据同步 → 数据校验 → 业务割接"
+      },
+      {
+        "label": "B",
+        "text": "直接停机导出导入"
+      },
+      {
+        "label": "C",
+        "text": "仅复制表结构不迁移数据"
+      },
+      {
+        "label": "D",
+        "text": "先割接业务再迁移数据"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-tools",
+    "tags": [
+      "DTS",
+      "平滑迁移"
+    ],
+    "analysis": "DTS平滑迁移流程：1)全量迁移（将存量数据完整同步到目标库）→ 2)增量同步（持续同步新增和变更数据）→ 3)数据校验（确认源和目标数据一致）→ 4)业务割接（将应用连接切到新库，仅需极短停机窗口）。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.2_%E4%BA%91%E7%BB%84%E4%BB%B6%E4%B8%8E%E8%BF%81%E7%A7%BB%E5%B7%A5%E5%85%B7/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch5-method-005",
+    "stem": "迁移策略中的 6R 不包括以下哪个？",
+    "options": [
+      {
+        "label": "A",
+        "text": "Rehost（重新托管，直接搬迁）"
+      },
+      {
+        "label": "B",
+        "text": "Replatform（重新平台化）"
+      },
+      {
+        "label": "C",
+        "text": "Rebuild（重新构建）"
+      },
+      {
+        "label": "D",
+        "text": "Refactor（重构优化）"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-method",
+    "tags": [
+      "迁移策略",
+      "6R"
+    ],
+    "analysis": "迁移6R策略：Rehost（直接搬迁）、Replatform（平台迁移，如换DB）、Refactor（重构优化）、Repurchase（替换为SaaS）、Retain（保留不迁移）、Retire（淘汰下线）。Rebuild不在标准6R中。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.1_%E8%BF%81%E7%A7%BB%E6%96%B9%E6%B3%95%E8%AE%BA%E6%A6%82%E8%BF%B0/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch5-cost-004",
+    "stem": "云上资源成本管理中，以下哪些是标签（Tag）管理的最佳实践？",
+    "options": [
+      {
+        "label": "A",
+        "text": "为所有资源打上项目/部门标签便于成本分摊"
+      },
+      {
+        "label": "B",
+        "text": "为不同环境（生产/测试/开发）打标签区分"
+      },
+      {
+        "label": "C",
+        "text": "标签越少越好，最好不打"
+      },
+      {
+        "label": "D",
+        "text": "为资源标注负责人标签便于治理"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D"
+    ],
+    "type": "multiple",
+    "chapter": 5,
+    "subChapter": "ch5-cost",
+    "tags": [
+      "标签管理",
+      "成本治理"
+    ],
+    "analysis": "标签管理是FinOps的基础：A按部门/项目标签实现成本分摊；B按环境标签区分生产和非生产资源（非生产可降配节省）；D负责人标签便于追踪和治理。C标签体系应完善，不打标签无法做精细化成本管理。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.3_%E8%BF%81%E7%A7%BB%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BA%91%E4%B8%8A%E8%B5%84%E6%BA%90%E6%88%90%E6%9C%AC%E7%AE%A1%E7%90%86/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch5-tools-004",
+    "stem": "服务器迁移中心 SMC 的工作原理是什么？",
+    "options": [
+      {
+        "label": "A",
+        "text": "在源服务器安装 Agent，通过网络将系统盘和数据盘增量同步到腾讯云 CVM"
+      },
+      {
+        "label": "B",
+        "text": "物理搬运服务器硬盘"
+      },
+      {
+        "label": "C",
+        "text": "仅复制应用代码不迁移系统"
+      },
+      {
+        "label": "D",
+        "text": "需要完全停机才能开始迁移"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-tools",
+    "tags": [
+      "SMC",
+      "服务器迁移",
+      "整机迁移"
+    ],
+    "analysis": "SMC 在源服务器安装轻量 Agent，先进行全量同步（系统盘+数据盘），再持续增量同步变化数据。业务可在迁移过程中继续运行，最终割接时仅需短暂停机切换。支持从物理机、VMware、其他云平台迁移到腾讯云 CVM。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.2_%E4%BA%91%E7%BB%84%E4%BB%B6%E4%B8%8E%E8%BF%81%E7%A7%BB%E5%B7%A5%E5%85%B7/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch5-tools-005",
+    "stem": "DTS 数据校验的核心目的是什么？",
+    "options": [
+      {
+        "label": "A",
+        "text": "在割接前确认源库和目标库的数据完全一致"
+      },
+      {
+        "label": "B",
+        "text": "测试数据库性能"
+      },
+      {
+        "label": "C",
+        "text": "清理重复数据"
+      },
+      {
+        "label": "D",
+        "text": "优化数据库索引"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-tools",
+    "tags": [
+      "DTS",
+      "数据校验"
+    ],
+    "analysis": "DTS 数据校验在全量和增量同步完成后，逐表逐行比对源库和目标库的数据是否一致（包括行数校验和内容校验）。只有校验通过后才能安全地进行业务割接，否则可能出现数据不一致导致业务异常。这是平滑迁移不可或缺的步骤。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.2_%E4%BA%91%E7%BB%84%E4%BB%B6%E4%B8%8E%E8%BF%81%E7%A7%BB%E5%B7%A5%E5%85%B7/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch5-tools-006",
+    "stem": "COS 迁移工具支持从以下哪些数据源迁移对象存储数据？",
+    "options": [
+      {
+        "label": "A",
+        "text": "AWS S3"
+      },
+      {
+        "label": "B",
+        "text": "阿里云 OSS"
+      },
+      {
+        "label": "C",
+        "text": "本地文件系统（NAS/磁盘）"
+      },
+      {
+        "label": "D",
+        "text": "仅支持腾讯云内部 COS 之间迁移"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 5,
+    "subChapter": "ch5-tools",
+    "tags": [
+      "COS迁移",
+      "对象存储",
+      "跨云迁移"
+    ],
+    "analysis": "COS 迁移工具支持多种数据源：A AWS S3（兼容 S3 协议）；B 阿里云 OSS；C 本地文件系统（通过 COS Migration 工具或 COSCLI）。还支持 Azure Blob、华为 OBS 等。D 错误，COS 迁移工具的核心价值就是支持跨云和本地到云的迁移。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.2_%E4%BA%91%E7%BB%84%E4%BB%B6%E4%B8%8E%E8%BF%81%E7%A7%BB%E5%B7%A5%E5%85%B7/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch5-method-006",
+    "stem": "迁移策略中 Rehost 和 Replatform 的区别是什么？",
+    "options": [
+      {
+        "label": "A",
+        "text": "Rehost 原封不动搬迁，Replatform 迁移时做少量优化（如换托管数据库）"
+      },
+      {
+        "label": "B",
+        "text": "两者完全一样"
+      },
+      {
+        "label": "C",
+        "text": "Replatform 需要完全重写代码"
+      },
+      {
+        "label": "D",
+        "text": "Rehost 需要重写代码"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-method",
+    "tags": [
+      "迁移策略",
+      "Rehost",
+      "Replatform"
+    ],
+    "analysis": "Rehost（Lift & Shift）原封不动将应用搬到云上，改动最小速度最快。Replatform（Lift, Tinker & Shift）在搬迁过程中做少量优化，如将自建MySQL换为CDB托管服务，享受云的运维优势但不改应用架构。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.1_%E8%BF%81%E7%A7%BB%E6%96%B9%E6%B3%95%E8%AE%BA%E6%A6%82%E8%BF%B0/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch5-method-007",
+    "stem": "迁移中的依赖分析（Dependency Mapping）为什么重要？",
+    "options": [
+      {
+        "label": "A",
+        "text": "确定应用间的调用关系，避免迁移后因依赖未就绪导致服务不可用"
+      },
+      {
+        "label": "B",
+        "text": "仅为了编写文档"
+      },
+      {
+        "label": "C",
+        "text": "分析代码质量"
+      },
+      {
+        "label": "D",
+        "text": "统计服务器数量"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-method",
+    "tags": [
+      "迁移",
+      "依赖分析"
+    ],
+    "analysis": "依赖分析梳理应用间的调用关系、数据库连接、第三方API依赖等。迁移时必须按依赖顺序进行（底层服务先迁）。如果A依赖B，B未迁移就割接A，A调用B会失败。依赖图也帮助确定最小迁移批次。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.1_%E8%BF%81%E7%A7%BB%E6%96%B9%E6%B3%95%E8%AE%BA%E6%A6%82%E8%BF%B0/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch5-method-008",
+    "stem": "大规模迁移项目中，推荐的迁移批次策略是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "从低风险非核心系统开始试点，验证后逐步扩大到核心系统"
+      },
+      {
+        "label": "B",
+        "text": "一次性迁移所有系统"
+      },
+      {
+        "label": "C",
+        "text": "先迁核心系统积累经验"
+      },
+      {
+        "label": "D",
+        "text": "随机选择迁移顺序"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-method",
+    "tags": [
+      "迁移策略",
+      "批次规划"
+    ],
+    "analysis": "先迁低风险系统（如内部OA、测试环境）验证迁移流程和工具，积累经验后再迁移核心业务系统。这样即使出现问题影响也可控。一次性全迁风险过大，随机顺序无法管理依赖。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.1_%E8%BF%81%E7%A7%BB%E6%96%B9%E6%B3%95%E8%AE%BA%E6%A6%82%E8%BF%B0/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch5-tools-007",
+    "stem": "DTS 支持哪些数据库类型的迁移？",
+    "options": [
+      {
+        "label": "A",
+        "text": "MySQL（含CDB、自建、他云MySQL）"
+      },
+      {
+        "label": "B",
+        "text": "PostgreSQL"
+      },
+      {
+        "label": "C",
+        "text": "MongoDB"
+      },
+      {
+        "label": "D",
+        "text": "仅支持腾讯云CDB"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 5,
+    "subChapter": "ch5-tools",
+    "tags": [
+      "DTS",
+      "数据库类型"
+    ],
+    "analysis": "DTS支持多种数据库迁移：A MySQL全系列（自建/CDB/他云RDS）；B PostgreSQL；C MongoDB。还支持Redis、MariaDB、TDSQL等。不限于腾讯云产品，支持从自建和其他云平台迁入。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.2_%E4%BA%91%E7%BB%84%E4%BB%B6%E4%B8%8E%E8%BF%81%E7%A7%BB%E5%B7%A5%E5%85%B7/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch5-tools-008",
+    "stem": "SMC 服务器迁移中心支持从哪些平台迁移？",
+    "options": [
+      {
+        "label": "A",
+        "text": "物理服务器（裸金属）"
+      },
+      {
+        "label": "B",
+        "text": "VMware虚拟机"
+      },
+      {
+        "label": "C",
+        "text": "AWS/Azure/阿里云等其他云平台"
+      },
+      {
+        "label": "D",
+        "text": "只支持从腾讯云其他地域迁移"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 5,
+    "subChapter": "ch5-tools",
+    "tags": [
+      "SMC",
+      "服务器迁移",
+      "跨平台"
+    ],
+    "analysis": "SMC支持多种源环境：A物理服务器（安装Agent后直接迁移）；B VMware/KVM等虚拟化平台；C各大公有云平台（AWS EC2、Azure VM、阿里云ECS等）。D错误，SMC核心价值是从各种环境迁移到腾讯云。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.2_%E4%BA%91%E7%BB%84%E4%BB%B6%E4%B8%8E%E8%BF%81%E7%A7%BB%E5%B7%A5%E5%85%B7/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch5-tools-009",
+    "stem": "迁移过程中网络互通方案的选择依据是什么？",
+    "options": [
+      {
+        "label": "A",
+        "text": "根据数据量、带宽需求、安全要求和预算选择VPN/专线/公网传输"
+      },
+      {
+        "label": "B",
+        "text": "只能使用公网传输"
+      },
+      {
+        "label": "C",
+        "text": "不需要考虑网络"
+      },
+      {
+        "label": "D",
+        "text": "所有场景都用专线"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-tools",
+    "tags": [
+      "迁移",
+      "网络方案"
+    ],
+    "analysis": "小数据量/低预算可用VPN（经公网加密，几Mbps-几百Mbps）；大数据量/高安全要求用专线（Gbps级，延迟低）；临时迁移可走公网传输（最快开通但不安全）。应综合考虑数据量、时间窗口、安全和成本选择。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.2_%E4%BA%91%E7%BB%84%E4%BB%B6%E4%B8%8E%E8%BF%81%E7%A7%BB%E5%B7%A5%E5%85%B7/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch5-tools-010",
+    "stem": "DTS 增量同步的原理是什么？",
+    "options": [
+      {
+        "label": "A",
+        "text": "通过读取数据库的 Binlog 实时捕获数据变更并同步到目标库"
+      },
+      {
+        "label": "B",
+        "text": "定期全量导出对比差异"
+      },
+      {
+        "label": "C",
+        "text": "在应用层双写"
+      },
+      {
+        "label": "D",
+        "text": "通过文件系统监听"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-tools",
+    "tags": [
+      "DTS",
+      "增量同步",
+      "Binlog"
+    ],
+    "analysis": "DTS增量同步通过订阅MySQL的Binlog（二进制日志），实时捕获INSERT/UPDATE/DELETE等数据变更事件，将这些变更按顺序回放到目标数据库。延迟通常在秒级。这比全量对比效率高得多且不影响源库性能。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.2_%E4%BA%91%E7%BB%84%E4%BB%B6%E4%B8%8E%E8%BF%81%E7%A7%BB%E5%B7%A5%E5%85%B7/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch5-cost-005",
+    "stem": "腾讯云节省计划（Savings Plan）和预留实例的区别是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "节省计划按承诺消费金额折扣，灵活性更高；预留实例锁定具体规格"
+      },
+      {
+        "label": "B",
+        "text": "两者完全一样"
+      },
+      {
+        "label": "C",
+        "text": "节省计划更贵"
+      },
+      {
+        "label": "D",
+        "text": "预留实例灵活性更高"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-cost",
+    "tags": [
+      "成本优化",
+      "节省计划",
+      "预留实例"
+    ],
+    "analysis": "节省计划承诺每小时最低消费金额，可灵活用于不同实例规格和地域（灵活性高）。预留实例锁定特定规格和地域（灵活性低但折扣可能更大）。建议稳定不变的用预留实例，规格可能变化的用节省计划。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.3_%E8%BF%81%E7%A7%BB%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BA%91%E4%B8%8A%E8%B5%84%E6%BA%90%E6%88%90%E6%9C%AC%E7%AE%A1%E7%90%86/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch5-cost-006",
+    "stem": "云上资源浪费的常见原因包括哪些？",
+    "options": [
+      {
+        "label": "A",
+        "text": "过度配置（实例规格远超实际需求）"
+      },
+      {
+        "label": "B",
+        "text": "僵尸资源（已废弃但未释放的实例/磁盘/IP）"
+      },
+      {
+        "label": "C",
+        "text": "非生产环境全天候运行（测试环境夜间不关机）"
+      },
+      {
+        "label": "D",
+        "text": "使用了合适规格的包年包月实例"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 5,
+    "subChapter": "ch5-cost",
+    "tags": [
+      "成本优化",
+      "资源浪费"
+    ],
+    "analysis": "A过度配置是最常见浪费（如用8核16G跑仅需2核4G的应用）；B僵尸资源持续计费无人使用；C非生产环境可按时段开关机节省费用。D合适规格的包年包月是合理配置，不算浪费。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.3_%E8%BF%81%E7%A7%BB%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BA%91%E4%B8%8A%E8%B5%84%E6%BA%90%E6%88%90%E6%9C%AC%E7%AE%A1%E7%90%86/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch5-cost-007",
+    "stem": "FinOps 成本优化的三个阶段是什么？",
+    "options": [
+      {
+        "label": "A",
+        "text": "成本可见（Inform）→ 成本可优化（Optimize）→ 成本可运营（Operate）"
+      },
+      {
+        "label": "B",
+        "text": "购买 → 使用 → 退款"
+      },
+      {
+        "label": "C",
+        "text": "评估 → 部署 → 运维"
+      },
+      {
+        "label": "D",
+        "text": "只有一个阶段：削减成本"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-cost",
+    "tags": [
+      "FinOps",
+      "成本管理"
+    ],
+    "analysis": "FinOps三阶段：1)Inform（可见）：通过账单分析、标签分摊看清每个团队/项目的花费；2)Optimize（优化）：Right-sizing、预留、竞价等手段降低成本；3)Operate（运营）：建立预算告警、持续监控、形成成本治理文化。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.3_%E8%BF%81%E7%A7%BB%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BA%91%E4%B8%8A%E8%B5%84%E6%BA%90%E6%88%90%E6%9C%AC%E7%AE%A1%E7%90%86/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch5-cost-008",
+    "stem": "如何利用腾讯云预算告警控制云支出？",
+    "options": [
+      {
+        "label": "A",
+        "text": "设置月度预算阈值，消费达到阈值百分比时自动发送告警通知"
+      },
+      {
+        "label": "B",
+        "text": "预算告警会自动停止所有云资源"
+      },
+      {
+        "label": "C",
+        "text": "只能按年设置预算"
+      },
+      {
+        "label": "D",
+        "text": "不支持预算管理功能"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-cost",
+    "tags": [
+      "成本管理",
+      "预算告警"
+    ],
+    "analysis": "腾讯云支持设置月度/季度预算，在消费达到预算的50%/80%/100%时通过短信/邮件/企微通知相关人员。预算告警只做通知不会自动停机（避免影响业务），帮助及时发现异常消费。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.3_%E8%BF%81%E7%A7%BB%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BA%91%E4%B8%8A%E8%B5%84%E6%BA%90%E6%88%90%E6%9C%AC%E7%AE%A1%E7%90%86/",
+    "difficulty": 1
+  }
 ]

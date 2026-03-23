@@ -8,6 +8,7 @@ import RandomPage from './pages/RandomPage'
 import WrongBookPage from './pages/WrongBookPage'
 import FavoritesPage from './pages/FavoritesPage'
 import StatsPage from './pages/StatsPage'
+import DataManagePage from './pages/DataManagePage'
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             <Route path="wrong" element={<WrongBookPage />} />
             <Route path="favorites" element={<FavoritesPage />} />
             <Route path="stats" element={<StatsPage />} />
+            <Route path="data" element={<DataManagePage />} />
           </Route>
         </Routes>
       </HashRouter>

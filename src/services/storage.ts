@@ -152,6 +152,182 @@ export function clearAllData(): void {
   localStorage.removeItem(STORAGE_KEY);
 }
 
+// ======= 导出/导入功能 =======
+
+// 导出所有数据为 JSON 字符串
+export function exportData(): string {
+  const data = getData();
+  const exportPayload = {
+    _meta: {
+      app: 'tccp-practice',
+      exportTime: new Date().toISOString(),
+      version: CURRENT_VERSION,
+    },
+    data,
+  };
+  return JSON.stringify(exportPayload, null, 2);
+}
+
+// 下载数据为 JSON 文件
+export function downloadData(): void {
+  const json = exportData();
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+  a.href = url;
+  a.download = `tccp-backup-${timestamp}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// 导入数据（带智能合并去重）
+export interface ImportResult {
+  success: boolean;
+  message: string;
+  stats?: {
+    answerRecords: { before: number; imported: number; after: number };
+    wrongQuestions: { before: number; imported: number; after: number };
+    favorites: { before: number; imported: number; after: number };
+    examHistory: { before: number; imported: number; after: number };
+    dailyStats: { before: number; imported: number; after: number };
+  };
+}
+
+export function importData(jsonStr: string, mode: 'merge' | 'overwrite' = 'merge'): ImportResult {
+  try {
+    const parsed = JSON.parse(jsonStr);
+
+    // 支持两种格式：带 _meta 的导出格式 和 直接的 StorageData 格式
+    let importedData: StorageData;
+    if (parsed._meta && parsed.data) {
+      importedData = parsed.data as StorageData;
+    } else if (parsed.answerRecords !== undefined) {
+      importedData = parsed as StorageData;
+    } else {
+      return { success: false, message: '无法识别的数据格式，请确认是 TCCP 练习系统导出的文件' };
+    }
+
+    // 验证必要字段
+    if (!Array.isArray(importedData.answerRecords) ||
+        !Array.isArray(importedData.wrongQuestions) ||
+        !Array.isArray(importedData.favorites)) {
+      return { success: false, message: '数据格式不完整，缺少必要字段' };
+    }
+
+    if (mode === 'overwrite') {
+      // 直接覆盖
+      const migrated = { ...defaultData, ...importedData, version: CURRENT_VERSION };
+      setData(migrated);
+      return {
+        success: true,
+        message: '数据已完全覆盖导入',
+        stats: {
+          answerRecords: { before: 0, imported: migrated.answerRecords.length, after: migrated.answerRecords.length },
+          wrongQuestions: { before: 0, imported: migrated.wrongQuestions.length, after: migrated.wrongQuestions.length },
+          favorites: { before: 0, imported: migrated.favorites.length, after: migrated.favorites.length },
+          examHistory: { before: 0, imported: migrated.examHistory.length, after: migrated.examHistory.length },
+          dailyStats: { before: 0, imported: Object.keys(migrated.dailyStats).length, after: Object.keys(migrated.dailyStats).length },
+        },
+      };
+    }
+
+    // 合并模式（默认）：智能去重
+    const current = getData();
+    const stats = {
+      answerRecords: { before: current.answerRecords.length, imported: importedData.answerRecords.length, after: 0 },
+      wrongQuestions: { before: current.wrongQuestions.length, imported: importedData.wrongQuestions.length, after: 0 },
+      favorites: { before: current.favorites.length, imported: importedData.favorites.length, after: 0 },
+      examHistory: { before: current.examHistory.length, imported: importedData.examHistory.length, after: 0 },
+      dailyStats: { before: Object.keys(current.dailyStats).length, imported: Object.keys(importedData.dailyStats || {}).length, after: 0 },
+    };
+
+    // 1. 合并答题记录（按 questionId + timestamp 去重）
+    const existingRecordKeys = new Set(
+      current.answerRecords.map(r => `${r.questionId}_${r.timestamp}`)
+    );
+    const newRecords = (importedData.answerRecords || []).filter(
+      r => !existingRecordKeys.has(`${r.questionId}_${r.timestamp}`)
+    );
+    current.answerRecords = [...current.answerRecords, ...newRecords];
+    // 按时间排序并限制 5000 条
+    current.answerRecords.sort((a, b) => a.timestamp - b.timestamp);
+    if (current.answerRecords.length > 5000) {
+      current.answerRecords = current.answerRecords.slice(-5000);
+    }
+    stats.answerRecords.after = current.answerRecords.length;
+
+    // 2. 合并错题（Set 去重）
+    const wrongSet = new Set([...current.wrongQuestions, ...(importedData.wrongQuestions || [])]);
+    current.wrongQuestions = [...wrongSet];
+    stats.wrongQuestions.after = current.wrongQuestions.length;
+
+    // 3. 合并收藏（Set 去重）
+    const favSet = new Set([...current.favorites, ...(importedData.favorites || [])]);
+    current.favorites = [...favSet];
+    stats.favorites.after = current.favorites.length;
+
+    // 4. 合并考试历史（按 id 去重）
+    const existingExamIds = new Set(current.examHistory.map(e => e.id));
+    const newExams = (importedData.examHistory || []).filter(e => !existingExamIds.has(e.id));
+    current.examHistory = [...current.examHistory, ...newExams];
+    current.examHistory.sort((a, b) => a.startTime - b.startTime);
+    stats.examHistory.after = current.examHistory.length;
+
+    // 5. 合并每日统计（相同日期取较大值）
+    const importedDaily = importedData.dailyStats || {};
+    for (const [date, importedStat] of Object.entries(importedDaily)) {
+      if (!current.dailyStats[date]) {
+        current.dailyStats[date] = importedStat;
+      } else {
+        current.dailyStats[date] = {
+          answered: Math.max(current.dailyStats[date].answered, importedStat.answered),
+          correct: Math.max(current.dailyStats[date].correct, importedStat.correct),
+        };
+      }
+    }
+    stats.dailyStats.after = Object.keys(current.dailyStats).length;
+
+    // 6. 连续打卡和最近学习日期：取较新的
+    if (importedData.lastStudyDate && importedData.lastStudyDate > current.lastStudyDate) {
+      current.lastStudyDate = importedData.lastStudyDate;
+    }
+    current.streakDays = Math.max(current.streakDays, importedData.streakDays || 0);
+
+    current.version = CURRENT_VERSION;
+    setData(current);
+
+    const totalNew = (stats.answerRecords.after - stats.answerRecords.before) +
+                     (stats.wrongQuestions.after - stats.wrongQuestions.before) +
+                     (stats.favorites.after - stats.favorites.before) +
+                     (stats.examHistory.after - stats.examHistory.before);
+
+    return {
+      success: true,
+      message: totalNew > 0
+        ? `合并完成，新增 ${totalNew} 条数据（已自动去重）`
+        : '合并完成，所有数据已存在（无新增）',
+      stats,
+    };
+  } catch {
+    return { success: false, message: '文件解析失败，请确认是有效的 JSON 文件' };
+  }
+}
+
+// 获取当前数据概要（用于展示）
+export function getDataSummary() {
+  const data = getData();
+  return {
+    answerRecords: data.answerRecords.length,
+    wrongQuestions: data.wrongQuestions.length,
+    favorites: data.favorites.length,
+    examHistory: data.examHistory.length,
+    dailyStats: Object.keys(data.dailyStats).length,
+    lastStudyDate: data.lastStudyDate,
+    streakDays: data.streakDays,
+  };
+}
+
 // 导出所有存储 API
 const storageService = {
   getData,
@@ -168,6 +344,10 @@ const storageService = {
   saveAnswerRecord,
   getAnswerRecords,
   clearAllData,
+  exportData,
+  downloadData,
+  importData,
+  getDataSummary,
 };
 
 export default storageService;

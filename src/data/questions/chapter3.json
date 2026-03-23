@@ -1,31 +1,1453 @@
 [
-  {"id":"ch3-dr-001","stem":"容灾架构中，RTO 和 RPO 分别代表什么？","options":[{"label":"A","text":"RTO 是恢复时间目标，RPO 是恢复点目标（允许丢失的数据量）"},{"label":"B","text":"RTO 是数据复制频率，RPO 是数据保留天数"},{"label":"C","text":"两者都是网络延迟指标"},{"label":"D","text":"RTO 是备份频率，RPO 是恢复测试频率"}],"answer":["A"],"type":"single","chapter":3,"subChapter":"ch3-dr","tags":["RTO","RPO","容灾"],"analysis":"RTO（Recovery Time Objective）恢复时间目标：灾难发生后多久恢复业务。RPO（Recovery Point Objective）恢复点目标：能容忍丢失多长时间的数据。RTO 越小恢复越快，RPO 越小数据丢失越少。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter3/3.1_%E4%BA%91%E4%B8%8A%E5%AE%B9%E7%81%BE/","difficulty":1},
-  {"id":"ch3-dr-002","stem":"灾备等级 1-6 级中，等级越高意味着什么？","options":[{"label":"A","text":"RTO 和 RPO 越大，成本越低"},{"label":"B","text":"RTO 和 RPO 越小，投资成本越高"},{"label":"C","text":"仅存储容量越大"},{"label":"D","text":"带宽越大"}],"answer":["B"],"type":"single","chapter":3,"subChapter":"ch3-dr","tags":["灾备等级"],"analysis":"灾备等级从 1 到 6 逐步提高：1级仅本地备份（RTO天级），6级零数据丢失+秒级恢复。等级越高，RTO和RPO越接近零，但所需投资成本也呈指数级增长。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter3/3.1_%E4%BA%91%E4%B8%8A%E5%AE%B9%E7%81%BE/","difficulty":1},
-  {"id":"ch3-dr-003","stem":"\"两地三中心\" 容灾架构中，三个中心分别是？","options":[{"label":"A","text":"生产中心、同城灾备中心、异地灾备中心"},{"label":"B","text":"开发中心、测试中心、生产中心"},{"label":"C","text":"数据中心、计算中心、网络中心"},{"label":"D","text":"主数据库、从数据库、备份数据库"}],"answer":["A"],"type":"single","chapter":3,"subChapter":"ch3-dr","tags":["两地三中心"],"analysis":"两地三中心：两地指同城和异地；三个中心是生产中心（主）、同城灾备中心（承接同城切换，RPO接近0）、异地灾备中心（应对城市级灾难，RPO取决于同步策略）。是金融等关键行业的标准容灾架构。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter3/3.1_%E4%BA%91%E4%B8%8A%E5%AE%B9%E7%81%BE/","difficulty":1},
-  {"id":"ch3-dr-004","stem":"同城双活架构的核心特点是？","options":[{"label":"A","text":"两个数据中心同时对外提供服务，互为备份"},{"label":"B","text":"只有一个中心工作，另一个完全闲置"},{"label":"C","text":"两个中心处理不同的业务"},{"label":"D","text":"仅在网络层做冗余"}],"answer":["A"],"type":"single","chapter":3,"subChapter":"ch3-dr","tags":["同城双活"],"analysis":"同城双活的核心是两个数据中心同时承载业务流量（Active-Active），而非传统的主备模式（Active-Standby）。两个中心互为备份，任一中心故障时另一中心可接管全部流量。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter3/3.1_%E4%BA%91%E4%B8%8A%E5%AE%B9%E7%81%BE/","difficulty":2},
-  {"id":"ch3-dr-005","stem":"以下关于容灾架构设计的最佳实践，哪些是正确的？","options":[{"label":"A","text":"数据同步优先选择强同步模式保证一致性"},{"label":"B","text":"定期进行容灾演练验证切换流程"},{"label":"C","text":"异地容灾可以接受较大的RPO"},{"label":"D","text":"只需要备份数据库，不需要备份应用和配置"}],"answer":["A","B","C"],"type":"multiple","chapter":3,"subChapter":"ch3-dr","tags":["容灾","最佳实践"],"analysis":"A强同步保证数据不丢失；B定期演练是验证容灾有效性的关键；C异地受网络延迟限制，通常接受分钟级RPO。D错误，完整的容灾需备份数据、应用、配置、网络等全栈。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter3/3.1_%E4%BA%91%E4%B8%8A%E5%AE%B9%E7%81%BE/","difficulty":2},
-  {"id":"ch3-perf-001","stem":"云上架构性能优化的全链路思路正确的顺序是？","options":[{"label":"A","text":"用户端 → CDN → 负载均衡 → 应用层 → 数据库 → 存储"},{"label":"B","text":"数据库 → 存储 → 应用层 → CDN → 用户端"},{"label":"C","text":"仅优化数据库即可"},{"label":"D","text":"仅优化网络带宽即可"}],"answer":["A"],"type":"single","chapter":3,"subChapter":"ch3-perf","tags":["性能优化","全链路"],"analysis":"全链路性能优化应从用户端到后端逐层分析：用户端（前端优化）→ CDN（静态缓存）→ CLB（负载分流）→ 应用层（代码/架构优化）→ 数据库（查询/索引优化）→ 存储（IO优化）。瓶颈可能在任何一层。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter3/3.2_%E4%BA%91%E4%B8%8A%E6%9E%B6%E6%9E%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/","difficulty":2},
-  {"id":"ch3-perf-002","stem":"数据库层性能优化的常见手段包括哪些？","options":[{"label":"A","text":"读写分离，读请求分流到只读实例"},{"label":"B","text":"添加合适的索引减少全表扫描"},{"label":"C","text":"引入 Redis 缓存热点查询"},{"label":"D","text":"增加更多的数据库表"}],"answer":["A","B","C"],"type":"multiple","chapter":3,"subChapter":"ch3-perf","tags":["性能优化","数据库"],"analysis":"A读写分离分担读压力；B索引优化是最基础的DB性能提升手段；C Redis缓存可拦截80%以上的热点读请求。D增加表数量本身不会提升性能，可能反而增加join复杂度。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter3/3.2_%E4%BA%91%E4%B8%8A%E6%9E%B6%E6%9E%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/","difficulty":1},
-  {"id":"ch3-container-001","stem":"应用容器化改造的推荐步骤顺序是？","options":[{"label":"A","text":"评估 → 设计 → 改造 → 构建镜像 → 部署 → 验证"},{"label":"B","text":"直接将所有代码打包成镜像运行"},{"label":"C","text":"先买服务器，再考虑容器化"},{"label":"D","text":"仅将数据库容器化即可"}],"answer":["A"],"type":"single","chapter":3,"subChapter":"ch3-container","tags":["容器化","改造步骤"],"analysis":"容器化改造六步法：1)评估（分析应用是否适合容器化）→ 2)设计（网络/存储/日志方案）→ 3)改造（无状态化、配置外置）→ 4)构建（Dockerfile、CI/CD）→ 5)部署（TKE编排）→ 6)验证（功能/性能/容灾测试）。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter3/3.3_%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%94%B9%E9%80%A0/","difficulty":2},
-  {"id":"ch3-container-002","stem":"在应用容器化过程中，以下哪些是必须完成的改造？","options":[{"label":"A","text":"将应用改造为无状态服务"},{"label":"B","text":"配置信息外置到 ConfigMap 或环境变量"},{"label":"C","text":"日志输出到标准输出（stdout）而非本地文件"},{"label":"D","text":"将所有中间件也容器化"}],"answer":["A","B","C"],"type":"multiple","chapter":3,"subChapter":"ch3-container","tags":["容器化","改造要点"],"analysis":"A无状态是容器化基础，支持弹性伸缩；B配置外置实现不同环境复用同一镜像；C日志输出到stdout方便容器平台统一采集。D中间件容器化不是必须的，有些场景用云托管中间件更合适。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter3/3.3_%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%94%B9%E9%80%A0/","difficulty":2},
-  {"id":"ch3-ai-001","stem":"在 AI 大模型推理场景中，KV Cache 的主要作用是？","options":[{"label":"A","text":"缓存已生成 Token 的 Key-Value 向量，避免重复计算加速推理"},{"label":"B","text":"缓存数据库查询结果"},{"label":"C","text":"存储模型训练数据"},{"label":"D","text":"加速文件读写"}],"answer":["A"],"type":"single","chapter":3,"subChapter":"ch3-ai","tags":["AI","KV Cache"],"analysis":"KV Cache 是大模型推理的关键优化。Transformer 模型在生成每个新 Token 时需要计算所有历史 Token 的 Attention，KV Cache 将已计算的 Key 和 Value 向量缓存在显存中，避免重复计算，大幅提升推理速度。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter3/3.4_AI%E5%92%8C%E5%A4%A7%E6%A8%A1%E5%9E%8B/","difficulty":2},
-  {"id":"ch3-ai-002","stem":"腾讯云星脉网络在 AI 训练场景中的核心价值是？","options":[{"label":"A","text":"提供高带宽低延迟的 GPU 互联网络，加速分布式训练"},{"label":"B","text":"提供 CDN 加速"},{"label":"C","text":"提供域名解析服务"},{"label":"D","text":"提供安全防护"}],"answer":["A"],"type":"single","chapter":3,"subChapter":"ch3-ai","tags":["AI","星脉网络"],"analysis":"星脉网络是腾讯云为AI训练场景设计的高性能 GPU 互联网络，提供超高带宽（如800Gbps RDMA）和超低延迟，确保多机多卡分布式训练时梯度同步高效进行，是大规模模型训练的关键基础设施。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter3/3.4_AI%E5%92%8C%E5%A4%A7%E6%A8%A1%E5%9E%8B/","difficulty":2},
-  {"id":"ch3-ai-003","stem":"qGPU（GPU 虚拟化）技术的主要用途是？","options":[{"label":"A","text":"将一块物理 GPU 虚拟成多个 GPU 实例，提高 GPU 利用率"},{"label":"B","text":"将多块 GPU 合并成一块大 GPU"},{"label":"C","text":"降低 GPU 计算精度"},{"label":"D","text":"替代 CPU 进行所有计算"}],"answer":["A"],"type":"single","chapter":3,"subChapter":"ch3-ai","tags":["AI","qGPU","GPU虚拟化"],"analysis":"qGPU 是腾讯云的 GPU 虚拟化方案，可将一块物理 GPU 按显存和算力维度切分成多个虚拟 GPU 实例，多个推理任务或小模型可共享同一块 GPU，显著提高 GPU 利用率，降低推理成本。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter3/3.4_AI%E5%92%8C%E5%A4%A7%E6%A8%A1%E5%9E%8B/","difficulty":2},
-  {"id":"ch3-dr-006","stem":"多云容灾架构的优势包括哪些？","options":[{"label":"A","text":"避免供应商锁定"},{"label":"B","text":"应对单一云厂商整体故障"},{"label":"C","text":"可以利用不同云的优势产品"},{"label":"D","text":"管理简单无额外成本"}],"answer":["A","B","C"],"type":"multiple","chapter":3,"subChapter":"ch3-dr","tags":["多云","容灾"],"analysis":"A多云避免被单一厂商绑定；B即使某家云出现重大故障也能继续服务；C可选择各家最优产品。D错误，多云管理复杂度和成本都更高，需要跨云数据同步、网络打通等额外投入。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter3/3.1_%E4%BA%91%E4%B8%8A%E5%AE%B9%E7%81%BE/","difficulty":2},
-  {"id":"ch3-perf-003","stem":"某Web应用访问慢，经分析发现首页加载了5MB的未压缩JS和图片。优先的优化方案是？","options":[{"label":"A","text":"使用CDN分发+开启Gzip压缩+图片WebP格式转换"},{"label":"B","text":"升级数据库服务器"},{"label":"C","text":"增加CVM实例数量"},{"label":"D","text":"优化数据库索引"}],"answer":["A"],"type":"single","chapter":3,"subChapter":"ch3-perf","tags":["性能优化","前端"],"analysis":"问题在前端静态资源过大。CDN将资源缓存到边缘节点减少延迟，Gzip压缩可减小JS体积60-70%，WebP格式图片比PNG小25-35%。数据库和CVM扩容不解决前端加载慢的问题。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter3/3.2_%E4%BA%91%E4%B8%8A%E6%9E%B6%E6%9E%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/","difficulty":2},
-  {"id":"ch3-ai-004","stem":"以下关于 AI 基础设施架构的说法，哪些是正确的？","options":[{"label":"A","text":"大模型训练对 GPU 间网络带宽要求极高"},{"label":"B","text":"推理场景更关注延迟和吞吐量"},{"label":"C","text":"KV Cache 会大量消耗 GPU 显存"},{"label":"D","text":"所有 AI 任务都需要最高端 GPU"}],"answer":["A","B","C"],"type":"multiple","chapter":3,"subChapter":"ch3-ai","tags":["AI","基础设施"],"analysis":"A训练需多卡同步梯度，带宽至关重要；B推理服务要求低延迟高吞吐；C KV Cache随序列长度线性增长，占用大量显存。D错误，不同任务对GPU需求不同，推理可用中端GPU或qGPU。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter3/3.4_AI%E5%92%8C%E5%A4%A7%E6%A8%A1%E5%9E%8B/","difficulty":2},
-  {"id":"ch3-dr-007","stem":"某金融系统要求 RPO=0，RTO<30秒，应采用什么容灾方案？","options":[{"label":"A","text":"每日全量备份"},{"label":"B","text":"同城双活+数据库强同步复制"},{"label":"C","text":"异地冷备"},{"label":"D","text":"仅做快照"}],"answer":["B"],"type":"single","chapter":3,"subChapter":"ch3-dr","tags":["容灾","RPO","RTO"],"analysis":"RPO=0要求零数据丢失，必须使用数据库强同步复制。RTO<30秒要求秒级切换，同城双活架构两个中心同时承载流量，切换只需DNS/LB层面调整，可实现秒级恢复。冷备和快照的RTO都远超30秒。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter3/3.1_%E4%BA%91%E4%B8%8A%E5%AE%B9%E7%81%BE/","difficulty":3},
-
-  {"id":"ch3-perf-004","stem":"应用层性能优化中，连接池的作用是什么？","options":[{"label":"A","text":"复用已建立的数据库/Redis连接，避免频繁创建销毁连接的开销"},{"label":"B","text":"限制客户端的网络带宽"},{"label":"C","text":"加密应用层数据"},{"label":"D","text":"压缩 HTTP 响应体"}],"answer":["A"],"type":"single","chapter":3,"subChapter":"ch3-perf","tags":["性能优化","连接池"],"analysis":"连接池预先创建一组数据库/Redis连接并复用，避免每次请求都经历TCP三次握手+认证的开销。典型配置包括最小连接数、最大连接数、空闲超时。连接池设置不当（过大或过小）都会影响性能，需根据并发量和后端处理能力合理配置。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter3/3.2_%E4%BA%91%E4%B8%8A%E6%9E%B6%E6%9E%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/","difficulty":1},
-  {"id":"ch3-perf-005","stem":"以下哪些属于网络层性能优化手段？","options":[{"label":"A","text":"启用 CDN 加速静态资源分发"},{"label":"B","text":"开启 HTTP/2 多路复用减少连接数"},{"label":"C","text":"使用腾讯云 TDSQL 替换 MySQL"},{"label":"D","text":"启用 TCP BBR 拥塞控制算法优化传输效率"}],"answer":["A","B","D"],"type":"multiple","chapter":3,"subChapter":"ch3-perf","tags":["性能优化","网络层","CDN","HTTP/2"],"analysis":"A CDN 将静态资源缓存到边缘减少延迟；B HTTP/2 多路复用在单个TCP连接上并行传输多个请求，减少连接开销；D TCP BBR 算法优化网络吞吐量。C 数据库选型属于数据层优化而非网络层优化。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter3/3.2_%E4%BA%91%E4%B8%8A%E6%9E%B6%E6%9E%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/","difficulty":2},
-  {"id":"ch3-perf-006","stem":"性能压测中，关注的核心指标包括哪些？","options":[{"label":"A","text":"QPS/TPS（每秒请求数/事务数）"},{"label":"B","text":"响应时间（RT）的 P99 和平均值"},{"label":"C","text":"错误率"},{"label":"D","text":"代码行数"}],"answer":["A","B","C"],"type":"multiple","chapter":3,"subChapter":"ch3-perf","tags":["性能优化","压测","QPS","P99"],"analysis":"A QPS/TPS 衡量系统的吞吐能力；B 响应时间 P99（99%请求的响应时间）比平均值更能反映尾部延迟；C 错误率反映系统在压力下的稳定性。D 代码行数与性能无关。压测还需关注 CPU、内存、IO等资源利用率找到瓶颈点。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter3/3.2_%E4%BA%91%E4%B8%8A%E6%9E%B6%E6%9E%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/","difficulty":2},
-
-  {"id":"ch3-container-003","stem":"Dockerfile 编写的最佳实践包括哪些？","options":[{"label":"A","text":"使用多阶段构建（Multi-stage Build）减小镜像体积"},{"label":"B","text":"将不常变化的层放在前面利用构建缓存"},{"label":"C","text":"每个 RUN 指令都使用单独的层"},{"label":"D","text":"使用轻量基础镜像（如 Alpine）减小镜像大小"}],"answer":["A","B","D"],"type":"multiple","chapter":3,"subChapter":"ch3-container","tags":["容器化","Dockerfile","最佳实践"],"analysis":"A 多阶段构建在编译阶段用完整镜像，最终阶段只复制产物到轻量镜像；B 将依赖安装等不常变化的步骤放前面，充分利用 Docker 构建缓存加速构建；D Alpine 镜像仅5MB远小于 Ubuntu 的70MB+。C 错误，应合并相关 RUN 指令减少层数，减小镜像体积。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter3/3.3_%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%94%B9%E9%80%A0/","difficulty":2},
-  {"id":"ch3-container-004","stem":"容器化改造中，应用的持久化数据应如何处理？","options":[{"label":"A","text":"使用 PV/PVC 挂载云硬盘 CBS 或文件存储 CFS"},{"label":"B","text":"直接存储在容器内部文件系统"},{"label":"C","text":"利用对象存储 COS 存储非结构化数据"},{"label":"D","text":"不需要考虑数据持久化"}],"answer":["A","C"],"type":"multiple","chapter":3,"subChapter":"ch3-container","tags":["容器化","持久化","PV","PVC"],"analysis":"A 通过 Kubernetes PV/PVC 挂载 CBS（块存储，适合数据库）或 CFS（共享文件存储），数据独立于容器生命周期；C COS 适合存储图片、日志文件等非结构化数据。B 错误，容器重启后内部文件系统数据会丢失；D 有状态应用必须考虑数据持久化。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter3/3.3_%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%94%B9%E9%80%A0/","difficulty":2},
-  {"id":"ch3-container-005","stem":"容器化应用的健康检查有哪几种探针类型？","options":[{"label":"A","text":"存活探针（Liveness Probe）检测容器是否需要重启"},{"label":"B","text":"就绪探针（Readiness Probe）检测容器是否可以接收流量"},{"label":"C","text":"启动探针（Startup Probe）检测容器是否启动完成"},{"label":"D","text":"性能探针（Performance Probe）检测容器 CPU 使用率"}],"answer":["A","B","C"],"type":"multiple","chapter":3,"subChapter":"ch3-container","tags":["容器化","健康检查","探针"],"analysis":"Kubernetes 支持三种探针：A Liveness Probe 检测容器是否存活，失败则重启容器；B Readiness Probe 检测容器是否就绪可接收流量，未就绪则从 Service 端点移除；C Startup Probe 用于启动慢的应用，成功前不执行其他探针。D 不存在性能探针，CPU 监控由 Metrics Server 和 HPA 负责。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter3/3.3_%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%94%B9%E9%80%A0/","difficulty":2},
-
-  {"id":"ch3-ai-005","stem":"大模型推理优化技术中，模型量化（Quantization）的作用是？","options":[{"label":"A","text":"将模型权重从高精度（FP32/FP16）转为低精度（INT8/INT4），减少显存占用和计算量"},{"label":"B","text":"增加模型参数数量提升精度"},{"label":"C","text":"将模型部署到 CPU 上运行"},{"label":"D","text":"增加训练数据量"}],"answer":["A"],"type":"single","chapter":3,"subChapter":"ch3-ai","tags":["AI","量化","推理优化"],"analysis":"模型量化将权重从 FP32（32位浮点）压缩到 INT8（8位整数）或 INT4（4位），显存占用减少 4-8 倍，推理速度提升 2-4 倍，精度损失通常可控。常见方案包括 GPTQ、AWQ、bitsandbytes 等。是大模型在有限 GPU 资源上部署的关键技术。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter3/3.4_AI%E5%92%8C%E5%A4%A7%E6%A8%A1%E5%9E%8B/","difficulty":2},
-  {"id":"ch3-ai-006","stem":"腾讯云高性能应用服务（HAI）的定位是什么？","options":[{"label":"A","text":"为AI开发者提供开箱即用的GPU云服务器，预装常用AI框架"},{"label":"B","text":"仅用于Web应用托管"},{"label":"C","text":"仅用于数据库管理"},{"label":"D","text":"仅用于CDN加速"}],"answer":["A"],"type":"single","chapter":3,"subChapter":"ch3-ai","tags":["AI","HAI","GPU"],"analysis":"HAI（High-performance Application Infrastructure）面向 AI 开发者，提供预配置的 GPU 环境，预装 PyTorch、TensorFlow 等主流框架和 CUDA 驱动，开箱即用。支持 Jupyter Notebook 交互式开发，降低 AI 开发门槛，适合模型训练、推理、微调等场景。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter3/3.4_AI%E5%92%8C%E5%A4%A7%E6%A8%A1%E5%9E%8B/","difficulty":1},
-  {"id":"ch3-ai-007","stem":"以下关于大模型训练和推理的区别，哪些说法是正确的？","options":[{"label":"A","text":"训练需要大量 GPU 并行计算和高速互联网络"},{"label":"B","text":"推理更关注响应延迟和单位成本的吞吐量"},{"label":"C","text":"训练通常使用高端 GPU（如 A100/H100），推理可使用中端 GPU 或 qGPU"},{"label":"D","text":"训练和推理对硬件的需求完全相同"}],"answer":["A","B","C"],"type":"multiple","chapter":3,"subChapter":"ch3-ai","tags":["AI","训练","推理","GPU"],"analysis":"A 训练需多卡并行和高带宽互联（如 NVLink/星脉网络）进行梯度同步；B 推理服务需要低延迟高吞吐满足在线服务SLA；C 训练用高端 GPU，推理可通过量化等技术用中端 GPU 甚至 qGPU 共享。D 错误，训练偏重计算带宽，推理偏重延迟和显存效率，需求差异显著。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter3/3.4_AI%E5%92%8C%E5%A4%A7%E6%A8%A1%E5%9E%8B/","difficulty":3},
-  {"id":"ch3-ai-008","stem":"RAG（检索增强生成）技术在大模型应用中解决的核心问题是？","options":[{"label":"A","text":"通过检索外部知识库为大模型提供上下文，减少幻觉并提供实时信息"},{"label":"B","text":"增加模型的参数规模"},{"label":"C","text":"降低 GPU 硬件成本"},{"label":"D","text":"加速模型训练过程"}],"answer":["A"],"type":"single","chapter":3,"subChapter":"ch3-ai","tags":["AI","RAG","知识库"],"analysis":"RAG（Retrieval-Augmented Generation）将用户问题先在向量数据库/知识库中检索相关文档，然后将检索结果作为上下文与原始问题一起输入大模型生成回答。核心价值：1) 减少大模型幻觉（基于真实数据回答）；2) 提供实时/私域知识（模型训练后的新信息）；3) 无需重新训练模型即可定制化。","wikiUrl":"https://angelsnow1129.github.io/TCCPWiki/chapter3/3.4_AI%E5%92%8C%E5%A4%A7%E6%A8%A1%E5%9E%8B/","difficulty":2}
+  {
+    "id": "ch3-dr-001",
+    "stem": "容灾架构中，RTO 和 RPO 分别代表什么？",
+    "options": [
+      {
+        "label": "A",
+        "text": "RTO 是恢复时间目标，RPO 是恢复点目标（允许丢失的数据量）"
+      },
+      {
+        "label": "B",
+        "text": "RTO 是数据复制频率，RPO 是数据保留天数"
+      },
+      {
+        "label": "C",
+        "text": "两者都是网络延迟指标"
+      },
+      {
+        "label": "D",
+        "text": "RTO 是备份频率，RPO 是恢复测试频率"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-dr",
+    "tags": [
+      "RTO",
+      "RPO",
+      "容灾"
+    ],
+    "analysis": "RTO（Recovery Time Objective）恢复时间目标：灾难发生后多久恢复业务。RPO（Recovery Point Objective）恢复点目标：能容忍丢失多长时间的数据。RTO 越小恢复越快，RPO 越小数据丢失越少。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.1_%E4%BA%91%E4%B8%8A%E5%AE%B9%E7%81%BE/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch3-dr-002",
+    "stem": "灾备等级 1-6 级中，等级越高意味着什么？",
+    "options": [
+      {
+        "label": "A",
+        "text": "RTO 和 RPO 越大，成本越低"
+      },
+      {
+        "label": "B",
+        "text": "RTO 和 RPO 越小，投资成本越高"
+      },
+      {
+        "label": "C",
+        "text": "仅存储容量越大"
+      },
+      {
+        "label": "D",
+        "text": "带宽越大"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-dr",
+    "tags": [
+      "灾备等级"
+    ],
+    "analysis": "灾备等级从 1 到 6 逐步提高：1级仅本地备份（RTO天级），6级零数据丢失+秒级恢复。等级越高，RTO和RPO越接近零，但所需投资成本也呈指数级增长。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.1_%E4%BA%91%E4%B8%8A%E5%AE%B9%E7%81%BE/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch3-dr-003",
+    "stem": "\"两地三中心\" 容灾架构中，三个中心分别是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "生产中心、同城灾备中心、异地灾备中心"
+      },
+      {
+        "label": "B",
+        "text": "开发中心、测试中心、生产中心"
+      },
+      {
+        "label": "C",
+        "text": "数据中心、计算中心、网络中心"
+      },
+      {
+        "label": "D",
+        "text": "主数据库、从数据库、备份数据库"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-dr",
+    "tags": [
+      "两地三中心"
+    ],
+    "analysis": "两地三中心：两地指同城和异地；三个中心是生产中心（主）、同城灾备中心（承接同城切换，RPO接近0）、异地灾备中心（应对城市级灾难，RPO取决于同步策略）。是金融等关键行业的标准容灾架构。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.1_%E4%BA%91%E4%B8%8A%E5%AE%B9%E7%81%BE/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch3-dr-004",
+    "stem": "同城双活架构的核心特点是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "两个数据中心同时对外提供服务，互为备份"
+      },
+      {
+        "label": "B",
+        "text": "只有一个中心工作，另一个完全闲置"
+      },
+      {
+        "label": "C",
+        "text": "两个中心处理不同的业务"
+      },
+      {
+        "label": "D",
+        "text": "仅在网络层做冗余"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-dr",
+    "tags": [
+      "同城双活"
+    ],
+    "analysis": "同城双活的核心是两个数据中心同时承载业务流量（Active-Active），而非传统的主备模式（Active-Standby）。两个中心互为备份，任一中心故障时另一中心可接管全部流量。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.1_%E4%BA%91%E4%B8%8A%E5%AE%B9%E7%81%BE/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-dr-005",
+    "stem": "以下关于容灾架构设计的最佳实践，哪些是正确的？",
+    "options": [
+      {
+        "label": "A",
+        "text": "数据同步优先选择强同步模式保证一致性"
+      },
+      {
+        "label": "B",
+        "text": "定期进行容灾演练验证切换流程"
+      },
+      {
+        "label": "C",
+        "text": "异地容灾可以接受较大的RPO"
+      },
+      {
+        "label": "D",
+        "text": "只需要备份数据库，不需要备份应用和配置"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 3,
+    "subChapter": "ch3-dr",
+    "tags": [
+      "容灾",
+      "最佳实践"
+    ],
+    "analysis": "A强同步保证数据不丢失；B定期演练是验证容灾有效性的关键；C异地受网络延迟限制，通常接受分钟级RPO。D错误，完整的容灾需备份数据、应用、配置、网络等全栈。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.1_%E4%BA%91%E4%B8%8A%E5%AE%B9%E7%81%BE/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-perf-001",
+    "stem": "云上架构性能优化的全链路思路正确的顺序是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "用户端 → CDN → 负载均衡 → 应用层 → 数据库 → 存储"
+      },
+      {
+        "label": "B",
+        "text": "数据库 → 存储 → 应用层 → CDN → 用户端"
+      },
+      {
+        "label": "C",
+        "text": "仅优化数据库即可"
+      },
+      {
+        "label": "D",
+        "text": "仅优化网络带宽即可"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-perf",
+    "tags": [
+      "性能优化",
+      "全链路"
+    ],
+    "analysis": "全链路性能优化应从用户端到后端逐层分析：用户端（前端优化）→ CDN（静态缓存）→ CLB（负载分流）→ 应用层（代码/架构优化）→ 数据库（查询/索引优化）→ 存储（IO优化）。瓶颈可能在任何一层。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.2_%E4%BA%91%E4%B8%8A%E6%9E%B6%E6%9E%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-perf-002",
+    "stem": "数据库层性能优化的常见手段包括哪些？",
+    "options": [
+      {
+        "label": "A",
+        "text": "读写分离，读请求分流到只读实例"
+      },
+      {
+        "label": "B",
+        "text": "添加合适的索引减少全表扫描"
+      },
+      {
+        "label": "C",
+        "text": "引入 Redis 缓存热点查询"
+      },
+      {
+        "label": "D",
+        "text": "增加更多的数据库表"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 3,
+    "subChapter": "ch3-perf",
+    "tags": [
+      "性能优化",
+      "数据库"
+    ],
+    "analysis": "A读写分离分担读压力；B索引优化是最基础的DB性能提升手段；C Redis缓存可拦截80%以上的热点读请求。D增加表数量本身不会提升性能，可能反而增加join复杂度。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.2_%E4%BA%91%E4%B8%8A%E6%9E%B6%E6%9E%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch3-container-001",
+    "stem": "应用容器化改造的推荐步骤顺序是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "评估 → 设计 → 改造 → 构建镜像 → 部署 → 验证"
+      },
+      {
+        "label": "B",
+        "text": "直接将所有代码打包成镜像运行"
+      },
+      {
+        "label": "C",
+        "text": "先买服务器，再考虑容器化"
+      },
+      {
+        "label": "D",
+        "text": "仅将数据库容器化即可"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-container",
+    "tags": [
+      "容器化",
+      "改造步骤"
+    ],
+    "analysis": "容器化改造六步法：1)评估（分析应用是否适合容器化）→ 2)设计（网络/存储/日志方案）→ 3)改造（无状态化、配置外置）→ 4)构建（Dockerfile、CI/CD）→ 5)部署（TKE编排）→ 6)验证（功能/性能/容灾测试）。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.3_%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%94%B9%E9%80%A0/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-container-002",
+    "stem": "在应用容器化过程中，以下哪些是必须完成的改造？",
+    "options": [
+      {
+        "label": "A",
+        "text": "将应用改造为无状态服务"
+      },
+      {
+        "label": "B",
+        "text": "配置信息外置到 ConfigMap 或环境变量"
+      },
+      {
+        "label": "C",
+        "text": "日志输出到标准输出（stdout）而非本地文件"
+      },
+      {
+        "label": "D",
+        "text": "将所有中间件也容器化"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 3,
+    "subChapter": "ch3-container",
+    "tags": [
+      "容器化",
+      "改造要点"
+    ],
+    "analysis": "A无状态是容器化基础，支持弹性伸缩；B配置外置实现不同环境复用同一镜像；C日志输出到stdout方便容器平台统一采集。D中间件容器化不是必须的，有些场景用云托管中间件更合适。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.3_%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%94%B9%E9%80%A0/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-ai-001",
+    "stem": "在 AI 大模型推理场景中，KV Cache 的主要作用是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "缓存已生成 Token 的 Key-Value 向量，避免重复计算加速推理"
+      },
+      {
+        "label": "B",
+        "text": "缓存数据库查询结果"
+      },
+      {
+        "label": "C",
+        "text": "存储模型训练数据"
+      },
+      {
+        "label": "D",
+        "text": "加速文件读写"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-ai",
+    "tags": [
+      "AI",
+      "KV Cache"
+    ],
+    "analysis": "KV Cache 是大模型推理的关键优化。Transformer 模型在生成每个新 Token 时需要计算所有历史 Token 的 Attention，KV Cache 将已计算的 Key 和 Value 向量缓存在显存中，避免重复计算，大幅提升推理速度。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.4_AI%E5%92%8C%E5%A4%A7%E6%A8%A1%E5%9E%8B/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-ai-002",
+    "stem": "腾讯云星脉网络在 AI 训练场景中的核心价值是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "提供高带宽低延迟的 GPU 互联网络，加速分布式训练"
+      },
+      {
+        "label": "B",
+        "text": "提供 CDN 加速"
+      },
+      {
+        "label": "C",
+        "text": "提供域名解析服务"
+      },
+      {
+        "label": "D",
+        "text": "提供安全防护"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-ai",
+    "tags": [
+      "AI",
+      "星脉网络"
+    ],
+    "analysis": "星脉网络是腾讯云为AI训练场景设计的高性能 GPU 互联网络，提供超高带宽（如800Gbps RDMA）和超低延迟，确保多机多卡分布式训练时梯度同步高效进行，是大规模模型训练的关键基础设施。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.4_AI%E5%92%8C%E5%A4%A7%E6%A8%A1%E5%9E%8B/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-ai-003",
+    "stem": "qGPU（GPU 虚拟化）技术的主要用途是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "将一块物理 GPU 虚拟成多个 GPU 实例，提高 GPU 利用率"
+      },
+      {
+        "label": "B",
+        "text": "将多块 GPU 合并成一块大 GPU"
+      },
+      {
+        "label": "C",
+        "text": "降低 GPU 计算精度"
+      },
+      {
+        "label": "D",
+        "text": "替代 CPU 进行所有计算"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-ai",
+    "tags": [
+      "AI",
+      "qGPU",
+      "GPU虚拟化"
+    ],
+    "analysis": "qGPU 是腾讯云的 GPU 虚拟化方案，可将一块物理 GPU 按显存和算力维度切分成多个虚拟 GPU 实例，多个推理任务或小模型可共享同一块 GPU，显著提高 GPU 利用率，降低推理成本。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.4_AI%E5%92%8C%E5%A4%A7%E6%A8%A1%E5%9E%8B/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-dr-006",
+    "stem": "多云容灾架构的优势包括哪些？",
+    "options": [
+      {
+        "label": "A",
+        "text": "避免供应商锁定"
+      },
+      {
+        "label": "B",
+        "text": "应对单一云厂商整体故障"
+      },
+      {
+        "label": "C",
+        "text": "可以利用不同云的优势产品"
+      },
+      {
+        "label": "D",
+        "text": "管理简单无额外成本"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 3,
+    "subChapter": "ch3-dr",
+    "tags": [
+      "多云",
+      "容灾"
+    ],
+    "analysis": "A多云避免被单一厂商绑定；B即使某家云出现重大故障也能继续服务；C可选择各家最优产品。D错误，多云管理复杂度和成本都更高，需要跨云数据同步、网络打通等额外投入。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.1_%E4%BA%91%E4%B8%8A%E5%AE%B9%E7%81%BE/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-perf-003",
+    "stem": "某Web应用访问慢，经分析发现首页加载了5MB的未压缩JS和图片。优先的优化方案是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "使用CDN分发+开启Gzip压缩+图片WebP格式转换"
+      },
+      {
+        "label": "B",
+        "text": "升级数据库服务器"
+      },
+      {
+        "label": "C",
+        "text": "增加CVM实例数量"
+      },
+      {
+        "label": "D",
+        "text": "优化数据库索引"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-perf",
+    "tags": [
+      "性能优化",
+      "前端"
+    ],
+    "analysis": "问题在前端静态资源过大。CDN将资源缓存到边缘节点减少延迟，Gzip压缩可减小JS体积60-70%，WebP格式图片比PNG小25-35%。数据库和CVM扩容不解决前端加载慢的问题。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.2_%E4%BA%91%E4%B8%8A%E6%9E%B6%E6%9E%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-ai-004",
+    "stem": "以下关于 AI 基础设施架构的说法，哪些是正确的？",
+    "options": [
+      {
+        "label": "A",
+        "text": "大模型训练对 GPU 间网络带宽要求极高"
+      },
+      {
+        "label": "B",
+        "text": "推理场景更关注延迟和吞吐量"
+      },
+      {
+        "label": "C",
+        "text": "KV Cache 会大量消耗 GPU 显存"
+      },
+      {
+        "label": "D",
+        "text": "所有 AI 任务都需要最高端 GPU"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 3,
+    "subChapter": "ch3-ai",
+    "tags": [
+      "AI",
+      "基础设施"
+    ],
+    "analysis": "A训练需多卡同步梯度，带宽至关重要；B推理服务要求低延迟高吞吐；C KV Cache随序列长度线性增长，占用大量显存。D错误，不同任务对GPU需求不同，推理可用中端GPU或qGPU。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.4_AI%E5%92%8C%E5%A4%A7%E6%A8%A1%E5%9E%8B/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-dr-007",
+    "stem": "某金融系统要求 RPO=0，RTO<30秒，应采用什么容灾方案？",
+    "options": [
+      {
+        "label": "A",
+        "text": "每日全量备份"
+      },
+      {
+        "label": "B",
+        "text": "同城双活+数据库强同步复制"
+      },
+      {
+        "label": "C",
+        "text": "异地冷备"
+      },
+      {
+        "label": "D",
+        "text": "仅做快照"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-dr",
+    "tags": [
+      "容灾",
+      "RPO",
+      "RTO"
+    ],
+    "analysis": "RPO=0要求零数据丢失，必须使用数据库强同步复制。RTO<30秒要求秒级切换，同城双活架构两个中心同时承载流量，切换只需DNS/LB层面调整，可实现秒级恢复。冷备和快照的RTO都远超30秒。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.1_%E4%BA%91%E4%B8%8A%E5%AE%B9%E7%81%BE/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch3-perf-004",
+    "stem": "应用层性能优化中，连接池的作用是什么？",
+    "options": [
+      {
+        "label": "A",
+        "text": "复用已建立的数据库/Redis连接，避免频繁创建销毁连接的开销"
+      },
+      {
+        "label": "B",
+        "text": "限制客户端的网络带宽"
+      },
+      {
+        "label": "C",
+        "text": "加密应用层数据"
+      },
+      {
+        "label": "D",
+        "text": "压缩 HTTP 响应体"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-perf",
+    "tags": [
+      "性能优化",
+      "连接池"
+    ],
+    "analysis": "连接池预先创建一组数据库/Redis连接并复用，避免每次请求都经历TCP三次握手+认证的开销。典型配置包括最小连接数、最大连接数、空闲超时。连接池设置不当（过大或过小）都会影响性能，需根据并发量和后端处理能力合理配置。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.2_%E4%BA%91%E4%B8%8A%E6%9E%B6%E6%9E%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch3-perf-005",
+    "stem": "以下哪些属于网络层性能优化手段？",
+    "options": [
+      {
+        "label": "A",
+        "text": "启用 CDN 加速静态资源分发"
+      },
+      {
+        "label": "B",
+        "text": "开启 HTTP/2 多路复用减少连接数"
+      },
+      {
+        "label": "C",
+        "text": "使用腾讯云 TDSQL 替换 MySQL"
+      },
+      {
+        "label": "D",
+        "text": "启用 TCP BBR 拥塞控制算法优化传输效率"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D"
+    ],
+    "type": "multiple",
+    "chapter": 3,
+    "subChapter": "ch3-perf",
+    "tags": [
+      "性能优化",
+      "网络层",
+      "CDN",
+      "HTTP/2"
+    ],
+    "analysis": "A CDN 将静态资源缓存到边缘减少延迟；B HTTP/2 多路复用在单个TCP连接上并行传输多个请求，减少连接开销；D TCP BBR 算法优化网络吞吐量。C 数据库选型属于数据层优化而非网络层优化。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.2_%E4%BA%91%E4%B8%8A%E6%9E%B6%E6%9E%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-perf-006",
+    "stem": "性能压测中，关注的核心指标包括哪些？",
+    "options": [
+      {
+        "label": "A",
+        "text": "QPS/TPS（每秒请求数/事务数）"
+      },
+      {
+        "label": "B",
+        "text": "响应时间（RT）的 P99 和平均值"
+      },
+      {
+        "label": "C",
+        "text": "错误率"
+      },
+      {
+        "label": "D",
+        "text": "代码行数"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 3,
+    "subChapter": "ch3-perf",
+    "tags": [
+      "性能优化",
+      "压测",
+      "QPS",
+      "P99"
+    ],
+    "analysis": "A QPS/TPS 衡量系统的吞吐能力；B 响应时间 P99（99%请求的响应时间）比平均值更能反映尾部延迟；C 错误率反映系统在压力下的稳定性。D 代码行数与性能无关。压测还需关注 CPU、内存、IO等资源利用率找到瓶颈点。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.2_%E4%BA%91%E4%B8%8A%E6%9E%B6%E6%9E%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-container-003",
+    "stem": "Dockerfile 编写的最佳实践包括哪些？",
+    "options": [
+      {
+        "label": "A",
+        "text": "使用多阶段构建（Multi-stage Build）减小镜像体积"
+      },
+      {
+        "label": "B",
+        "text": "将不常变化的层放在前面利用构建缓存"
+      },
+      {
+        "label": "C",
+        "text": "每个 RUN 指令都使用单独的层"
+      },
+      {
+        "label": "D",
+        "text": "使用轻量基础镜像（如 Alpine）减小镜像大小"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D"
+    ],
+    "type": "multiple",
+    "chapter": 3,
+    "subChapter": "ch3-container",
+    "tags": [
+      "容器化",
+      "Dockerfile",
+      "最佳实践"
+    ],
+    "analysis": "A 多阶段构建在编译阶段用完整镜像，最终阶段只复制产物到轻量镜像；B 将依赖安装等不常变化的步骤放前面，充分利用 Docker 构建缓存加速构建；D Alpine 镜像仅5MB远小于 Ubuntu 的70MB+。C 错误，应合并相关 RUN 指令减少层数，减小镜像体积。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.3_%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%94%B9%E9%80%A0/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-container-004",
+    "stem": "容器化改造中，应用的持久化数据应如何处理？",
+    "options": [
+      {
+        "label": "A",
+        "text": "使用 PV/PVC 挂载云硬盘 CBS 或文件存储 CFS"
+      },
+      {
+        "label": "B",
+        "text": "直接存储在容器内部文件系统"
+      },
+      {
+        "label": "C",
+        "text": "利用对象存储 COS 存储非结构化数据"
+      },
+      {
+        "label": "D",
+        "text": "不需要考虑数据持久化"
+      }
+    ],
+    "answer": [
+      "A",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 3,
+    "subChapter": "ch3-container",
+    "tags": [
+      "容器化",
+      "持久化",
+      "PV",
+      "PVC"
+    ],
+    "analysis": "A 通过 Kubernetes PV/PVC 挂载 CBS（块存储，适合数据库）或 CFS（共享文件存储），数据独立于容器生命周期；C COS 适合存储图片、日志文件等非结构化数据。B 错误，容器重启后内部文件系统数据会丢失；D 有状态应用必须考虑数据持久化。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.3_%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%94%B9%E9%80%A0/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-container-005",
+    "stem": "容器化应用的健康检查有哪几种探针类型？",
+    "options": [
+      {
+        "label": "A",
+        "text": "存活探针（Liveness Probe）检测容器是否需要重启"
+      },
+      {
+        "label": "B",
+        "text": "就绪探针（Readiness Probe）检测容器是否可以接收流量"
+      },
+      {
+        "label": "C",
+        "text": "启动探针（Startup Probe）检测容器是否启动完成"
+      },
+      {
+        "label": "D",
+        "text": "性能探针（Performance Probe）检测容器 CPU 使用率"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 3,
+    "subChapter": "ch3-container",
+    "tags": [
+      "容器化",
+      "健康检查",
+      "探针"
+    ],
+    "analysis": "Kubernetes 支持三种探针：A Liveness Probe 检测容器是否存活，失败则重启容器；B Readiness Probe 检测容器是否就绪可接收流量，未就绪则从 Service 端点移除；C Startup Probe 用于启动慢的应用，成功前不执行其他探针。D 不存在性能探针，CPU 监控由 Metrics Server 和 HPA 负责。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.3_%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%94%B9%E9%80%A0/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-ai-005",
+    "stem": "大模型推理优化技术中，模型量化（Quantization）的作用是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "将模型权重从高精度（FP32/FP16）转为低精度（INT8/INT4），减少显存占用和计算量"
+      },
+      {
+        "label": "B",
+        "text": "增加模型参数数量提升精度"
+      },
+      {
+        "label": "C",
+        "text": "将模型部署到 CPU 上运行"
+      },
+      {
+        "label": "D",
+        "text": "增加训练数据量"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-ai",
+    "tags": [
+      "AI",
+      "量化",
+      "推理优化"
+    ],
+    "analysis": "模型量化将权重从 FP32（32位浮点）压缩到 INT8（8位整数）或 INT4（4位），显存占用减少 4-8 倍，推理速度提升 2-4 倍，精度损失通常可控。常见方案包括 GPTQ、AWQ、bitsandbytes 等。是大模型在有限 GPU 资源上部署的关键技术。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.4_AI%E5%92%8C%E5%A4%A7%E6%A8%A1%E5%9E%8B/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-ai-006",
+    "stem": "腾讯云高性能应用服务（HAI）的定位是什么？",
+    "options": [
+      {
+        "label": "A",
+        "text": "为AI开发者提供开箱即用的GPU云服务器，预装常用AI框架"
+      },
+      {
+        "label": "B",
+        "text": "仅用于Web应用托管"
+      },
+      {
+        "label": "C",
+        "text": "仅用于数据库管理"
+      },
+      {
+        "label": "D",
+        "text": "仅用于CDN加速"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-ai",
+    "tags": [
+      "AI",
+      "HAI",
+      "GPU"
+    ],
+    "analysis": "HAI（High-performance Application Infrastructure）面向 AI 开发者，提供预配置的 GPU 环境，预装 PyTorch、TensorFlow 等主流框架和 CUDA 驱动，开箱即用。支持 Jupyter Notebook 交互式开发，降低 AI 开发门槛，适合模型训练、推理、微调等场景。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.4_AI%E5%92%8C%E5%A4%A7%E6%A8%A1%E5%9E%8B/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch3-ai-007",
+    "stem": "以下关于大模型训练和推理的区别，哪些说法是正确的？",
+    "options": [
+      {
+        "label": "A",
+        "text": "训练需要大量 GPU 并行计算和高速互联网络"
+      },
+      {
+        "label": "B",
+        "text": "推理更关注响应延迟和单位成本的吞吐量"
+      },
+      {
+        "label": "C",
+        "text": "训练通常使用高端 GPU（如 A100/H100），推理可使用中端 GPU 或 qGPU"
+      },
+      {
+        "label": "D",
+        "text": "训练和推理对硬件的需求完全相同"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 3,
+    "subChapter": "ch3-ai",
+    "tags": [
+      "AI",
+      "训练",
+      "推理",
+      "GPU"
+    ],
+    "analysis": "A 训练需多卡并行和高带宽互联（如 NVLink/星脉网络）进行梯度同步；B 推理服务需要低延迟高吞吐满足在线服务SLA；C 训练用高端 GPU，推理可通过量化等技术用中端 GPU 甚至 qGPU 共享。D 错误，训练偏重计算带宽，推理偏重延迟和显存效率，需求差异显著。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.4_AI%E5%92%8C%E5%A4%A7%E6%A8%A1%E5%9E%8B/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch3-ai-008",
+    "stem": "RAG（检索增强生成）技术在大模型应用中解决的核心问题是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "通过检索外部知识库为大模型提供上下文，减少幻觉并提供实时信息"
+      },
+      {
+        "label": "B",
+        "text": "增加模型的参数规模"
+      },
+      {
+        "label": "C",
+        "text": "降低 GPU 硬件成本"
+      },
+      {
+        "label": "D",
+        "text": "加速模型训练过程"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-ai",
+    "tags": [
+      "AI",
+      "RAG",
+      "知识库"
+    ],
+    "analysis": "RAG（Retrieval-Augmented Generation）将用户问题先在向量数据库/知识库中检索相关文档，然后将检索结果作为上下文与原始问题一起输入大模型生成回答。核心价值：1) 减少大模型幻觉（基于真实数据回答）；2) 提供实时/私域知识（模型训练后的新信息）；3) 无需重新训练模型即可定制化。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.4_AI%E5%92%8C%E5%A4%A7%E6%A8%A1%E5%9E%8B/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-dr-008",
+    "stem": "容灾切换演练的最佳频率和方式是什么？",
+    "options": [
+      {
+        "label": "A",
+        "text": "至少每半年一次全流程演练，包含切换和回切验证"
+      },
+      {
+        "label": "B",
+        "text": "永远不需要演练"
+      },
+      {
+        "label": "C",
+        "text": "只在发生故障时才演练"
+      },
+      {
+        "label": "D",
+        "text": "每天演练一次"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-dr",
+    "tags": [
+      "容灾",
+      "演练",
+      "最佳实践"
+    ],
+    "analysis": "定期演练是验证容灾有效性的唯一方式。建议至少每半年一次全流程演练：切换到灾备中心 → 验证业务功能 → 回切到主中心。记录切换时间、数据一致性等指标，发现问题及时整改。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.1_%E4%BA%91%E4%B8%8A%E5%AE%B9%E7%81%BE/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-dr-009",
+    "stem": "云上容灾相比传统IDC容灾的优势包括哪些？",
+    "options": [
+      {
+        "label": "A",
+        "text": "灾备资源按需使用，非灾难时期成本低"
+      },
+      {
+        "label": "B",
+        "text": "部署速度快，分钟级创建灾备环境"
+      },
+      {
+        "label": "C",
+        "text": "跨地域部署更便捷"
+      },
+      {
+        "label": "D",
+        "text": "云上不可能出现任何故障"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 3,
+    "subChapter": "ch3-dr",
+    "tags": [
+      "云容灾",
+      "优势"
+    ],
+    "analysis": "A云上灾备资源可用时扩容不用时缩容，避免IDC容灾机房长期闲置；B云上API/自动化快速部署灾备；C利用云厂商多地域能力轻松实现异地容灾。D云上也会有故障，容灾就是为应对故障而设计。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.1_%E4%BA%91%E4%B8%8A%E5%AE%B9%E7%81%BE/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-dr-010",
+    "stem": "某视频平台需要保证全国用户7×24小时访问不中断，最适合的架构是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "异地多活架构（多个地域同时提供服务）"
+      },
+      {
+        "label": "B",
+        "text": "单地域单可用区部署"
+      },
+      {
+        "label": "C",
+        "text": "每日全量备份即可"
+      },
+      {
+        "label": "D",
+        "text": "仅使用CDN加速"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-dr",
+    "tags": [
+      "异地多活",
+      "高可用"
+    ],
+    "analysis": "异地多活在多个地域同时承载业务流量（如北京、上海、广州都对外服务），任一地域故障只影响部分用户，GSLB自动将流量调度到其他地域。是7×24不中断要求最高等级的架构方案，成本也最高。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.1_%E4%BA%91%E4%B8%8A%E5%AE%B9%E7%81%BE/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch3-perf-007",
+    "stem": "CDN 层性能优化的关键配置包括哪些？",
+    "options": [
+      {
+        "label": "A",
+        "text": "合理设置缓存TTL提高命中率"
+      },
+      {
+        "label": "B",
+        "text": "开启Gzip/Brotli压缩减小传输体积"
+      },
+      {
+        "label": "C",
+        "text": "配置参数过滤忽略URL中不影响缓存的参数"
+      },
+      {
+        "label": "D",
+        "text": "禁用所有CDN缓存"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 3,
+    "subChapter": "ch3-perf",
+    "tags": [
+      "性能优化",
+      "CDN",
+      "缓存"
+    ],
+    "analysis": "A合理TTL（如静态资源设30天）提高命中率减少回源；B Gzip/Brotli压缩JS/CSS/HTML可减小60-80%体积；C过滤URL中的随机参数（如时间戳）避免缓存Key不一致。D禁用缓存会失去CDN核心价值。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.2_%E4%BA%91%E4%B8%8A%E6%9E%B6%E6%9E%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-perf-008",
+    "stem": "数据库连接池大小的经验公式是什么？",
+    "options": [
+      {
+        "label": "A",
+        "text": "连接数 ≈ CPU核心数 × 2 + 有效磁盘数"
+      },
+      {
+        "label": "B",
+        "text": "连接数 = 并发用户数"
+      },
+      {
+        "label": "C",
+        "text": "连接数越大越好"
+      },
+      {
+        "label": "D",
+        "text": "固定为100不变"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-perf",
+    "tags": [
+      "性能优化",
+      "连接池",
+      "数据库"
+    ],
+    "analysis": "PostgreSQL文档推荐公式：连接数 ≈ CPU核心数 × 2 + 有效磁盘数。对MySQL也适用。连接数过大会导致线程切换开销和资源竞争反而降低性能。实际应结合压测调优。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.2_%E4%BA%91%E4%B8%8A%E6%9E%B6%E6%9E%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch3-perf-009",
+    "stem": "应用架构层面，缓存策略的最佳实践是什么？",
+    "options": [
+      {
+        "label": "A",
+        "text": "多级缓存（本地缓存 → Redis → 数据库），逐级降低请求压力"
+      },
+      {
+        "label": "B",
+        "text": "只在数据库层面缓存"
+      },
+      {
+        "label": "C",
+        "text": "缓存所有数据永不过期"
+      },
+      {
+        "label": "D",
+        "text": "不使用任何缓存"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-perf",
+    "tags": [
+      "性能优化",
+      "多级缓存"
+    ],
+    "analysis": "多级缓存架构：L1本地缓存（Guava/Caffeine，微秒级，拦截最热数据）→ L2 Redis缓存（毫秒级，拦截大部分读请求）→ L3数据库（最终数据源）。每一级减少对下一级的访问压力，整体性能最优。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.2_%E4%BA%91%E4%B8%8A%E6%9E%B6%E6%9E%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-perf-010",
+    "stem": "异步化处理在性能优化中的作用是什么？",
+    "options": [
+      {
+        "label": "A",
+        "text": "将非关键操作异步执行（通过消息队列），缩短主流程响应时间"
+      },
+      {
+        "label": "B",
+        "text": "让所有操作串行执行"
+      },
+      {
+        "label": "C",
+        "text": "增加CPU使用率"
+      },
+      {
+        "label": "D",
+        "text": "减少磁盘空间"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-perf",
+    "tags": [
+      "性能优化",
+      "异步化",
+      "消息队列"
+    ],
+    "analysis": "将非核心操作异步化（如注册后的发送邮件/短信通过MQ异步处理），主流程只处理核心逻辑（写入数据库、返回响应），大幅缩短接口响应时间。适用于发通知、更新统计、生成报表等非即时操作。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.2_%E4%BA%91%E4%B8%8A%E6%9E%B6%E6%9E%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch3-container-006",
+    "stem": "容器镜像仓库（TCR）的安全最佳实践包括哪些？",
+    "options": [
+      {
+        "label": "A",
+        "text": "开启镜像漏洞扫描发现安全风险"
+      },
+      {
+        "label": "B",
+        "text": "配置镜像签名验证确保镜像来源可信"
+      },
+      {
+        "label": "C",
+        "text": "设置访问策略限制谁可以推送/拉取镜像"
+      },
+      {
+        "label": "D",
+        "text": "公开镜像仓库让所有人可以访问"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 3,
+    "subChapter": "ch3-container",
+    "tags": [
+      "容器化",
+      "TCR",
+      "镜像安全"
+    ],
+    "analysis": "A镜像漏洞扫描在部署前发现CVE漏洞；B镜像签名（如Cosign/Notary）确保部署的是经过验证的可信镜像；C访问策略控制防止未授权操作。D公开仓库有安全风险。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.3_%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%94%B9%E9%80%A0/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-container-007",
+    "stem": "容器化应用 CI/CD 流水线的典型流程是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "代码提交 → 自动构建镜像 → 运行测试 → 推送镜像到仓库 → 自动部署到TKE"
+      },
+      {
+        "label": "B",
+        "text": "手动编译代码并FTP上传"
+      },
+      {
+        "label": "C",
+        "text": "直接在生产环境修改代码"
+      },
+      {
+        "label": "D",
+        "text": "只构建不测试直接部署"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-container",
+    "tags": [
+      "容器化",
+      "CI/CD",
+      "流水线"
+    ],
+    "analysis": "标准容器CI/CD流程：代码Push → CI系统触发 → Docker Build构建镜像 → 运行单元测试和集成测试 → 推送镜像到TCR → CD自动更新TKE中的Deployment滚动升级。全自动化，保证质量和效率。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.3_%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%94%B9%E9%80%A0/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-container-008",
+    "stem": "Kubernetes 中 Deployment 滚动更新（Rolling Update）的机制是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "逐步用新版本Pod替换旧版本，确保更新过程中始终有Pod可用"
+      },
+      {
+        "label": "B",
+        "text": "直接删除所有旧Pod再创建新Pod"
+      },
+      {
+        "label": "C",
+        "text": "只更新配置不更新镜像"
+      },
+      {
+        "label": "D",
+        "text": "需要手动逐个替换Pod"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-container",
+    "tags": [
+      "容器化",
+      "滚动更新",
+      "Deployment"
+    ],
+    "analysis": "滚动更新逐步替换：先创建一个新版本Pod，就绪后删除一个旧Pod，直到所有Pod都更新完成。通过maxSurge和maxUnavailable参数控制同时创建和删除的Pod数量，确保更新过程中服务不中断。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.3_%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%94%B9%E9%80%A0/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-container-009",
+    "stem": "容器网络策略（NetworkPolicy）的作用是什么？",
+    "options": [
+      {
+        "label": "A",
+        "text": "控制Pod间的网络通信，实现微分段安全隔离"
+      },
+      {
+        "label": "B",
+        "text": "加速Pod间通信"
+      },
+      {
+        "label": "C",
+        "text": "分配公网IP给Pod"
+      },
+      {
+        "label": "D",
+        "text": "管理容器镜像"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-container",
+    "tags": [
+      "容器化",
+      "NetworkPolicy",
+      "网络安全"
+    ],
+    "analysis": "NetworkPolicy定义Pod级别的网络访问规则：如只允许前端Pod访问API Pod的80端口，禁止其他Pod访问数据库Pod。实现零信任的微分段（Micro-segmentation）安全策略，即使容器被入侵也无法横向移动。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.3_%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%94%B9%E9%80%A0/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch3-container-010",
+    "stem": "容器资源配额（ResourceQuota）的用途是什么？",
+    "options": [
+      {
+        "label": "A",
+        "text": "限制命名空间下的资源总量（CPU/内存/Pod数量），防止资源耗尽"
+      },
+      {
+        "label": "B",
+        "text": "限制单个容器的CPU"
+      },
+      {
+        "label": "C",
+        "text": "管理网络带宽"
+      },
+      {
+        "label": "D",
+        "text": "加速容器启动"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-container",
+    "tags": [
+      "容器化",
+      "ResourceQuota",
+      "多租户"
+    ],
+    "analysis": "ResourceQuota在Namespace级别限制资源总量：如某团队的Namespace最多使用100核CPU、200GB内存、50个Pod。防止某个团队或项目过度使用集群资源影响其他租户，是多租户集群的基础治理能力。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.3_%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%94%B9%E9%80%A0/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-ai-009",
+    "stem": "大模型微调（Fine-tuning）和 Prompt Engineering 的区别是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "微调修改模型权重适配特定任务，Prompt Engineering通过优化提示词引导模型输出"
+      },
+      {
+        "label": "B",
+        "text": "两者完全相同"
+      },
+      {
+        "label": "C",
+        "text": "Prompt Engineering需要大量GPU"
+      },
+      {
+        "label": "D",
+        "text": "微调不需要任何数据"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-ai",
+    "tags": [
+      "AI",
+      "微调",
+      "Prompt"
+    ],
+    "analysis": "微调用特定领域数据重新训练模型部分参数（如LoRA/QLoRA），需要GPU和训练数据，效果更好但成本高。Prompt Engineering不修改模型，通过设计输入提示词（含示例、角色设定）引导输出，零成本快速迭代。两者可结合使用。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.4_AI%E5%92%8C%E5%A4%A7%E6%A8%A1%E5%9E%8B/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-ai-010",
+    "stem": "腾讯云 TI 平台（TI-ONE）的定位和核心能力是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "一站式机器学习平台，提供数据处理、模型训练、评估和部署全流程能力"
+      },
+      {
+        "label": "B",
+        "text": "仅用于图片存储"
+      },
+      {
+        "label": "C",
+        "text": "仅用于域名解析"
+      },
+      {
+        "label": "D",
+        "text": "仅用于CDN加速"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-ai",
+    "tags": [
+      "AI",
+      "TI-ONE",
+      "MLOps"
+    ],
+    "analysis": "TI-ONE是腾讯云的一站式AI开发平台，覆盖MLOps全生命周期：数据预处理 → 特征工程 → 模型训练（支持分布式训练）→ 模型评估 → 一键部署为在线推理服务。支持Notebook交互式开发和自动化流水线。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.4_AI%E5%92%8C%E5%A4%A7%E6%A8%A1%E5%9E%8B/",
+    "difficulty": 2
+  }
 ]

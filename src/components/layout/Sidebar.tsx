@@ -11,6 +11,7 @@ import {
   ChevronLeft,
   ChevronRight,
   GraduationCap,
+  Database,
 } from 'lucide-react';
 
 const navItems = [
@@ -21,6 +22,7 @@ const navItems = [
   { path: '/wrong', label: '错题本', icon: XCircle },
   { path: '/favorites', label: '收藏夹', icon: Star },
   { path: '/stats', label: '数据看板', icon: BarChart3 },
+  { path: '/data', label: '数据管理', icon: Database },
 ];
 
 export default function Sidebar() {
