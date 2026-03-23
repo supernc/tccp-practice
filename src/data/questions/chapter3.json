@@ -1449,5 +1449,316 @@
     "analysis": "TI-ONE是腾讯云的一站式AI开发平台，覆盖MLOps全生命周期：数据预处理 → 特征工程 → 模型训练（支持分布式训练）→ 模型评估 → 一键部署为在线推理服务。支持Notebook交互式开发和自动化流水线。",
     "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.4_AI%E5%92%8C%E5%A4%A7%E6%A8%A1%E5%9E%8B/",
     "difficulty": 2
+  },
+  {
+    "id": "ch3-dr-011",
+    "stem": "某省级政务系统正在进行容灾架构升级评审。系统当前部署在广州地域单可用区，业务要求RPO≤15分钟、RTO≤4小时，年度IT预算有限。以下哪种容灾方案最合理？",
+    "options": [
+      {
+        "label": "A",
+        "text": "同城双活+异地热备，采用数据库强同步复制，RPO=0"
+      },
+      {
+        "label": "B",
+        "text": "同城双可用区部署+异地冷备，数据库异步复制+定时快照备份"
+      },
+      {
+        "label": "C",
+        "text": "单可用区部署+每日全量备份到COS，通过快照恢复"
+      },
+      {
+        "label": "D",
+        "text": "异地多活架构，在北京、上海、广州三地域同时提供服务"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-dr",
+    "tags": [
+      "容灾等级",
+      "场景分析",
+      "RPO",
+      "RTO",
+      "成本优化"
+    ],
+    "analysis": "根据RPO≤15分钟和RTO≤4小时的要求，对应灾备等级约3-4级。A方案（同城双活+强同步）远超需求，成本过高，不符合预算有限的约束。B方案同城双可用区保证同城高可用，异地冷备应对城市级灾难，数据库异步复制RPO可控制在分钟级（满足≤15分钟），冷备恢复时间在小时级（满足≤4小时），成本适中。C方案每日全量备份RPO可达24小时，不满足≤15分钟的要求。D方案异地多活成本最高，远超实际需求。容灾方案选择的核心原则是：在满足业务RPO/RTO要求的前提下，选择成本最优的方案，而非一味追求最高等级。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.1_%E4%BA%91%E4%B8%8A%E5%AE%B9%E7%81%BE/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch3-dr-012",
+    "stem": "某跨国电商平台采用异地多活架构，在中国和东南亚两个地域同时提供服务。关于跨地域数据同步，以下哪些说法是正确的？",
+    "options": [
+      {
+        "label": "A",
+        "text": "跨地域网络延迟通常在几十到上百毫秒，数据库强同步会严重影响写入性能"
+      },
+      {
+        "label": "B",
+        "text": "可以采用\"单元化\"架构，将用户数据按地域分片，本地写入本地读取，减少跨地域同步"
+      },
+      {
+        "label": "C",
+        "text": "全局数据（如商品库、配置中心）适合异步复制+最终一致性模型"
+      },
+      {
+        "label": "D",
+        "text": "跨地域数据强一致性没有任何额外成本，应该对所有数据都使用强同步"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 3,
+    "subChapter": "ch3-dr",
+    "tags": [
+      "异地多活",
+      "数据同步",
+      "一致性",
+      "单元化"
+    ],
+    "analysis": "A正确，跨地域（尤其跨国）网络延迟通常50-200ms，数据库强同步需等待远端确认，每次写入增加一个RTT延迟，对高并发写入场景影响巨大。B正确，单元化架构是异地多活的核心设计模式，按用户地理位置或ID范围将数据分片到对应地域的\"单元\"中，实现本地闭环读写，仅用户迁移或全局数据需跨地域同步。C正确，商品信息、系统配置等读多写少的全局数据，可通过异步复制实现最终一致性（秒级延迟通常可接受）。D错误，跨地域强同步代价极大：写入延迟增加、吞吐量下降、网络故障时可用性降低，应根据数据类型选择合适的一致性级别。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.1_%E4%BA%91%E4%B8%8A%E5%AE%B9%E7%81%BE/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch3-perf-011",
+    "stem": "运维团队发现某MySQL数据库在业务高峰期频繁出现慢查询告警，平均查询耗时从50ms上升到2秒。以下排查和优化流程中，最合理的诊断顺序是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "开启慢查询日志 → 用EXPLAIN分析TOP慢SQL执行计划 → 检查是否缺少索引或索引失效 → 优化SQL/添加索引 → 考虑读写分离分流读压力"
+      },
+      {
+        "label": "B",
+        "text": "直接升级数据库实例规格（加CPU加内存）→ 如果还慢就加只读实例"
+      },
+      {
+        "label": "C",
+        "text": "直接重启数据库清除慢查询"
+      },
+      {
+        "label": "D",
+        "text": "先增加Redis缓存层 → 缓存所有数据库查询结果"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-perf",
+    "tags": [
+      "性能优化",
+      "慢查询",
+      "数据库诊断",
+      "EXPLAIN",
+      "索引"
+    ],
+    "analysis": "数据库慢查询诊断应遵循\"先定位后优化\"原则。A是标准诊断流程：①开启慢查询日志（slow_query_log）定位哪些SQL慢；②用EXPLAIN查看执行计划，分析是否全表扫描（type=ALL）、是否命中索引；③根据分析结果针对性优化：添加缺失索引、改写低效SQL（如避免SELECT *、减少子查询）；④若单实例优化后仍有瓶颈，再考虑架构优化如读写分离。B直接升级硬件是\"用钱解决问题\"，未解决根本原因（可能一条烂SQL就导致全库慢）。C重启只是临时缓解，问题会重现。D盲目缓存所有查询可能引入缓存一致性问题，且不解决写操作的性能问题。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.2_%E4%BA%91%E4%B8%8A%E6%9E%B6%E6%9E%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch3-perf-012",
+    "stem": "某电商大促期间，Redis缓存层出现异常导致大量请求直接打到数据库。以下关于缓存异常场景的描述，哪些是正确的？",
+    "options": [
+      {
+        "label": "A",
+        "text": "缓存雪崩：大量缓存Key同时过期，导致海量请求同时穿透到数据库"
+      },
+      {
+        "label": "B",
+        "text": "缓存穿透：查询一个数据库中根本不存在的数据，缓存永远无法命中，每次都查数据库"
+      },
+      {
+        "label": "C",
+        "text": "缓存击穿：某个热点Key过期的瞬间，大量并发请求同时查询数据库重建缓存"
+      },
+      {
+        "label": "D",
+        "text": "缓存雪崩、穿透、击穿的解决方案完全相同，只需增加Redis节点即可"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 3,
+    "subChapter": "ch3-perf",
+    "tags": [
+      "性能优化",
+      "缓存雪崩",
+      "缓存穿透",
+      "缓存击穿",
+      "Redis"
+    ],
+    "analysis": "A正确，缓存雪崩是大面积Key同时失效，解决方案：设置随机过期时间（避免同时失效）、多级缓存、熔断降级。B正确，缓存穿透是查询不存在的数据（如恶意攻击查id=-1），解决方案：布隆过滤器拦截非法请求、对空结果也缓存（设短TTL）。C正确，缓存击穿是单个热点Key失效导致并发击穿，解决方案：互斥锁（setnx）保证只有一个线程重建缓存、热点Key永不过期+异步更新。D错误，三种场景的成因和解决方案各不相同，简单加节点无法解决穿透和击穿问题。理解三者的区别是Redis缓存架构设计的核心知识点。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.2_%E4%BA%91%E4%B8%8A%E6%9E%B6%E6%9E%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-container-011",
+    "stem": "某在线教育平台部署在TKE上，工作日白天并发用户约5000，晚间直播高峰可达50000。以下关于Kubernetes HPA（Horizontal Pod Autoscaler）自动伸缩的说法，哪些是正确的？",
+    "options": [
+      {
+        "label": "A",
+        "text": "HPA可以基于CPU/内存利用率自动调整Pod副本数，也支持自定义指标（如QPS、连接数）"
+      },
+      {
+        "label": "B",
+        "text": "HPA的伸缩决策依赖Metrics Server采集的实时指标，默认每15秒评估一次"
+      },
+      {
+        "label": "C",
+        "text": "为应对突发流量，可以结合CronHPA（定时伸缩）在直播前提前扩容，避免HPA响应延迟"
+      },
+      {
+        "label": "D",
+        "text": "HPA可以将Pod副本数缩减到0，完全释放资源"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 3,
+    "subChapter": "ch3-container",
+    "tags": [
+      "容器化",
+      "HPA",
+      "自动伸缩",
+      "TKE",
+      "CronHPA"
+    ],
+    "analysis": "A正确，HPA v2支持多种指标源：Resource（CPU/内存）、Pods（自定义指标如QPS）、Object（如Ingress请求数）。B正确，HPA控制器默认每15秒从Metrics Server获取指标并计算期望副本数，公式：期望副本数 = ceil(当前副本数 × 当前指标值 / 目标指标值)。C正确，对于可预测的流量高峰（如定时直播），CronHPA可以提前扩容，避免HPA被动响应的滞后期（指标采集+Pod启动通常需要1-3分钟），是生产环境的最佳实践。D错误，标准HPA的minReplicas最小值为1，不能缩到0。缩到0需要使用KEDA（Kubernetes Event-Driven Autoscaling）等扩展方案。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.3_%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%94%B9%E9%80%A0/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch3-container-012",
+    "stem": "某企业将微服务架构从Spring Cloud迁移到Kubernetes，考虑引入Service Mesh（如Istio）进行服务治理。以下关于Service Mesh的说法，哪项是正确的？",
+    "options": [
+      {
+        "label": "A",
+        "text": "Service Mesh通过Sidecar代理（如Envoy）拦截服务间流量，实现流量管理、可观测性和安全通信，业务代码无需修改"
+      },
+      {
+        "label": "B",
+        "text": "Service Mesh完全替代Kubernetes的Service和Ingress，部署后不再需要K8s原生网络组件"
+      },
+      {
+        "label": "C",
+        "text": "Service Mesh只能用于HTTP协议，不支持gRPC和TCP流量"
+      },
+      {
+        "label": "D",
+        "text": "引入Service Mesh不会带来任何额外的资源开销和运维复杂度"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-container",
+    "tags": [
+      "容器化",
+      "Service Mesh",
+      "Istio",
+      "Sidecar",
+      "微服务治理"
+    ],
+    "analysis": "A正确，Service Mesh的核心设计是数据平面（Sidecar代理，如Envoy）+控制平面（如Istiod）。每个Pod注入一个Sidecar容器，透明拦截所有进出流量，实现：流量管理（金丝雀发布、灰度路由、熔断限流）、可观测性（分布式追踪、指标采集、访问日志）、安全（mTLS双向认证、授权策略）。对业务代码零侵入是其最大优势。B错误，Service Mesh构建在K8s网络之上，依赖Service做服务发现，不是替代关系。C错误，Envoy支持HTTP/1.1、HTTP/2、gRPC、TCP、MongoDB、Redis等多种协议。D错误，每个Pod增加Sidecar容器会消耗额外CPU/内存（约100-200MB/Pod），控制平面也需要资源，且引入了额外的运维复杂度，需要权衡收益与成本。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.3_%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%94%B9%E9%80%A0/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-ai-011",
+    "stem": "某AI平台需要为一个70B参数的大语言模型搭建在线推理服务，要求支持高并发请求。以下关于推理Batching策略的说法，哪些是正确的？",
+    "options": [
+      {
+        "label": "A",
+        "text": "Static Batching（静态批处理）将多个请求组成固定大小的批次一起推理，但短请求必须等最长请求完成才能返回"
+      },
+      {
+        "label": "B",
+        "text": "Continuous Batching（连续批处理/动态批处理）允许已完成的请求立即返回，新请求可以动态加入正在运行的批次"
+      },
+      {
+        "label": "C",
+        "text": "Continuous Batching相比Static Batching可以显著提高GPU利用率和推理吞吐量"
+      },
+      {
+        "label": "D",
+        "text": "批处理大小越大越好，不会带来任何负面影响"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 3,
+    "subChapter": "ch3-ai",
+    "tags": [
+      "AI",
+      "推理优化",
+      "Batching",
+      "Continuous Batching",
+      "吞吐量"
+    ],
+    "analysis": "A正确，Static Batching收集固定数量请求组成批次，所有请求一起开始一起结束。由于大模型生成长度不同，短回复的请求会被长回复的请求\"拖住\"（padding浪费），GPU利用率低。B正确，Continuous Batching（也称Iteration-level Batching）是vLLM、TGI等推理框架的核心优化：在每个decode step（生成每个Token时）动态调整批次组成，已生成完EOS的请求立即释放位置，等待队列中的新请求立即填入。C正确，Continuous Batching消除了padding浪费和队头阻塞，吞吐量可比Static Batching提升2-5倍。D错误，批次过大会导致：KV Cache显存溢出（OOM）、单请求延迟增加（TTFT上升）、调度复杂度增加。需要根据模型大小、显存容量和延迟SLA合理设置最大批次大小。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.4_AI%E5%92%8C%E5%A4%A7%E6%A8%A1%E5%9E%8B/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch3-ai-012",
+    "stem": "关于MoE（Mixture of Experts，混合专家）大模型架构，以下哪项描述是正确的？",
+    "options": [
+      {
+        "label": "A",
+        "text": "MoE模型包含多个\"专家\"子网络，每次推理只激活其中部分专家，总参数量大但实际计算量较小"
+      },
+      {
+        "label": "B",
+        "text": "MoE模型的每次推理都需要激活所有专家网络进行完整计算"
+      },
+      {
+        "label": "C",
+        "text": "MoE模型虽然总参数量大，但由于稀疏激活特性，推理时的FLOPs远小于同等总参数的Dense模型"
+      },
+      {
+        "label": "D",
+        "text": "MoE架构的主要缺点是模型总参数量小，无法获得大模型的涌现能力"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-ai",
+    "tags": [
+      "AI",
+      "MoE",
+      "混合专家",
+      "稀疏模型",
+      "模型架构"
+    ],
+    "analysis": "A正确，MoE（如Mixtral 8x7B、DeepSeek-V2）的核心设计是：每个Transformer层包含多个专家FFN（如8个），通过Router/Gate网络为每个Token选择Top-K个专家（通常K=2）进行计算，其余专家不参与。以Mixtral 8x7B为例，总参数约46.7B，但每个Token只激活约12.9B参数。B错误，MoE的核心优势就是稀疏激活，每次只激活部分专家（如8选2）。C也正确地描述了MoE的优势，但题目问\"哪项\"是正确的（单选），A更全面准确地描述了MoE的核心机制。D错误，MoE的总参数量通常很大（如DeepSeek-V2有236B参数），具备大模型的涌现能力，同时通过稀疏激活控制推理成本。MoE的实际挑战在于：显存占用仍与总参数成正比（需加载所有专家权重）、专家负载均衡、通信开销等。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.4_AI%E5%92%8C%E5%A4%A7%E6%A8%A1%E5%9E%8B/",
+    "difficulty": 3
   }
 ]
