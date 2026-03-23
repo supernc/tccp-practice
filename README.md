@@ -20,6 +20,23 @@
 
 ---
 
+## 📌 项目背景
+
+本项目是 [TCCPWiki](https://github.com/angelsnow1129/TCCPWiki) 知识库的**配套刷题平台**。
+
+[TCCPWiki](https://angelsnow1129.github.io/TCCPWiki/) 是一个系统整理腾讯云从业者认证（TCCP）考试知识点的开源 Wiki 项目，涵盖云架构基础、核心产品、架构实践、安全合规、迁移与成本管理等全部考试章节。本刷题平台的所有题目均基于 TCCPWiki 中的知识点编写，每道题都关联了对应的 Wiki 页面链接，实现了**「学 + 练」一体化**的备考体验。
+
+**两个项目的关系：**
+
+| 项目 | 定位 | 链接 |
+|------|------|------|
+| **TCCPWiki** | 📖 知识库（学习） | [angelsnow1129.github.io/TCCPWiki](https://angelsnow1129.github.io/TCCPWiki/) |
+| **TCCP Practice** | ✍️ 刷题平台（练习） | [supernc.github.io/tccp-practice](https://supernc.github.io/tccp-practice/) |
+
+> 💡 建议配合使用：先通过 TCCPWiki 学习知识点，再通过本平台刷题巩固。做题过程中遇到不会的，可以点击题目解析中的「查看 Wiki」链接直接跳转学习。
+
+---
+
 ## ✨ 功能特性
 
 ### 🎯 核心刷题功能
@@ -45,7 +62,7 @@
 
 | 功能 | 描述 |
 |------|------|
-| **🔒 密码门禁** | 前端密码验证，保护题目内容（默认密码 `tccp2025`） |
+| **🔒 密码门禁** | 前端密码验证，保护题目内容（请联系管理员获取访问密码） |
 | **💾 数据导出/导入** | 支持 JSON 文件导出/导入，跨设备迁移学习数据 |
 | **🔄 智能去重合并** | 导入时自动去重，不会覆盖已有数据 |
 | **🔗 Wiki 关联** | 每道题关联 TCCPWiki 知识点链接，做题 + 学习一体化 |
@@ -390,15 +407,23 @@ npm run preview
 
 | 资源 | 链接 |
 |------|------|
+| TCCPWiki 知识库（本项目题目来源） | [angelsnow1129.github.io/TCCPWiki](https://angelsnow1129.github.io/TCCPWiki/) |
+| TCCPWiki GitHub 仓库 | [github.com/angelsnow1129/TCCPWiki](https://github.com/angelsnow1129/TCCPWiki) |
 | TCCP 认证官网 | [腾讯云认证](https://cloud.tencent.com/edu/certification) |
-| TCCPWiki 知识库 | [angelsnow1129.github.io/TCCPWiki](https://angelsnow1129.github.io/TCCPWiki/) |
 | 腾讯云文档 | [cloud.tencent.com/document](https://cloud.tencent.com/document/product) |
+
+---
+
+## 🙏 致谢
+
+- 感谢 [TCCPWiki](https://github.com/angelsnow1129/TCCPWiki) 项目提供的系统化知识整理，本刷题平台的所有题目均基于其知识点编写
+- 感谢腾讯云官方文档提供的产品技术资料
 
 ---
 
 ## 📄 License
 
-本项目仅供学习交流使用，题目内容基于公开的腾讯云产品文档整理。
+本项目仅供学习交流使用，题目内容基于 [TCCPWiki](https://angelsnow1129.github.io/TCCPWiki/) 和公开的腾讯云产品文档整理。
 
 ---
 
