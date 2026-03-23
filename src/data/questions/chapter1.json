@@ -1,0 +1,362 @@
+[
+  {
+    "id": "ch1-arch-001",
+    "stem": "根据 NIST 对云计算的定义，以下哪项不属于云计算的五大基本特征？",
+    "options": [
+      {"label": "A", "text": "按需自服务（On-demand Self-service）"},
+      {"label": "B", "text": "广泛的网络访问（Broad Network Access）"},
+      {"label": "C", "text": "物理资源独占（Dedicated Physical Resources）"},
+      {"label": "D", "text": "可度量的服务（Measured Service）"}
+    ],
+    "answer": ["C"],
+    "type": "single",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": ["NIST", "云计算定义"],
+    "analysis": "NIST 定义云计算的五大基本特征为：按需自服务、广泛的网络访问、资源池化（Resource Pooling）、快速弹性（Rapid Elasticity）和可度量的服务。物理资源独占不是云计算特征，云计算恰恰强调资源共享和池化。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch1-arch-002",
+    "stem": "以下哪种云服务模型需要用户自行管理操作系统、中间件和应用程序？",
+    "options": [
+      {"label": "A", "text": "SaaS（软件即服务）"},
+      {"label": "B", "text": "PaaS（平台即服务）"},
+      {"label": "C", "text": "IaaS（基础设施即服务）"},
+      {"label": "D", "text": "FaaS（函数即服务）"}
+    ],
+    "answer": ["C"],
+    "type": "single",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": ["IaaS", "服务模型"],
+    "analysis": "IaaS 提供虚拟化的基础设施资源（计算、存储、网络），用户需要自行管理操作系统、中间件和应用。PaaS 提供运行时环境，用户只需管理应用。SaaS 提供完整的应用，用户直接使用。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch1-arch-003",
+    "stem": "在云架构设计的六大原则中，\"Design for Failure\" 属于以下哪个设计原则？",
+    "options": [
+      {"label": "A", "text": "高弹性原则"},
+      {"label": "B", "text": "高可用原则"},
+      {"label": "C", "text": "松耦合原则"},
+      {"label": "D", "text": "安全合规原则"}
+    ],
+    "answer": ["B"],
+    "type": "single",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": ["架构设计原则", "高可用"],
+    "analysis": "\"Design for Failure\"（为失败而设计）是高可用原则的核心思想，要求架构师在设计时就假设任何组件都可能失败，通过冗余、故障转移等机制保证系统整体可用。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch1-arch-004",
+    "stem": "信创产业中的 \"2+8+N\" 体系，\"2\" 指的是哪两个领域？",
+    "options": [
+      {"label": "A", "text": "金融和电信"},
+      {"label": "B", "text": "党政和军队"},
+      {"label": "C", "text": "教育和医疗"},
+      {"label": "D", "text": "能源和交通"}
+    ],
+    "answer": ["B"],
+    "type": "single",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": ["信创", "2+8+N"],
+    "analysis": "信创 2+8+N 体系中，\"2\" 代表党政和军队，是信创最先推进的领域；\"8\" 代表金融、电信、电力、石油、交通、航空航天、教育、医疗八大关键行业；\"N\" 代表更广泛的其他行业。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch1-arch-005",
+    "stem": "在云计算的四种部署模型中，既能满足企业数据安全隐私需求，又能利用公有云弹性的是哪种模型？",
+    "options": [
+      {"label": "A", "text": "公有云"},
+      {"label": "B", "text": "私有云"},
+      {"label": "C", "text": "混合云"},
+      {"label": "D", "text": "社区云"}
+    ],
+    "answer": ["C"],
+    "type": "single",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": ["部署模型", "混合云"],
+    "analysis": "混合云（Hybrid Cloud）结合了公有云和私有云的优势，敏感数据保留在私有云中满足安全合规需求，同时可以利用公有云的弹性资源应对业务峰值，是当前企业最常见的云部署策略之一。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch1-arch-006",
+    "stem": "以下哪些属于云架构设计的核心原则？",
+    "options": [
+      {"label": "A", "text": "高可用（High Availability）"},
+      {"label": "B", "text": "松耦合（Loose Coupling）"},
+      {"label": "C", "text": "强一致性（Strong Consistency）"},
+      {"label": "D", "text": "高弹性（High Elasticity）"}
+    ],
+    "answer": ["A", "B", "D"],
+    "type": "multiple",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": ["架构设计原则"],
+    "analysis": "云架构设计的六大核心原则包括：高可用、高弹性、松耦合、高性能、安全合规、成本优化。强一致性不是六大原则之一，在分布式系统中通常需要在一致性和可用性之间做权衡（CAP 理论）。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch1-arch-007",
+    "stem": "腾讯云虚拟化平台 VStation 的主要优势包括哪些？",
+    "options": [
+      {"label": "A", "text": "性能接近物理机"},
+      {"label": "B", "text": "支持热迁移"},
+      {"label": "C", "text": "无需操作系统"},
+      {"label": "D", "text": "资源隔离性强"}
+    ],
+    "answer": ["A", "B", "D"],
+    "type": "multiple",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": ["VStation", "虚拟化"],
+    "analysis": "腾讯云自研虚拟化平台 VStation 基于 KVM 优化，支持热迁移（Live Migration）、资源隔离，性能损耗极低接近物理机。虚拟机仍然需要安装操作系统，因此 C 选项错误。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch1-arch-008",
+    "stem": "关于云计算的八大特征，以下说法正确的是？",
+    "options": [
+      {"label": "A", "text": "超大规模是指云计算数据中心拥有数万台服务器"},
+      {"label": "B", "text": "虚拟化是指用户无需了解底层物理资源细节"},
+      {"label": "C", "text": "通用性是指云计算只适用于特定应用场景"},
+      {"label": "D", "text": "按需服务是指用户可以根据需求自助获取资源"}
+    ],
+    "answer": ["A", "B", "D"],
+    "type": "multiple",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": ["云计算特征"],
+    "analysis": "云计算八大特征包括超大规模、虚拟化、高可靠性、通用性、高可扩展性、按需服务、极其廉价和潜在危险性。通用性意味着云计算不针对特定应用，而是支撑各种场景，C 选项说法相反，是错误的。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch1-arch-009",
+    "stem": "某企业需要将核心财务系统部署在云上，同时要求数据完全自主可控，但希望借助公有云实现 OA 办公协同。最适合的部署方案是？",
+    "options": [
+      {"label": "A", "text": "将全部系统部署到公有云"},
+      {"label": "B", "text": "将全部系统部署到私有云"},
+      {"label": "C", "text": "采用混合云架构，核心系统放私有云，OA 系统放公有云"},
+      {"label": "D", "text": "采用社区云与多个企业共享基础设施"}
+    ],
+    "answer": ["C"],
+    "type": "single",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": ["混合云", "场景设计"],
+    "analysis": "这是典型的混合云场景。核心财务系统涉及敏感数据，需部署在私有云确保安全合规和自主可控；OA 协同系统属于通用办公应用，适合部署在公有云以降低成本并利用弹性能力。混合云完美满足两者需求。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch1-arch-010",
+    "stem": "PaaS 层提供的核心能力是什么？",
+    "options": [
+      {"label": "A", "text": "虚拟机、存储和网络等基础设施"},
+      {"label": "B", "text": "应用运行时环境、开发工具和数据库服务"},
+      {"label": "C", "text": "开箱即用的完整软件应用"},
+      {"label": "D", "text": "物理服务器的托管服务"}
+    ],
+    "answer": ["B"],
+    "type": "single",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": ["PaaS", "服务模型"],
+    "analysis": "PaaS（Platform as a Service）提供应用运行所需的平台环境，包括运行时、开发框架、数据库服务等。用户无需管理底层基础设施，只需关注应用代码。A 描述的是 IaaS，C 描述的是 SaaS。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch1-arch-011",
+    "stem": "在云架构中，\"松耦合\"原则的核心目标是什么？",
+    "options": [
+      {"label": "A", "text": "降低系统开发成本"},
+      {"label": "B", "text": "减少组件间的依赖，使故障不会级联扩散"},
+      {"label": "C", "text": "提高单个组件的运算性能"},
+      {"label": "D", "text": "统一各组件的编程语言"}
+    ],
+    "answer": ["B"],
+    "type": "single",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": ["松耦合", "架构原则"],
+    "analysis": "松耦合原则的核心目标是降低组件间的依赖关系，使单个组件的变更或故障不会影响其他组件，从而提高系统的可维护性、可扩展性和容错能力。典型实践包括使用消息队列解耦、微服务化等。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch1-arch-012",
+    "stem": "某创业公司希望快速上线产品，不希望投入大量精力在基础设施运维上，应优先选择哪种服务模型？",
+    "options": [
+      {"label": "A", "text": "IaaS + 自建所有中间件"},
+      {"label": "B", "text": "PaaS 或 Serverless"},
+      {"label": "C", "text": "自建私有云"},
+      {"label": "D", "text": "购买物理服务器托管"}
+    ],
+    "answer": ["B"],
+    "type": "single",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": ["PaaS", "Serverless", "场景选型"],
+    "analysis": "创业公司需要快速上线且不希望投入大量运维精力，PaaS 或 Serverless 模型最为合适。PaaS 提供开发平台，Serverless 进一步消除服务器管理负担，让团队专注于业务代码开发，降低初期投入和运维成本。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch1-arch-013",
+    "stem": "以下关于公有云、私有云和混合云的描述，哪些是正确的？",
+    "options": [
+      {"label": "A", "text": "公有云的资源是多租户共享的"},
+      {"label": "B", "text": "私有云只能部署在企业自有的机房中"},
+      {"label": "C", "text": "混合云可以将敏感数据留在私有云，弹性负载由公有云承担"},
+      {"label": "D", "text": "社区云是多个有共同需求的组织共享的云基础设施"}
+    ],
+    "answer": ["A", "C", "D"],
+    "type": "multiple",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": ["部署模型", "公有云", "私有云", "混合云"],
+    "analysis": "A 正确，公有云是多租户共享资源模型。B 错误，私有云也可以托管在第三方数据中心（Hosted Private Cloud），不一定在企业自有机房。C 正确，这是混合云的典型用法。D 正确，社区云（Community Cloud）由具有共同关注点的组织共享。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch1-arch-014",
+    "stem": "在架构设计中，实现\"高弹性\"的关键手段包括哪些？",
+    "options": [
+      {"label": "A", "text": "弹性伸缩（Auto Scaling）"},
+      {"label": "B", "text": "手动扩容物理服务器"},
+      {"label": "C", "text": "Serverless 按需计费"},
+      {"label": "D", "text": "容器化部署快速扩缩"}
+    ],
+    "answer": ["A", "C", "D"],
+    "type": "multiple",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": ["高弹性", "架构原则"],
+    "analysis": "高弹性指系统能根据负载自动调整资源。弹性伸缩（AS）自动增减 CVM 实例；Serverless 按调用量计费天然弹性；容器化部署支持秒级扩缩容。手动扩容物理服务器不具备弹性特征，与云原生弹性理念相悖。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch1-arch-015",
+    "stem": "信创 \"2+8+N\" 体系中，\"8\" 代表的八大关键行业不包括以下哪个？",
+    "options": [
+      {"label": "A", "text": "金融"},
+      {"label": "B", "text": "电信"},
+      {"label": "C", "text": "房地产"},
+      {"label": "D", "text": "电力"}
+    ],
+    "answer": ["C"],
+    "type": "single",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": ["信创", "2+8+N"],
+    "analysis": "信创 \"8\" 指金融、电信、电力、石油、交通、航空航天、教育、医疗八大关键行业。房地产不在八大关键行业之列，属于 \"N\"（更广泛的其他行业）范畴。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch1-arch-016",
+    "stem": "以下哪种不属于 NIST 定义的云计算服务模型？",
+    "options": [
+      {"label": "A", "text": "IaaS"},
+      {"label": "B", "text": "PaaS"},
+      {"label": "C", "text": "DaaS（桌面即服务）"},
+      {"label": "D", "text": "SaaS"}
+    ],
+    "answer": ["C"],
+    "type": "single",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": ["NIST", "服务模型"],
+    "analysis": "NIST 定义的三种标准云服务模型为 IaaS（基础设施即服务）、PaaS（平台即服务）和 SaaS（软件即服务）。DaaS 虽然在实际市场中存在，但不属于 NIST 标准定义的三大服务模型。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch1-arch-017",
+    "stem": "在成本优化原则下，以下哪些做法是推荐的？",
+    "options": [
+      {"label": "A", "text": "选择与业务负载匹配的实例规格，避免过度配置"},
+      {"label": "B", "text": "对稳定负载使用预留实例或包年包月计费"},
+      {"label": "C", "text": "为所有资源都选择最高配置以确保性能"},
+      {"label": "D", "text": "利用对象存储生命周期管理自动降冷数据存储等级"}
+    ],
+    "answer": ["A", "B", "D"],
+    "type": "multiple",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": ["成本优化", "架构原则"],
+    "analysis": "成本优化的核心是\"合适的资源做合适的事\"。A 正确，Right-sizing 避免浪费；B 正确，预留实例可节省 30-60%；D 正确，生命周期管理自动将不常访问数据转为低成本存储。C 错误，过度配置是典型的成本浪费。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch1-arch-018",
+    "stem": "云架构中的\"安全合规原则\"要求在架构设计的哪个阶段考虑安全？",
+    "options": [
+      {"label": "A", "text": "仅在上线前进行安全审计"},
+      {"label": "B", "text": "仅在发现安全事件后进行修复"},
+      {"label": "C", "text": "在架构设计之初就将安全融入每一层"},
+      {"label": "D", "text": "仅在存储层和网络层考虑安全"}
+    ],
+    "answer": ["C"],
+    "type": "single",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": ["安全合规", "架构原则"],
+    "analysis": "安全合规原则要求\"Security by Design\"，即从架构设计之初就将安全融入每一层（网络、计算、存储、应用、数据），而不是事后补救。这包括最小权限、纵深防御、加密传输与存储等实践。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch1-arch-019",
+    "stem": "一家游戏公司计划新游上线首周预计流量是日常的 10 倍，之后逐步回落。最符合\"高弹性\"原则的方案是？",
+    "options": [
+      {"label": "A", "text": "按 10 倍流量永久购买包年包月服务器"},
+      {"label": "B", "text": "使用弹性伸缩 + 竞价实例应对峰值，低谷自动缩容"},
+      {"label": "C", "text": "仅按日常流量部署，超过部分用户排队等待"},
+      {"label": "D", "text": "完全使用 Serverless，不做任何容量规划"}
+    ],
+    "answer": ["B"],
+    "type": "single",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": ["高弹性", "场景设计", "弹性伸缩"],
+    "analysis": "高弹性原则的核心是资源随需伸缩。方案B使用弹性伸缩在首周高峰自动扩容（可结合竞价实例降低成本），流量回落后自动缩容，是最佳实践。A浪费成本；C影响用户体验；D对游戏场景不够精准可控。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch1-arch-020",
+    "stem": "关于 IaaS、PaaS、SaaS 的用户管理职责，以下说法正确的是？",
+    "options": [
+      {"label": "A", "text": "IaaS 用户需要管理操作系统和应用，云厂商管理虚拟化层以下"},
+      {"label": "B", "text": "PaaS 用户只需管理应用和数据，运行时由云厂商管理"},
+      {"label": "C", "text": "SaaS 用户需要管理中间件和数据库"},
+      {"label": "D", "text": "三种模型中用户的管理范围大小为：IaaS > PaaS > SaaS"}
+    ],
+    "answer": ["A", "B", "D"],
+    "type": "multiple",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": ["服务模型", "责任共担"],
+    "analysis": "A正确，IaaS用户管理OS以上所有层；B正确，PaaS用户只关注应用代码和数据；D正确，从IaaS到SaaS，用户管理范围逐渐减少。C错误，SaaS用户不需要管理中间件和数据库，这些都由云厂商负责。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 2
+  }
+]
