@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  一站式 TCCP（Tencent Cloud Certified Practitioner）认证备考刷题平台，基于 TCCPWiki 知识库的 <b>268 道</b>高质量题目，覆盖考试全部 5 大章节。
+  一站式 TCCP（Tencent Cloud Certified Practitioner）认证备考刷题平台，基于 TCCPWiki 知识库的 <b>350 道</b>高质量题目，覆盖考试全部 5 大章节。
 </p>
 
 <p align="center">
@@ -71,17 +71,17 @@
 
 ## 📋 题库概览
 
-共 **268 道题**，覆盖 TCCP 认证考试全部考点：
+共 **350 道题**，覆盖 TCCP 认证考试全部考点：
 
 | 章节 | 名称 | 考试占比 | 题目数 | 主要内容 |
 |:----:|------|:-------:|:------:|---------|
-| Ch1 | 云架构设计基础 | 4% | 20 | 云计算定义、服务模型（IaaS/PaaS/SaaS）、部署模型、架构设计原则 |
-| Ch2 | 腾讯云核心产品与服务 | 55% | 150 | CVM、VPC、CLB、TKE、COS、CDN、CDB、TDSQL、Redis、消息队列等 17 个子章节 |
-| Ch3 | 云架构设计实践 | 13.5% | 40 | 容灾架构、性能优化、应用容器化改造、AI 和大模型 |
-| Ch4 | 云安全体系 | 14.5% | 32 | 等保 2.0、云安全标准、网络安全、计算安全 |
-| Ch5 | 云迁移与成本管理 | 12.5% | 26 | 迁移方法论、迁移工具、FinOps 成本优化 |
+| Ch1 | 云架构设计基础 | 4% | 20 | 云计算定义、服务模型（IaaS/PaaS/SaaS）、部署模型、架构设计原则、CAP定理、十二因素应用 |
+| Ch2 | 腾讯云核心产品与服务 | 55% | 193 | CVM、VPC、CLB、TKE、COS、CDN、CDB、TDSQL、Redis、消息队列等 17 个子章节 |
+| Ch3 | 云架构设计实践 | 13.5% | 48 | 容灾架构、性能优化、应用容器化改造、AI 和大模型、MoE架构、Service Mesh |
+| Ch4 | 云安全体系 | 14.5% | 50 | 等保 2.0、云安全标准、网络安全、计算安全、CNAPP、KMS密钥轮换 |
+| Ch5 | 云迁移与成本管理 | 12.5% | 39 | 迁移方法论、迁移工具、FinOps 成本优化、灰度迁移、TCO分析 |
 
-> 💡 **题目质量**：所有题目基于 [TCCPWiki](https://angelsnow1129.github.io/TCCPWiki/) 知识库生成，覆盖 DPDK/GSLB、中间源/URL 鉴权、纠删码/智能分层、Log is Database、Slot/CKV 等核心知识点，单选/多选比例约 6:4，难度分布 easy:medium:hard ≈ 2:5:3。
+> 💡 **题目质量**：所有题目基于 [TCCPWiki](https://angelsnow1129.github.io/TCCPWiki/) 知识库生成，覆盖 DPDK/GSLB、中间源/URL 鉴权、纠删码/智能分层、Log is Database、Slot/CKV 等核心知识点，单选/多选比例约 6:4，难度分布 easy:medium:hard ≈ 3:5:2。
 
 ---
 
@@ -238,10 +238,10 @@ tccp-practice/
 │   │   ├── chapters.ts              # 章节元数据（名称/描述/Wiki链接）
 │   │   └── questions/
 │   │       ├── chapter1.json        # Ch1 云架构基础（20题）
-│   │       ├── chapter2.json        # Ch2 核心产品与服务（150题）
-│   │       ├── chapter3.json        # Ch3 架构设计实践（40题）
-│   │       ├── chapter4.json        # Ch4 云安全体系（32题）
-│   │       └── chapter5.json        # Ch5 迁移与成本管理（26题）
+│   │       ├── chapter2.json        # Ch2 核心产品与服务（193题）
+│   │       ├── chapter3.json        # Ch3 架构设计实践（48题）
+│   │       ├── chapter4.json        # Ch4 云安全体系（50题）
+│   │       └── chapter5.json        # Ch5 迁移与成本管理（39题）
 │   │
 │   ├── services/                    # 🔧 业务服务层
 │   │   ├── storage.ts               # localStorage 存储服务（含导入/导出/去重）
