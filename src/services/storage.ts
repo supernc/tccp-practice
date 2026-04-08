@@ -152,6 +152,28 @@ export function clearAllData(): void {
   localStorage.removeItem(STORAGE_KEY);
 }
 
+// ======= 备注功能 =======
+const NOTES_KEY = 'tccp-question-notes';
+
+export function getNotes(): Record<string, string> {
+  const raw = localStorage.getItem(NOTES_KEY);
+  return raw ? JSON.parse(raw) : {};
+}
+
+export function getNote(questionId: string): string {
+  return getNotes()[questionId] || '';
+}
+
+export function saveNote(questionId: string, note: string): void {
+  const notes = getNotes();
+  if (note.trim()) {
+    notes[questionId] = note.trim();
+  } else {
+    delete notes[questionId];
+  }
+  localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
+}
+
 // ======= 导出/导入功能 =======
 
 // 导出所有数据为 JSON 字符串

@@ -21,7 +21,7 @@ interface PracticeReturn {
   favorites: Set<string>;
   setQuestions: (qs: Question[]) => void;
   answerQuestion: (answer: string[]) => void;
-  submitAnswer: () => void;
+  submitAnswer: () => boolean;
   goNext: () => void;
   goPrev: () => void;
   goTo: (index: number) => void;
@@ -57,10 +57,10 @@ export default function usePractice(mode: 'practice' | 'random' = 'practice'): P
     setAnswers(prev => ({ ...prev, [currentQuestion.id]: answer }));
   }, [currentQuestion, isSubmitted]);
 
-  const submitAnswer = useCallback(() => {
-    if (!currentQuestion || isSubmitted) return;
+  const submitAnswer = useCallback((): boolean => {
+    if (!currentQuestion || isSubmitted) return false;
     const ans = answers[currentQuestion.id] || [];
-    if (ans.length === 0) return;
+    if (ans.length === 0) return false;
 
     const correct = isAnswerCorrect(ans, currentQuestion.answer, currentQuestion.type);
 
@@ -86,6 +86,8 @@ export default function usePractice(mode: 'practice' | 'random' = 'practice'): P
     } else {
       addWrongQuestion(currentQuestion.id);
     }
+
+    return correct;
   }, [currentQuestion, isSubmitted, answers, mode]);
 
   const goNext = useCallback(() => {

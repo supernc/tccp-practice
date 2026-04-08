@@ -20,7 +20,10 @@ export default function RandomPage() {
 
   const handleSubmit = () => {
     if (practice.userAnswer.length === 0) return;
-    practice.submitAnswer();
+    const correct = practice.submitAnswer();
+    if (correct && practice.currentIndex < practice.questions.length - 1) {
+      setTimeout(() => practice.goNext(), 1000);
+    }
   };
 
   // 配置界面

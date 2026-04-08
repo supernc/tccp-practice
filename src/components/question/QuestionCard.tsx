@@ -1,9 +1,10 @@
-import { useState } from 'react';
-import { Star, Hash } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Star, Hash, FileText } from 'lucide-react';
 import { Question } from '../../types';
 import OptionItem from './OptionItem';
 import AnalysisPanel from './AnalysisPanel';
 import Badge from '../common/Badge';
+import { getNote, saveNote } from '../../services/storage';
 
 interface QuestionCardProps {
   question: Question;
@@ -30,6 +31,15 @@ export default function QuestionCard({
 }: QuestionCardProps) {
   const isMultiple = question.type === 'multiple';
   const isCorrect = showResult && checkCorrect(userAnswer, question.answer, question.type);
+  const [noteText, setNoteText] = useState(() => getNote(question.id));
+
+  useEffect(() => {
+    setNoteText(getNote(question.id));
+  }, [question.id]);
+
+  function handleNoteBlur() {
+    saveNote(question.id, noteText);
+  }
 
   function handleOptionClick(label: string) {
     if (showResult) return;
@@ -121,6 +131,21 @@ export default function QuestionCard({
           wikiUrl={question.wikiUrl}
         />
       )}
+
+      {/* Note section */}
+      <div className="mt-4 rounded-xl bg-bg-card/50 border border-white/5 p-4">
+        <div className="flex items-center gap-2 mb-2">
+          <FileText size={14} className="text-warning" />
+          <span className="text-xs font-semibold text-warning">我的备注</span>
+        </div>
+        <textarea
+          value={noteText}
+          onChange={(e) => setNoteText(e.target.value)}
+          onBlur={handleNoteBlur}
+          placeholder="在此输入备注内容..."
+          className="w-full min-h-[60px] px-3 py-2 rounded-lg bg-bg-primary border border-white/10 text-sm text-text-primary placeholder-text-muted resize-y focus:outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20 transition-all"
+        />
+      </div>
     </div>
   );
 }
