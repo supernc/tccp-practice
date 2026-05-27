@@ -4,6 +4,19 @@ export interface Option {
   text: string;   // 选项内容
 }
 
+// 实操题专属：场景元数据
+export interface PracticalMeta {
+  scenario: string;              // 业务场景描述（多行）
+  topology?: {                   // 拓扑/架构信息（可选）
+    type: 'mermaid' | 'ascii';   // 渲染方式
+    content: string;             // mermaid 代码 或 ASCII 图
+    caption?: string;            // 图注
+  };
+  constraints?: string[];        // 业务约束 / 已知条件
+  reasoning: string[];           // 解题推理链路（每一步一行）
+  pitfall?: string;              // 常见误区 / 为什么会答错
+}
+
 // 题目结构
 export interface Question {
   id: string;                    // 唯一标识，如 "ch2-cvm-003"
@@ -17,6 +30,8 @@ export interface Question {
   analysis: string;              // 解析文本
   wikiUrl?: string;              // 对应 Wiki 页面链接
   difficulty: 1 | 2 | 3;        // 难度等级
+  kind?: 'theory' | 'practical'; // 题型种类，缺省视为 theory（理论选择题）
+  practical?: PracticalMeta;     // 实操题元数据（kind=practical 时必填）
 }
 
 // 考试记录

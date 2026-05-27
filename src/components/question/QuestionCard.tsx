@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Star, Hash, FileText } from 'lucide-react';
+import { Star, Hash, FileText, Wrench } from 'lucide-react';
 import { Question } from '../../types';
 import OptionItem from './OptionItem';
 import AnalysisPanel from './AnalysisPanel';
+import PracticalScenario from './PracticalScenario';
+import PracticalAnalysisPanel from './PracticalAnalysisPanel';
 import Badge from '../common/Badge';
 import { getNote, saveNote } from '../../services/storage';
 
@@ -30,6 +32,7 @@ export default function QuestionCard({
   mode = 'practice',
 }: QuestionCardProps) {
   const isMultiple = question.type === 'multiple';
+  const isPractical = question.kind === 'practical' && !!question.practical;
   const isCorrect = showResult && checkCorrect(userAnswer, question.answer, question.type);
   const [noteText, setNoteText] = useState(() => getNote(question.id));
 
@@ -72,7 +75,7 @@ export default function QuestionCard({
     <div className="card-glow rounded-2xl bg-bg-secondary p-6">
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-wrap">
           <span className="flex items-center gap-1 text-xs text-text-secondary">
             <Hash size={12} />
             {index + 1}/{total}
@@ -80,6 +83,12 @@ export default function QuestionCard({
           <Badge variant={isMultiple ? 'warning' : 'info'} size="md">
             {isMultiple ? '多选' : '单选'}
           </Badge>
+          {isPractical && (
+            <Badge variant="primary" size="md" className="gap-1">
+              <Wrench size={11} className="inline -mt-0.5" />
+              实操模拟
+            </Badge>
+          )}
           {isMultiple && !showResult && (
             <span className="text-[10px] text-text-muted">（可选多项）</span>
           )}
@@ -99,8 +108,16 @@ export default function QuestionCard({
         )}
       </div>
 
+      {/* 实操题：场景 + 拓扑 + 约束 */}
+      {isPractical && question.practical && (
+        <PracticalScenario practical={question.practical} />
+      )}
+
       {/* Stem */}
       <p className="text-[15px] text-text-primary leading-relaxed mb-5 font-medium">
+        {isPractical && (
+          <span className="text-primary-light mr-1">问：</span>
+        )}
         {question.stem}
       </p>
 
@@ -122,14 +139,26 @@ export default function QuestionCard({
 
       {/* Analysis (shown after submit in practice mode) */}
       {showResult && (
-        <AnalysisPanel
-          correctAnswer={question.answer}
-          userAnswer={userAnswer}
-          isCorrect={isCorrect}
-          analysis={question.analysis}
-          tags={question.tags}
-          wikiUrl={question.wikiUrl}
-        />
+        isPractical && question.practical ? (
+          <PracticalAnalysisPanel
+            correctAnswer={question.answer}
+            userAnswer={userAnswer}
+            isCorrect={isCorrect}
+            analysis={question.analysis}
+            tags={question.tags}
+            wikiUrl={question.wikiUrl}
+            practical={question.practical}
+          />
+        ) : (
+          <AnalysisPanel
+            correctAnswer={question.answer}
+            userAnswer={userAnswer}
+            isCorrect={isCorrect}
+            analysis={question.analysis}
+            tags={question.tags}
+            wikiUrl={question.wikiUrl}
+          />
+        )
       )}
 
       {/* Note section */}

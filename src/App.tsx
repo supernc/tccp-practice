@@ -4,6 +4,7 @@ import PasswordGate from './components/auth/PasswordGate'
 import HomePage from './pages/HomePage'
 import ExamPage from './pages/ExamPage'
 import PracticePage from './pages/PracticePage'
+import PracticalPage from './pages/PracticalPage'
 import RandomPage from './pages/RandomPage'
 import WrongBookPage from './pages/WrongBookPage'
 import FavoritesPage from './pages/FavoritesPage'
@@ -19,6 +20,7 @@ function App() {
             <Route index element={<HomePage />} />
             <Route path="exam" element={<ExamPage />} />
             <Route path="practice" element={<PracticePage />} />
+            <Route path="practical" element={<PracticalPage />} />
             <Route path="random" element={<RandomPage />} />
             <Route path="wrong" element={<WrongBookPage />} />
             <Route path="favorites" element={<FavoritesPage />} />

@@ -12,12 +12,14 @@ import {
   ChevronRight,
   GraduationCap,
   Database,
+  Wrench,
 } from 'lucide-react';
 
 const navItems = [
   { path: '/', label: '首页', icon: Home },
   { path: '/exam', label: '模拟考试', icon: FileText },
   { path: '/practice', label: '章节练习', icon: BookOpen },
+  { path: '/practical', label: '实操模拟题', icon: Wrench },
   { path: '/random', label: '随机练习', icon: Shuffle },
   { path: '/wrong', label: '错题本', icon: XCircle },
   { path: '/favorites', label: '收藏夹', icon: Star },

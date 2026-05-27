@@ -1,0 +1,1874 @@
+[
+  {
+    "id": "prac-ch2-vpc-001",
+    "kind": "practical",
+    "stem": "在【已规划】专线网关挂载方式下，下列哪种方案能让 IDC-上海 同时访问 VPC-北京 和 VPC-上海？",
+    "practical": {
+      "scenario": "某客户已有腾讯云架构：VPC-北京 与 VPC-上海 通过云联网（CCN）实现互通。现客户在上海机房新建 IDC，希望通过专线接入腾讯云后，让 IDC-上海 既能访问本地 VPC-上海，也能访问 VPC-北京。",
+      "topology": {
+        "type": "mermaid",
+        "content": "flowchart LR\n  IDC[\"IDC-上海\"]\n  DCG[\"专线网关 ?\"]\n  VPCSH[\"VPC-上海\"]\n  CCN[\"云联网 CCN\"]\n  VPCBJ[\"VPC-北京\"]\n  IDC -- 物理专线 --> DCG\n  DCG -. 待选方案 .-> VPCSH\n  DCG -. 待选方案 .-> CCN\n  VPCSH --- CCN\n  CCN --- VPCBJ",
+        "caption": "IDC-上海 通过专线接入腾讯云的两种挂载方式选择"
+      },
+      "constraints": [
+        "VPC-北京 与 VPC-上海 已通过 CCN 互通，路由学习正常",
+        "IDC-上海 仅有一条物理专线接入腾讯云",
+        "客户后续可能还会新增 VPC-广州、VPC-深圳，希望架构可扩展",
+        "要求路由对称、回程可达"
+      ],
+      "reasoning": [
+        "选项 A（VPC 专线网关挂 VPC-上海）：专线流量进入 VPC-上海 后，默认不会跨 VPC 转发到 CCN 上的其他 VPC；即使在 VPC-上海 路由表手写下一跳为 CCN，VPC-北京 也不知道 IDC 网段从何而来，回程路由不通。",
+        "选项 B（云联网专线网关，直接挂 CCN）：专线网关作为 CCN 的网络实例，IDC 路由通过 BGP 通告到 CCN，由 CCN 自动下发给 VPC-北京/VPC-上海，新增 VPC 直接挂 CCN 即可，零改造。",
+        "选项 C（开两条专线分别接 VPC-北京和 VPC-上海）：成本高且不可扩展，每加一个 VPC 都要新拉专线。",
+        "选项 D（VPN 隧道替代专线）：与题目「专线接入」前提冲突，且性能/SLA 不达标。",
+        "结论：选 B（云联网专线网关挂 CCN）是腾讯云官方推荐的「IDC + 多 VPC」标准架构。"
+      ],
+      "pitfall": "最容易踩的坑：以为「VPC 专线网关挂在 VPC-上海，再让 VPC-上海 转发到 CCN」就能通。其实 VPC 专线网关并非 CCN 成员，CCN 看不到 IDC 网段，回程路由会黑洞。"
+    },
+    "options": [
+      {
+        "label": "A",
+        "text": "使用 VPC 专线网关挂在 VPC-上海，依靠 VPC-上海 路由转发到 CCN 访问 VPC-北京"
+      },
+      {
+        "label": "B",
+        "text": "使用云联网（CCN）专线网关，将专线网关直接挂载到 CCN 上，由 CCN 统一下发路由"
+      },
+      {
+        "label": "C",
+        "text": "拉两条独立专线，分别接入 VPC-北京 和 VPC-上海"
+      },
+      {
+        "label": "D",
+        "text": "放弃专线，改用 IPsec VPN 隧道接入 VPC-上海，再借道 CCN 访问 VPC-北京"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-vpc",
+    "tags": [
+      "VPC",
+      "云联网CCN",
+      "专线接入",
+      "混合云"
+    ],
+    "analysis": "云联网专线网关（CCN 专线网关）作为 CCN 的网络实例，IDC 路由通过 BGP 自动通告到 CCN，并下发给所有挂载的 VPC，实现「一次接入、多地互通」，是腾讯云推荐的混合云标准架构。VPC 专线网关只能服务单个 VPC，无法跨 VPC 转发到 CCN。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.4_%E7%A7%81%E6%9C%89%E7%BD%91%E7%BB%9CVPC%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 3
+  },
+  {
+    "id": "prac-ch2-clb-001",
+    "kind": "practical",
+    "stem": "用户访问 https 站点时偶发 502，从下列现象判断，最可能的根因和应优先采取的排查动作是？",
+    "practical": {
+      "scenario": "某电商业务架构：CLB（公网，HTTPS 监听）→ 后端 4 台 CVM（Nginx + Tomcat）→ TDSQL-C MySQL。监控显示：CLB 监听器健康检查全部正常；但用户端从 09:30 起偶发 502 Bad Gateway，比例约 3%–5%。Tomcat 业务日志无错误。CVM CPU 平均 35%，内存 60%。",
+      "topology": {
+        "type": "mermaid",
+        "content": "flowchart LR\n  U[\"用户\"]\n  CLB[\"CLB HTTPS 监听\\n健康检查 OK\"]\n  N1[\"CVM-1 Nginx+Tomcat\"]\n  N2[\"CVM-2 Nginx+Tomcat\"]\n  N3[\"CVM-3 Nginx+Tomcat\"]\n  N4[\"CVM-4 Nginx+Tomcat\"]\n  DB[\"TDSQL-C MySQL\"]\n  U -- HTTPS --> CLB\n  CLB --> N1\n  CLB --> N2\n  CLB --> N3\n  CLB --> N4\n  N1 --> DB\n  N2 --> DB\n  N3 --> DB\n  N4 --> DB",
+        "caption": "电商架构现状（健康检查 OK 但 502 偶发）"
+      },
+      "constraints": [
+        "502 比例 3%–5%，非全量故障",
+        "CLB 健康检查全部 OK",
+        "Tomcat 业务日志无 Error",
+        "CVM 资源水位不高",
+        "故障时间集中在 09:30 后流量上涨期"
+      ],
+      "reasoning": [
+        "502 = CLB 拿到了后端连接但响应异常或无响应，必然是『CLB ↔ 后端』链路问题，不是 CLB 本身、也不是 DB。",
+        "健康检查 OK 仅说明探测路径（默认 / 或自定义 URL）通，但并不代表所有业务路径下连接都健康；可能是 Nginx 端的 keepalive 连接被先关掉，CLB 复用了已关闭的连接。",
+        "Tomcat 业务日志无 Error，说明请求很可能根本没到 Tomcat，问题出在 Nginx 层（连接被 reset / upstream 超时 / 连接复用失败）。",
+        "CVM 资源水位不高 → 排除性能瓶颈；DB 端无现象 → 排除 SQL 慢查导致的 504。",
+        "正确动作：先看 CVM 上 Nginx 的 error.log，确认 upstream timeout / connection reset；同时检查 Nginx keepalive_timeout 与 CLB 空闲超时的配置匹配；CLS 拉 CLB 访问日志按 status_code=502 聚合，看是否集中在某台 CVM。"
+      ],
+      "pitfall": "常见误判：看到 502 就去重启 CLB 或扩容 CVM。健康检查 OK 不代表业务路径 OK，必须看后端 Nginx 的 error.log，并确认 CLB 与 Nginx 的 keepalive 超时不匹配（CLB 默认 75s，Nginx 默认 60s，会出现『CLB 复用已关闭连接』）。"
+    },
+    "options": [
+      {
+        "label": "A",
+        "text": "数据库连接池打满，需要扩容 TDSQL-C 实例规格"
+      },
+      {
+        "label": "B",
+        "text": "CLB 监听器异常，重启 CLB 或重新创建监听器"
+      },
+      {
+        "label": "C",
+        "text": "Nginx upstream 与 CLB 的 keepalive 超时不一致或 Nginx 异常，应优先查 Nginx error.log 与 CLS 中的 CLB 访问日志"
+      },
+      {
+        "label": "D",
+        "text": "用户终端网络抖动，建议引导用户切换网络环境"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-clb",
+    "tags": [
+      "CLB",
+      "故障排查",
+      "502",
+      "Nginx",
+      "可观测"
+    ],
+    "analysis": "502 = 『CLB 已建连后端但响应异常』，必查后端 Nginx。健康检查 OK 仅探测了少量路径；Tomcat 无错说明请求未到 Tomcat，问题大概率在 Nginx 层。优先排查项：① Nginx error.log（upstream timeout / reset）；② Nginx keepalive_timeout 与 CLB 空闲超时（默认 75s）匹配；③ CLS 中 CLB 访问日志按 502 聚合是否集中在某台 CVM。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.5_%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1CLB%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 3
+  },
+  {
+    "id": "prac-ch3-dr-001",
+    "kind": "practical",
+    "stem": "下列哪种容灾方案最匹配「核心交易系统、RPO≈0、RTO<10 分钟、预算合理」的诉求？（多选）",
+    "practical": {
+      "scenario": "某金融客户核心交易系统部署在腾讯云广州地域。CTO 对容灾提出明确诉求：① 数据零丢失（RPO 接近 0）；② 故障切换时间 < 10 分钟（RTO < 10 分钟）；③ 预算合理，不要求做完全等量的双活。请为该客户选择匹配的容灾方案组合。",
+      "constraints": [
+        "RPO ≈ 0：数据零丢失",
+        "RTO < 10 分钟：切换要快",
+        "预算合理：不接受『冷备 / 跨城双活』两个极端",
+        "交易系统：必须考虑数据一致性"
+      ],
+      "reasoning": [
+        "RPO ≈ 0 → 必须同步复制；同步复制只能在网络延迟极低（<5ms）的范围内做，所以选『同城双可用区』而非跨地域。",
+        "RTO < 10 分钟 → 不能用冷备（手工恢复几小时起），必须『热备』或『多活』；CLB 自动切流可在分钟级完成。",
+        "预算合理 → 不做跨城双活（双地域全量资源 ×2 成本翻倍），选『同城双可用区 + 跨地域异步备份』组合：日常用同城双活抗机房级故障，跨地域备份兜底极端灾难。",
+        "数据库选 TDSQL-C 多可用区版（同步复制，自动主备切换 < 30s）或 TDSQL 强一致版本，匹配 RPO=0。",
+        "结论：A（同城双可用区）+ C（跨地域异步备份兜底）+ D（数据库选多可用区强一致）。B（跨城同步双活）成本过高且同步复制延迟难达标，不选。"
+      ],
+      "pitfall": "常见误区：以为 RPO=0 必须做『跨城双活』。实际上跨城（如广州↔上海）网络延迟 30ms+，做不了同步复制；强行同步会拖垮业务。RPO=0 的正确做法是『同城双可用区同步』+『跨地域异步备份』兜底。"
+    },
+    "options": [
+      {
+        "label": "A",
+        "text": "采用同城双可用区部署，CLB 跨可用区健康检查自动切流"
+      },
+      {
+        "label": "B",
+        "text": "采用跨城（广州↔上海）双活，两地数据库实时同步复制"
+      },
+      {
+        "label": "C",
+        "text": "在异地（上海）做异步数据备份与冷站点，作为极端灾难兜底"
+      },
+      {
+        "label": "D",
+        "text": "数据库选用 TDSQL-C 多可用区版（同步复制，主备秒级切换）"
+      },
+      {
+        "label": "E",
+        "text": "采用单可用区 + 每日快照备份的低成本方案"
+      }
+    ],
+    "answer": [
+      "A",
+      "C",
+      "D"
+    ],
+    "type": "multiple",
+    "chapter": 3,
+    "subChapter": "ch3-dr",
+    "tags": [
+      "容灾",
+      "高可用",
+      "RPO/RTO",
+      "TDSQL-C"
+    ],
+    "analysis": "金融交易系统 RPO=0 的标准答案是『同城双可用区同步复制 + 跨地域异步备份兜底』。同城双可用区延迟 < 2ms 可做同步复制，CLB 跨可用区健康检查自动切流；跨地域异步备份用于极端区域级灾难兜底；数据库选多可用区强一致版本。跨城同步双活成本高、延迟难达标，不选；单可用区+快照不满足 RTO<10 分钟。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.1_%E4%BA%91%E4%B8%8A%E5%AE%B9%E7%81%BE/",
+    "difficulty": 3
+  },
+  {
+    "id": "prac-ch2-cdn-001",
+    "kind": "practical",
+    "stem": "下列哪一项最可能是导致 CDN 命中率低、源站压力高的真正原因？",
+    "practical": {
+      "scenario": "某资讯类网站接入腾讯云 CDN 一周后，运维发现：源站带宽下降不明显，源站 QPS 仍高达接入前的 70%。CDN 控制台显示节点缓存命中率仅 35%。前端工程师反馈：业务页面里大量 JS/CSS/图片，URL 形如 /static/app.js?v=20260520&t=1716200000，每次发版都会变更 v 参数，t 参数是页面渲染时拼上的当前时间戳。",
+      "topology": {
+        "type": "mermaid",
+        "content": "flowchart LR\n  U[\"用户\"]\n  CDN[\"腾讯云 CDN\\n命中率 35%\"]\n  ORI[\"源站 CVM+COS\\nQPS 仍 70%\"]\n  U --> CDN\n  CDN -- 大量回源 --> ORI",
+        "caption": "CDN 接入后命中率仅 35%，回源量异常"
+      },
+      "constraints": [
+        "CDN 缓存命中率仅 35%（健康值应 > 85%）",
+        "URL 携带两类查询参数：v=版本号、t=当前时间戳",
+        "t 参数每次刷新都不同",
+        "v 参数仅在发版时变更"
+      ],
+      "reasoning": [
+        "CDN 默认会把『完整 URL（含 query string）』作为缓存 key；t 每次都变 → 每次请求都被视为新资源 → 必回源 → 命中率崩盘。",
+        "v 参数虽然变化频率低（仅发版变），但其实是『正确的缓存键』，应保留以便发版后强制刷新缓存。",
+        "正确做法：在 CDN 控制台开启『忽略参数缓存』并配置参数白名单，只保留 v，忽略 t（以及其他无意义参数如 utm_source 等追踪参数）。",
+        "辅助手段：发版时主动调用 CDN 预热 + 刷新接口，让新版本资源快速覆盖。",
+        "选项 B（关闭所有参数缓存）会让 v 也失效，发版后仍可能命中旧缓存，错误；选项 C（升级到边缘节点）不解决缓存键问题；选项 D（加大源站带宽）治标不治本。"
+      ],
+      "pitfall": "常见误区：① 直接关闭所有参数缓存（导致 v 失效）；② 把缓存命中率低归咎于 CDN 节点能力不足，盲目升级套餐。真正的根因 90% 都是『缓存键设计错了』——把不该参与缓存键的参数（时间戳、追踪参数）放进了 URL。"
+    },
+    "options": [
+      {
+        "label": "A",
+        "text": "URL 中的时间戳参数 t 导致缓存键被打散，应在 CDN 配置参数白名单仅保留 v，忽略 t"
+      },
+      {
+        "label": "B",
+        "text": "CDN 节点能力不足，应关闭所有参数缓存以提升命中率"
+      },
+      {
+        "label": "C",
+        "text": "应将 CDN 升级为边缘节点 EdgeOne 才能提升命中率"
+      },
+      {
+        "label": "D",
+        "text": "源站带宽不够，应扩容源站 CVM 出口带宽"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-cdn",
+    "tags": [
+      "CDN",
+      "缓存命中率",
+      "缓存键",
+      "参数白名单"
+    ],
+    "analysis": "CDN 默认以完整 URL（含 query string）为缓存键，URL 上每次变化的 t（时间戳）会让每次请求被视为新资源，全部回源，命中率自然崩盘。正确配置是『参数白名单缓存』：只保留有意义的版本参数 v，忽略 t、utm_*、track_* 等。发版时再配合 CDN 主动预热/刷新接口快速覆盖新版本。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.6_%E5%86%85%E5%AE%B9%E5%88%86%E5%8F%91%E7%BD%91%E7%BB%9CCDN%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "prac-ch4-net-001",
+    "kind": "practical",
+    "stem": "对于「公网三层 Web 架构 + 内网数据库」场景，下列哪种安全组与子网划分组合最符合等保 2.0 三级『安全区域边界』要求？",
+    "practical": {
+      "scenario": "某政务系统需通过等保 2.0 三级测评。架构：公网用户 → CLB（公网监听）→ Nginx 接入层（4 台 CVM）→ 应用层（4 台 CVM）→ TDSQL-C MySQL。等保要求：① 不同安全等级区域之间逻辑隔离；② 数据库不得直接暴露公网；③ 默认拒绝、最小化授权；④ 关键边界访问可审计。",
+      "topology": {
+        "type": "mermaid",
+        "content": "flowchart TB\n  U[\"公网用户\"]\n  CLB[\"CLB 公网监听器\"]\n  subgraph DMZ[\"子网1: DMZ 接入层\"]\n    NX[\"Nginx ×4\"]\n  end\n  subgraph APP[\"子网2: 应用层\"]\n    AP[\"App ×4\"]\n  end\n  subgraph DB[\"子网3: 数据层\"]\n    DBM[\"TDSQL-C\"]\n  end\n  U --> CLB --> NX --> AP --> DBM",
+        "caption": "三层 Web 架构在 VPC 内的子网划分"
+      },
+      "constraints": [
+        "等保 2.0 三级",
+        "公网入口仅 CLB，CVM 不挂公网 IP",
+        "数据库不可被公网访问",
+        "默认拒绝、最小化授权",
+        "需要可审计"
+      ],
+      "reasoning": [
+        "等保『安全区域边界』要求：不同安全等级的网段之间必须逻辑隔离 → 至少划 3 个子网（接入/应用/数据），各自独立安全组。",
+        "默认拒绝：每个安全组入站规则只放行『上游来源 + 必要端口』；最常见错误是用 0.0.0.0/0 + 全端口图省事，等保会扣分。",
+        "最小化授权：DB 安全组入站只允许『应用层安全组』访问 3306（按安全组引用，而非 IP 段，最干净），不允许接入层和公网 IP 访问。",
+        "审计：CLB 访问日志接 CLS、VPC 流日志开启、安全组变更接操作审计 CloudAudit。",
+        "选项 A 把 DB 放公网/全开放，违反『不得直接暴露公网』；选项 B 仅划 1 个大子网，违反『区域边界』；选项 C 三层子网+三套安全组+按安全组引用授权，符合；选项 D 仅依赖 CLB 不做内部分层，违反纵深防御原则。"
+      ],
+      "pitfall": "常见误区：① 三层 CVM 都挂公网 IP 图方便（违反等保 + 攻击面暴露）；② 安全组直接 0.0.0.0/0 全开放（违反默认拒绝）；③ 用 IP 段授权而不用『安全组引用』（CVM 扩缩容后授权失效）；④ 不开 VPC 流日志，故障/攻击溯源困难。"
+    },
+    "options": [
+      {
+        "label": "A",
+        "text": "全部 CVM 公网 IP + 一个大安全组放行 0.0.0.0/0，简化运维"
+      },
+      {
+        "label": "B",
+        "text": "VPC 内仅划 1 个子网容纳所有层，统一安全组管控即可"
+      },
+      {
+        "label": "C",
+        "text": "VPC 内划接入/应用/数据三层独立子网，三套独立安全组，DB 安全组入站仅放行应用层安全组的 3306 端口，开启 VPC 流日志与 CLS 审计"
+      },
+      {
+        "label": "D",
+        "text": "依靠 CLB 公网监听器做安全防护即可，内部不做安全组隔离"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 4,
+    "subChapter": "ch4-network",
+    "tags": [
+      "等保2.0",
+      "安全组",
+      "子网划分",
+      "VPC流日志"
+    ],
+    "analysis": "等保 2.0 三级『安全区域边界』要求不同安全等级网段逻辑隔离，最佳实践：按接入/应用/数据三层划独立子网与独立安全组，且使用『安全组引用』方式授权（DB 安全组放行应用层安全组的 3306 而非 IP 段），CVM 不挂公网 IP，公网入口收敛到 CLB；同时 VPC 流日志、CLB 访问日志接入 CLS，安全组变更接 CloudAudit，满足审计要求。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.3_%E6%9E%84%E5%BB%BA%E5%AE%89%E5%85%A8%E9%80%9A%E4%BF%A1%E7%BD%91%E7%BB%9C%E5%8F%8A%E5%AE%89%E5%85%A8%E5%8C%BA%E5%9F%9F%E8%BE%B9%E7%95%8C/",
+    "difficulty": 3
+  },
+  {
+    "id": "prac-ch2-cvm-002",
+    "kind": "practical",
+    "stem": "针对下列四类业务，最匹配的 CVM 实例族选型组合是？（多选）",
+    "practical": {
+      "scenario": "某互联网公司同时跑四类业务：① 视频转码集群：CPU 持续打满 95%+，对内存要求不高，需求 32 核；② 推荐系统在线服务：QPS 8000，需要在内存里缓存 200GB 特征向量；③ 日志检索（ES）集群：写入 50MB/s、磁盘 IOPS 要求 5w+，存储 8TB SSD；④ 通用 Web 后台：QPS 800，CPU/内存比例均衡。请为四类业务挑选实例族。",
+      "constraints": [
+        "选型必须考虑 CPU/内存比、本地盘性能、价格性价比",
+        "禁止『一把梭全选标准型 S5』，要按业务画像匹配",
+        "考虑实例代际选当代主推型号"
+      ],
+      "reasoning": [
+        "视频转码 CPU-bound、内存需求低 → 计算型 C6/C7，CPU/内存比 1:2，单价比标准型低 ~20%。",
+        "推荐系统 200GB 内存缓存 → 内存型 M6，CPU/内存比 1:8，单实例可达 768GB 内存，省去多机分布式缓存复杂度。",
+        "ES 写入密集 + IOPS 5w+ → 高 IO 型 IT5（本地 NVMe SSD），延迟微秒级，远胜云盘；增强型 SSD 云盘 IOPS 上限会被打到。",
+        "通用 Web QPS 800 → 标准型 S6（CPU/内存 1:4）即可，性价比最高。",
+        "结论：A+B+C+D 四个都对。E（全用标准型）和 F（全用计算型）都是『一把梭』反例。"
+      ],
+      "pitfall": "最容易错的是『内存型当万能型』或『标准型当万能型』。视频转码上内存型纯属浪费内存预算；推荐系统上标准型会因 swap 频繁导致延迟抖动；ES 用云盘 IOPS 永远打不满业务真实需求。"
+    },
+    "options": [
+      {
+        "label": "A",
+        "text": "视频转码集群选 计算型 C6（CPU/内存 1:2）"
+      },
+      {
+        "label": "B",
+        "text": "推荐系统选 内存型 M6（CPU/内存 1:8，单实例可达 768GB 内存）"
+      },
+      {
+        "label": "C",
+        "text": "ES 日志检索集群选 高 IO 型 IT5（本地 NVMe SSD，IOPS 数十万）"
+      },
+      {
+        "label": "D",
+        "text": "通用 Web 后台选 标准型 S6（CPU/内存 1:4）"
+      },
+      {
+        "label": "E",
+        "text": "四类业务统一使用标准型 S5，简化运维"
+      },
+      {
+        "label": "F",
+        "text": "四类业务统一使用计算型 C6，CPU 性能最高"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "type": "multiple",
+    "chapter": 2,
+    "subChapter": "ch2-cvm",
+    "tags": [
+      "CVM",
+      "实例族",
+      "选型",
+      "性价比"
+    ],
+    "analysis": "腾讯云 CVM 实例族按业务画像分为：标准型（S 系列，1:4，通用）、计算型（C 系列，1:2，CPU 密集）、内存型（M 系列，1:8，内存密集）、高 IO 型（IT 系列，本地 NVMe，磁盘密集）、GPU 型（GN/GT，AI 训练/推理）。选型核心是『按业务画像匹配 CPU/内存比和存储要求』，盲目一把梭会带来浪费或性能不达标。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.1_%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8CVM%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "prac-ch2-cvm-003",
+    "kind": "practical",
+    "stem": "客户希望把广州地域的一台关键 CVM『连同系统盘+数据盘』复制到上海地域用于异地容灾，下列方案最正确的是？",
+    "practical": {
+      "scenario": "某客户在广州地域有一台关键业务 CVM：标准型 S6.LARGE16（4C16G），系统盘 50GB（增强型 SSD），数据盘 500GB（已用 280GB）。客户希望在上海地域复制一份完全一致的实例（含数据盘内容）作为冷备。要求：① 数据完整一致；② 操作可重复（脚本化）；③ 后续可定期增量更新备份。",
+      "constraints": [
+        "必须跨地域（广州 → 上海）",
+        "系统盘 + 数据盘都要带过去",
+        "目标是冷备，不需要实时同步",
+        "操作需可脚本化、可定期执行"
+      ],
+      "reasoning": [
+        "选项 A：腾讯云标准做法。镜像负责系统盘 + 应用环境；快照跨地域复制负责数据盘内容；上海端用镜像启 CVM 后用快照创建数据盘并挂载。云 API 全支持，可定期增量复制。",
+        "选项 B（scp 拷贝数据盘文件）：耗时长、易漏文件（权限/软链接/打开句柄），不可恢复『系统盘状态』。",
+        "选项 C（直接迁移 CVM 到上海）：CVM 不支持跨地域迁移，只能在同一地域不同可用区做迁移；概念错误。",
+        "选项 D（CBS 跨地域同步）：CBS 云硬盘本身没有『跨地域实时同步』功能，必须借助快照复制；说法错误。",
+        "结论：A。"
+      ],
+      "pitfall": "常见误区：① 以为 CVM 实例可以『跨地域迁移』（只支持同地域内迁移）；② 以为 CBS 云盘有『跨地域复制』开关（必须走快照）；③ 用 scp 替代镜像/快照，导致系统级状态丢失。"
+    },
+    "options": [
+      {
+        "label": "A",
+        "text": "源端做自定义镜像并跨地域复制到上海，数据盘做快照并跨地域复制到上海，上海端用镜像启 CVM 并用快照创建数据盘挂载"
+      },
+      {
+        "label": "B",
+        "text": "在上海地域开一台空 CVM，用 scp 把广州数据盘的所有文件拷贝过去"
+      },
+      {
+        "label": "C",
+        "text": "在控制台对该 CVM 点『迁移』并选择目标为上海地域"
+      },
+      {
+        "label": "D",
+        "text": "为数据盘开启 CBS 跨地域同步开关，自动同步到上海地域"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-cvm",
+    "tags": [
+      "CVM",
+      "自定义镜像",
+      "快照",
+      "跨地域容灾"
+    ],
+    "analysis": "腾讯云『跨地域 CVM 复制』标准链路：自定义镜像（封装系统盘 + 应用环境）跨地域复制 + CBS 快照（封装数据盘内容）跨地域复制，目标地域用镜像创建 CVM 并用快照创建数据盘挂载。整套链路云 API 全支持，可脚本化定期执行。CVM 实例不支持跨地域迁移，CBS 也无『跨地域实时同步』功能。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.1_%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8CVM%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "prac-ch2-as-001",
+    "kind": "practical",
+    "stem": "针对『Kafka 消息队列堆积驱动 worker 弹性扩缩容』场景，下列 AS 弹性策略设计最合理的是？",
+    "practical": {
+      "scenario": "某外卖平台订单处理 worker 集群：架构为 CKafka（订单消息）→ Worker CVM 集群（消费、写库）。早高峰 11:00-13:00、晚高峰 17:00-20:00 消息量是平时 5 倍；其他时间消息量平稳。现 worker 始终保持 20 台 CVM，资源 70% 时间浪费，但高峰偶尔仍堆积 5-10 分钟。要求：① 高峰自动扩、低谷自动缩；② 堆积不能持续超过 3 分钟；③ 成本下降 ≥ 30%。",
+      "topology": {
+        "type": "mermaid",
+        "content": "flowchart LR\n  P[\"订单服务\"]\n  K[\"CKafka 订单 Topic\"]\n  ASG[\"AS 伸缩组\\nWorker 5-50 台\"]\n  DB[\"TDSQL-C\"]\n  P --> K\n  K --> ASG\n  ASG --> DB\n  CW[\"云监控\\n自定义指标:堆积量\"] -. 触发扩缩 .-> ASG",
+        "caption": "基于 Kafka 堆积量驱动的 AS 弹性架构"
+      },
+      "constraints": [
+        "高峰扩、低谷缩，扩缩响应速度 ≤ 3 分钟",
+        "成本下降 ≥ 30%",
+        "不能漏单或重复消费",
+        "弹性指标必须能反映真实业务压力"
+      ],
+      "reasoning": [
+        "用 CPU 利用率作为唯一扩容指标 → 不准。Worker 堆积时 CPU 可能不高（瓶颈在 DB），等 CPU 飙起来时已经堆积严重。",
+        "正确做法：以『Kafka 消费组堆积量 (lag)』为核心指标，把 lag 上报到云监控自定义指标，AS 基于该指标做扩缩。例如 lag > 1000 触发扩 5 台、lag < 100 持续 5 分钟触发缩 2 台。",
+        "辅以『定时策略』：早高峰前 10 分钟（10:50）预扩 10 台，避免冷启动延迟；晚高峰同理。",
+        "缩容必须设『冷却时间 + 安全阈值』：缩容后保留 5 台底线、缩容冷却 5 分钟，避免抖动。",
+        "选项 A 反应慢；选项 B 自定义指标 + 定时双轨正确；选项 C 不缩容省不了钱；选项 D 暴力扩缩会抖动。"
+      ],
+      "pitfall": "常见误区：① 以 CPU 利用率作为消费型 worker 的唯一弹性指标（指标滞后于业务真实压力）；② 不设缩容下限，导致深夜缩到 0 台再被突发流量击穿；③ 不设冷却时间，扩缩抖动让下游 DB 反复重连。"
+    },
+    "options": [
+      {
+        "label": "A",
+        "text": "AS 仅按『CPU 利用率 > 60%』扩容、『< 30%』缩容，简单有效"
+      },
+      {
+        "label": "B",
+        "text": "把 Kafka 消费组 lag 上报到云监控自定义指标，AS 基于 lag 做主弹性，叠加 10:50/16:50 定时预扩，缩容设 5 台下限和 5 分钟冷却"
+      },
+      {
+        "label": "C",
+        "text": "高峰扩到 50 台，低谷不缩，避免抖动"
+      },
+      {
+        "label": "D",
+        "text": "AS 配置『每分钟检查一次，超阈值立即扩 5 台、低于阈值立即缩 5 台』"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-as",
+    "tags": [
+      "弹性伸缩AS",
+      "自定义指标",
+      "Kafka",
+      "成本优化"
+    ],
+    "analysis": "消息队列消费型 worker 的弹性核心是『跟随业务真实压力』，用消费 lag 作主指标比 CPU 更准、反应更快。腾讯云 AS 支持自定义指标策略 + 定时策略 + 目标追踪策略多种组合：自定义指标负责实时跟随；定时策略负责高峰前预扩，规避冷启动延迟；缩容必须设下限和冷却时间避免抖动。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.2_%E5%BC%B9%E6%80%A7%E4%BC%B8%E7%BC%A9AS%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 3
+  },
+  {
+    "id": "prac-ch2-tke-001",
+    "kind": "practical",
+    "stem": "针对『日常负载平稳 + 月底批处理短时高峰 5 倍』的场景，最合适的 TKE 节点池设计是？",
+    "practical": {
+      "scenario": "某 SaaS 财税系统部署在 TKE 集群。业务特征：① 日常约 30 个 Pod，CPU 总需求 60 核；② 每月 28-30 号月结批处理，Pod 数瞬间扩到 200 个，需要 400 核 CPU，持续 6-8 小时后归零；③ 大促期间会有 1-2 天突发任务。客户希望日常成本最低、高峰自动扩、运维负担小。",
+      "topology": {
+        "type": "mermaid",
+        "content": "flowchart TB\n  K[\"TKE 集群\"]\n  subgraph BASE[\"普通节点池(底盘)\"]\n    N1[\"CVM 节点 ×N\"]\n  end\n  subgraph SUPER[\"超级节点(EKS)\"]\n    P1[\"按 Pod 计费的虚拟节点\"]\n  end\n  K --- BASE\n  K --- SUPER\n  POD[\"日常 Pod\"] --> N1\n  BURST[\"月结/突发 Pod\"] --> P1",
+        "caption": "TKE 节点池混合架构：底盘 + Serverless 弹性"
+      },
+      "constraints": [
+        "日常负载稳定，高峰短暂",
+        "高峰扩容速度要快（分钟级，不能等 CVM 启 5 分钟）",
+        "成本最低、运维少",
+        "Pod 调度对业务透明"
+      ],
+      "reasoning": [
+        "纯普通节点池：高峰要预留 400 核底盘，70% 时间浪费；扩容要先创建 CVM、再加入集群，分钟级延迟。",
+        "纯超级节点（EKS）：日常 30 个 Pod 长期跑在按 Pod 计费的 EKS 上，比包年包月 CVM 贵不少。",
+        "混合节点池（普通 + 超级节点）：日常负载放普通节点池（包年包月，单价低），月结突发 Pod 通过『超级节点』承接，按 Pod 秒级计费、不占用 CVM 资源、扩容秒级。这是 TKE 官方推荐的『底盘 + Serverless 弹性』模式。",
+        "调度策略：通过节点亲和性 + 标签把日常 workload 钉到普通节点池，把『可弹的 Job/批处理』调度到超级节点。",
+        "选项 A 浪费严重；B 日常成本高；C 混合正确；D 多个独立集群运维负担大。"
+      ],
+      "pitfall": "常见误区：① 把所有 workload 放到超级节点导致日常成本高；② 全用普通节点池，高峰只能靠 CA 创建 CVM，5 分钟以上的扩容延迟撑不住短时高峰；③ 拆多个独立集群，运维和资源利用都差。"
+    },
+    "options": [
+      {
+        "label": "A",
+        "text": "用一个普通节点池，预留 400 核 CVM 应对高峰，平时让其闲置"
+      },
+      {
+        "label": "B",
+        "text": "整个集群用超级节点（EKS），所有 Pod 按量计费"
+      },
+      {
+        "label": "C",
+        "text": "混合节点池：普通节点池跑日常稳态负载（包年包月），月结/突发 Pod 调度到超级节点（按 Pod 秒级计费）"
+      },
+      {
+        "label": "D",
+        "text": "拆为日常集群和月结集群两个独立集群，定期手工扩缩容"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-tke",
+    "tags": [
+      "TKE",
+      "节点池",
+      "超级节点EKS",
+      "弹性"
+    ],
+    "analysis": "TKE 支持『普通节点池 + 超级节点（EKS Serverless）』混合架构，业内典型『底盘 + 弹性』模式：日常稳态 workload 放普通节点池（包年包月最便宜），高峰/突发 workload 调度到超级节点（按 Pod 秒级计费、无需关心节点）。这是『成本最低 + 弹性最快 + 运维最简』的最佳组合。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.3_%E5%AE%B9%E5%99%A8%E6%9C%8D%E5%8A%A1TKE%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "prac-ch2-tke-002",
+    "kind": "practical",
+    "stem": "针对下列三种 TKE 中暴露服务的诉求，最合理的 Service 类型选型组合是？（多选）",
+    "practical": {
+      "scenario": "某团队在 TKE 集群里同时跑三类服务：① 对外 Web 业务（公网用户访问，HTTPS 终止，QPS 5000）；② 集群内部微服务调用（gRPC，服务间高频互调，对外不暴露）；③ 有状态数据库 StatefulSet（每个 Pod 需稳定网络标识，业务侧需要按 Pod 名称做发现，不需要负载均衡）。请为三种场景选择 Service 类型。",
+      "topology": {
+        "type": "mermaid",
+        "content": "flowchart LR\n  U[\"公网用户\"]\n  CLB[\"CLB 公网\"]\n  subgraph TKE[\"TKE 集群\"]\n    SVC1[\"Web Service\"]\n    SVC2[\"微服务 Service\"]\n    SVC3[\"DB Headless Service\"]\n  end\n  U --> CLB --> SVC1",
+        "caption": "TKE 三类服务暴露方式对照"
+      },
+      "constraints": [
+        "公网 Web 需要 HTTPS、自动负载均衡、健康检查",
+        "微服务集群内部调用，不能暴露公网",
+        "StatefulSet 需要稳定 Pod 网络标识，按名访问"
+      ],
+      "reasoning": [
+        "对外 Web → LoadBalancer 类型 Service（自动创建 CLB），云原生集成度最高，HTTPS 证书 + 健康检查 + 公网 IP 一站式。",
+        "集群内部微服务 → ClusterIP 类型 Service，仅集群内可达。NodePort 会在每个节点开端口暴露公网，违反『不对外』原则。",
+        "StatefulSet 按 Pod 名访问 → Headless Service（spec.clusterIP=None），不分配 ClusterIP，DNS 直接解析到每个 Pod，配合 StatefulSet 的稳定 Pod 名（pod-0/pod-1）实现按名访问。这是 MySQL 集群、Redis 集群、Kafka 等有状态服务的标准做法。",
+        "结论：A+C+D。B（NodePort 给公网 Web）不如 LoadBalancer 一站式；E（StatefulSet 用 LoadBalancer）会让所有 Pod 共享一个 VIP，丢失 Pod 级标识。"
+      ],
+      "pitfall": "最常见踩坑：StatefulSet 上误用普通 Service / LoadBalancer，导致『按 Pod 名访问』失效；或者为了图简单把内部微服务也搞成 LoadBalancer 暴露公网，引入大量攻击面。"
+    },
+    "options": [
+      {
+        "label": "A",
+        "text": "对外 Web 业务使用 type=LoadBalancer 的 Service，由 TKE 自动创建公网 CLB"
+      },
+      {
+        "label": "B",
+        "text": "对外 Web 业务使用 type=NodePort，让用户通过节点 IP+端口访问"
+      },
+      {
+        "label": "C",
+        "text": "集群内部微服务使用 type=ClusterIP 的 Service"
+      },
+      {
+        "label": "D",
+        "text": "StatefulSet 配套 Headless Service（clusterIP=None），通过 Pod DNS 名访问"
+      },
+      {
+        "label": "E",
+        "text": "StatefulSet 配套 type=LoadBalancer 的 Service，对外暴露所有 Pod"
+      }
+    ],
+    "answer": [
+      "A",
+      "C",
+      "D"
+    ],
+    "type": "multiple",
+    "chapter": 2,
+    "subChapter": "ch2-tke",
+    "tags": [
+      "TKE",
+      "Service",
+      "LoadBalancer",
+      "Headless"
+    ],
+    "analysis": "TKE Service 选型口诀：『对外 LB、对内 ClusterIP、有状态 Headless』。LoadBalancer 由 TKE 自动创建并管理 CLB（公网/内网均可）；ClusterIP 是集群内部服务发现的默认方式，安全且零成本；Headless Service（clusterIP=None）专为 StatefulSet 设计，DNS 直接解析到每个 Pod，配合稳定 Pod 名实现按名访问，是 Kafka/MySQL/Redis 集群的标准玩法。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.3_%E5%AE%B9%E5%99%A8%E6%9C%8D%E5%8A%A1TKE%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 3
+  },
+  {
+    "id": "prac-ch2-vpc-002",
+    "kind": "practical",
+    "stem": "针对『3 个 VPC 跨地域 + 后续会扩张』的互通需求，下列方案最合理的是？",
+    "practical": {
+      "scenario": "某客户已有：VPC-广州、VPC-上海、VPC-北京，三个 VPC 业务上需要任意两两互通。客户告知后续 6 个月内还会新增 VPC-深圳、VPC-成都，并预计未来会有海外 VPC（VPC-硅谷）。客户要求：① 所有 VPC 两两互通 ② 路由收敛、运维简单 ③ 后续新增 VPC 改造代价小。",
+      "topology": {
+        "type": "mermaid",
+        "content": "flowchart LR\n  GZ[\"VPC-广州\"]\n  SH[\"VPC-上海\"]\n  BJ[\"VPC-北京\"]\n  CCN[\"云联网 CCN\"]\n  GZ --- CCN\n  SH --- CCN\n  BJ --- CCN\n  SZ[\"VPC-深圳(将来)\"] -. 挂载 .-> CCN\n  CD[\"VPC-成都(将来)\"] -. 挂载 .-> CCN\n  US[\"VPC-硅谷(海外)\"] -. 挂载 .-> CCN",
+        "caption": "多 VPC 互通的两种方案对比"
+      },
+      "constraints": [
+        "至少 3 个 VPC 需要两两互通",
+        "未来会再加 2-3 个国内 VPC + 1 个海外 VPC",
+        "运维要简单、路由要收敛",
+        "成本可控"
+      ],
+      "reasoning": [
+        "对等连接 (Peering)：仅支持两两 VPC 互通，N 个 VPC 全互通需要 N×(N-1)/2 条对等连接。3 个 VPC 要 3 条，5 个 VPC 要 10 条，新增一个 VPC 要建 N 条新对等连接，运维爆炸。",
+        "CCN（云联网）：以 CCN 为核心 hub，所有 VPC 挂上去即可；CCN 内部自动路由学习；新增 VPC 只需『挂载』一次。支持跨地域、跨账号、海外。",
+        "私网 CLB 对外暴露：仅适合『一对多服务调用』，不适合 VPC 全互通的网络层需求。",
+        "公网 IP 互访：跨 VPC 走公网带宽贵、延迟大、不安全，绝对错误。",
+        "结论：B（CCN）。规模 3+ VPC 且会扩张的场景，CCN 几乎是唯一正确答案。"
+      ],
+      "pitfall": "常见误区：① 一开始用对等连接图省事，后期 VPC 增多变成『N 平方网状结构』无法维护；② 把 CCN 与对等连接混用导致路由黑洞；③ 把私网 CLB 当 VPC 互通工具（CLB 是『服务负载均衡』不是『路由器』）。"
+    },
+    "options": [
+      {
+        "label": "A",
+        "text": "在每两个 VPC 之间建立对等连接（Peering），共 3 条；后续每加 1 个 VPC，再补 N 条对等连接"
+      },
+      {
+        "label": "B",
+        "text": "建一个云联网 CCN，把三个 VPC 都挂上去；后续新增 VPC 直接挂到同一个 CCN 即可"
+      },
+      {
+        "label": "C",
+        "text": "在每个 VPC 部署私网 CLB，互相调用对方 CLB 实现跨 VPC 通信"
+      },
+      {
+        "label": "D",
+        "text": "给每个 VPC 的 CVM 都挂公网 IP，直接走公网互访"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-vpc",
+    "tags": [
+      "VPC",
+      "云联网CCN",
+      "对等连接",
+      "选型"
+    ],
+    "analysis": "VPC 互通的『对等连接 vs CCN 选型口诀』：2 个 VPC 一次性互通用对等连接成本最低；3 个及以上 VPC、跨地域、未来会扩张时必须用 CCN，因为 CCN 是『路由 hub』模型，新增 VPC 只需挂载，路由自动学习，后续扩张代价 O(1)；对等连接是『两两网状』模型，新增 VPC 代价 O(N)。CCN 还原生支持跨地域、跨账号和海外加速。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.4_%E7%A7%81%E6%9C%89%E7%BD%91%E7%BB%9CVPC%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 1
+  },
+  {
+    "id": "prac-ch2-vpc-003",
+    "kind": "practical",
+    "stem": "针对『后端 100 台 CVM 需要主动出公网拉镜像、调用第三方 API』的需求，下列出公网方案最合理的是？",
+    "practical": {
+      "scenario": "某团队有 100 台后端 CVM 部署在 VPC 私有子网内，所有 CVM 都不需要被公网主动访问，但需要：① 拉取 Docker Hub / GitHub 上的镜像与代码 ② 调用第三方支付/短信 API ③ 出公网带宽峰值约 500Mbps。安全合规要求不允许 CVM 直接挂公网 IP。",
+      "topology": {
+        "type": "mermaid",
+        "content": "flowchart LR\n  subgraph VPC\n    direction TB\n    CVM1[\"CVM ×100\\n无公网IP\"]\n    NAT[\"NAT 网关\"]\n  end\n  IGW[\"互联网\"]\n  CVM1 --> NAT --> IGW",
+        "caption": "私有子网通过 NAT 网关出公网"
+      },
+      "constraints": [
+        "100 台 CVM 都不能挂公网 IP（合规）",
+        "只需要主动出公网，不需要被动入公网",
+        "出公网带宽峰值 ≈ 500Mbps",
+        "成本可控、运维简单"
+      ],
+      "reasoning": [
+        "EIP 方案：100 台 CVM 各挂 1 个 EIP，违反合规『不挂公网 IP』；且 100 个 EIP 配额管理、安全组维护成本高、攻击面 100 倍。",
+        "NAT 网关方案：1 个 NAT 网关承接 100 台 CVM 的公网出流量，CVM 都在私有子网无公网 IP，安全。NAT 网关支持高带宽规格（数 Gbps），500Mbps 完全够用。路由表里 0.0.0.0/0 下一跳指向 NAT 网关即可。",
+        "CLB 方案：CLB 是『被动接受公网入流量』的产品，不是『主动出公网』的网关，方向错了。",
+        "公网代理 CVM 方案：自建一台代理 CVM 转发出公网，单点 + 性能差 + 维护代理软件配置，跟 NAT 网关相比毫无优势。",
+        "结论：B（NAT 网关）。"
+      ],
+      "pitfall": "常见误区：① 100 台 CVM 各挂 EIP 图省事（违规、贵、攻击面大）；② 把 CLB 当 NAT 用（方向不同：CLB 是入流量负载均衡，NAT 是出流量地址转换）；③ 自建代理 CVM 替代 NAT 网关（性能、SLA、运维都不如托管 NAT）。"
+    },
+    "options": [
+      {
+        "label": "A",
+        "text": "给 100 台 CVM 每台挂 1 个 EIP"
+      },
+      {
+        "label": "B",
+        "text": "VPC 内部署 NAT 网关，路由表 0.0.0.0/0 指向 NAT 网关，CVM 不挂公网 IP"
+      },
+      {
+        "label": "C",
+        "text": "用 CLB 做出公网网关，把 CVM 挂在 CLB 后端"
+      },
+      {
+        "label": "D",
+        "text": "自建一台代理 CVM 挂 EIP，让其他 100 台 CVM 走代理出公网"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-vpc",
+    "tags": [
+      "VPC",
+      "NAT网关",
+      "EIP",
+      "出公网"
+    ],
+    "analysis": "EIP 与 NAT 网关定位不同：EIP 适合『少数需要被公网入访问』的服务（如对外 Web 服务的少量入口），N 台机器挂 N 个 EIP；NAT 网关适合『多台 CVM 主动出公网』，N 台共享 1 个 NAT 网关，CVM 无需公网 IP，合规且经济。CLB 是入流量负载均衡，方向与 NAT 相反，不能替代。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.4_%E7%A7%81%E6%9C%89%E7%BD%91%E7%BB%9CVPC%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 1
+  },
+  {
+    "id": "prac-ch2-clb-002",
+    "kind": "practical",
+    "stem": "针对『棋牌类长连接游戏服务器 + 玩家断线必须回到原房间』的诉求，下列 CLB 监听器配置最正确的是？",
+    "practical": {
+      "scenario": "某棋牌游戏后端 50 台 CVM，玩家通过 TCP 长连接接入。业务需求：① 同一玩家断线重连后必须回到原房间，否则状态丢失；② TCP 心跳 30 秒一次；③ 单台 CVM 故障不能影响整体（需健康检查）；④ QPS 高、连接数 50w+。请配置 CLB 监听器。",
+      "topology": {
+        "type": "mermaid",
+        "content": "flowchart LR\n  P[\"玩家\"]\n  CLB[\"CLB 四层 TCP 监听器\\n会话保持 + 健康检查\"]\n  G1[\"GameServer-1\"]\n  G2[\"GameServer-2\"]\n  G3[\"GameServer-N\"]\n  P -- TCP长连接 --> CLB\n  CLB --> G1\n  CLB --> G2\n  CLB --> G3",
+        "caption": "棋牌长连接 + 会话保持 + 健康检查"
+      },
+      "constraints": [
+        "TCP 长连接、断线必须回原服",
+        "心跳 30 秒",
+        "需要后端故障自动剔除",
+        "QPS 高、连接数 50w+"
+      ],
+      "reasoning": [
+        "棋牌长连接、断线回原服 → 必须开启『会话保持』，CLB 四层 TCP 监听器支持基于源 IP 的会话保持，把同一玩家的新连接路由到原后端 CVM。",
+        "TCP 心跳 30 秒 → 健康检查间隔不能比心跳更激进否则误判；建议 5-10 秒探测一次端口连通性，连续 3 次失败标记不健康。",
+        "QPS 高、50w+ 连接 → 选 LCU（性能容量单元）级 CLB 而非按规格 CLB；同时确保后端健康检查阈值合理（不能 1 次失败就剔除，避免误踢）。",
+        "选项 A（七层 HTTP 监听器）：棋牌是 TCP 协议，不是 HTTP，错协议。",
+        "选项 B（四层 + 会话保持源 IP + 健康检查端口连通性 5s/3 次）：完全匹配。",
+        "选项 C（关闭健康检查）：单机故障会导致玩家断线无法恢复，错误。",
+        "选项 D（健康检查 1s/1 次失败立即剔除）：过于激进，网络抖动就会误剔除大量后端。"
+      ],
+      "pitfall": "常见误区：① 棋牌/IM/游戏长连接选七层 HTTP 监听器（协议错）；② 不开会话保持，玩家断线后被路由到别的 CVM 状态丢失；③ 健康检查间隔/失败阈值过激，正常网络抖动就把后端踢光；④ 用普通规格 CLB 扛 50w+ 连接，实际触发性能瓶颈。"
+    },
+    "options": [
+      {
+        "label": "A",
+        "text": "使用七层 HTTP 监听器 + Cookie 会话保持"
+      },
+      {
+        "label": "B",
+        "text": "使用四层 TCP 监听器 + 基于源 IP 的会话保持 + 健康检查（端口连通性，间隔 5s，连续 3 次失败剔除），并选用 LCU 性能容量型 CLB"
+      },
+      {
+        "label": "C",
+        "text": "使用四层 TCP 监听器但关闭健康检查，避免心跳被误判为故障"
+      },
+      {
+        "label": "D",
+        "text": "使用四层 TCP 监听器 + 健康检查间隔 1 秒、1 次失败立即剔除"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-clb",
+    "tags": [
+      "CLB",
+      "四层TCP",
+      "会话保持",
+      "健康检查",
+      "游戏长连接"
+    ],
+    "analysis": "CLB 监听器选型：HTTP/HTTPS 业务用七层（支持 URL 路由、Cookie 会话保持）；TCP/UDP 长连接（游戏、IM、私有协议）用四层。会话保持：七层基于 Cookie，四层基于源 IP。健康检查参数要『匹配业务心跳节奏』：间隔过短/阈值过敏会误剔除，间隔过长会延迟故障切换。高连接数场景（50w+）建议选 LCU 性能容量单元型 CLB 而非传统规格型。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.5_%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1CLB%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "prac-ch2-storage-001",
+    "kind": "practical",
+    "stem": "针对『海量小图片 + 7 天热访问 + 90 天后归档』的诉求，下列 COS 存储方案最优的是？",
+    "practical": {
+      "scenario": "某 UGC 社区每天上传图片 500w 张（平均 200KB），存量已 8 亿张约 160TB。访问规律：上传后前 7 天访问 99%，7-90 天偶尔访问 0.9%，90 天以上几乎不访问 0.1%。客户要求：① 总成本最低；② 热数据低延迟；③ 冷数据可在分钟级取回。请设计 COS 存储类型与生命周期策略。",
+      "topology": {
+        "type": "mermaid",
+        "content": "flowchart LR\n  U[\"用户\"]\n  CDN[\"CDN\"]\n  S[\"COS 标准存储\\n(0-7 天)\"]\n  IA[\"COS 低频存储\\n(7-90 天)\"]\n  ARC[\"COS 归档存储\\n(>90 天)\"]\n  U --> CDN --> S\n  S -- 7 天后转 --> IA\n  IA -- 90 天后转 --> ARC",
+        "caption": "COS 三级生命周期分层存储"
+      },
+      "constraints": [
+        "热数据访问延迟低（毫秒级）",
+        "冷数据可分钟级取回，不要求实时",
+        "总成本最低",
+        "策略可自动化、无需人工搬运"
+      ],
+      "reasoning": [
+        "前 7 天热数据 → 标准存储（毫秒级延迟、单价最高），CDN 前面挡一层降低源站访问。",
+        "7-90 天偶尔访问 → 低频存储（IA，单价约为标准存储的 50%-60%，仍是毫秒级访问，但每次取回有少量取回费）。",
+        "90 天以上几乎不访问 → 归档存储（ARCHIVE，单价约为标准存储的 20%，但取回需要分钟级且收取回费），匹配业务允许『分钟级取回』的前提。",
+        "深度归档存储取回需 12-48 小时，本场景不适用。",
+        "策略：用 COS 生命周期规则自动转换：上传后 7 天 → 低频；90 天 → 归档。无需人工搬运。",
+        "选项 A 全部标准成本最高；B 全部归档热数据延迟无法接受；C 标准→低频→归档 + 生命周期规则匹配；D 错用深度归档取回时长不达标。"
+      ],
+      "pitfall": "常见误区：① 不分层全部存标准（成本爆炸）；② 不分层全部存归档（热数据访问延迟无法接受 + 取回费打到爆）；③ 错用深度归档（取回 12-48 小时，绝大多数业务不能接受）；④ 不写生命周期规则，靠人工脚本搬运（容易遗漏）。"
+    },
+    "options": [
+      {
+        "label": "A",
+        "text": "全部使用 COS 标准存储，简单且访问最快"
+      },
+      {
+        "label": "B",
+        "text": "全部使用 COS 归档存储，单价最低"
+      },
+      {
+        "label": "C",
+        "text": "标准存储承接前 7 天热数据，配置生命周期规则：7 天后自动转低频存储，90 天后自动转归档存储"
+      },
+      {
+        "label": "D",
+        "text": "标准存储承接前 7 天，7 天后直接转深度归档存储，最大化降本"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-storage",
+    "tags": [
+      "COS",
+      "存储类型",
+      "生命周期",
+      "成本优化"
+    ],
+    "analysis": "COS 存储类型按访问频次和取回延迟划分：标准（毫秒级、单价最高、热数据）、低频 IA（毫秒级、单价 ~50%、偶尔访问）、归档 ARCHIVE（分钟级取回、单价 ~20%、冷数据）、深度归档（12-48 小时取回、单价最低、合规归档）。最佳实践：用『生命周期规则』自动分层迁移，匹配业务访问衰减曲线，整体成本可下降 50%-70%。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.7_%E4%BA%91%E5%AD%98%E5%82%A8%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "prac-ch2-storage-002",
+    "kind": "practical",
+    "stem": "针对『高并发交易数据库需要 80000 IOPS、低延迟』的诉求，下列 CBS 云硬盘选型最合理的是？",
+    "practical": {
+      "scenario": "某证券核心交易数据库需要部署在 CVM 上自建 MySQL 实例（不走云数据库）。性能要求：① 单卷 IOPS 80000+；② 平均读写延迟 < 1ms；③ 单盘容量 2TB；④ 可用区故障数据可恢复。请为该数据盘选 CBS 云硬盘类型。",
+      "constraints": [
+        "单卷 IOPS 80000+",
+        "平均读写延迟 < 1ms",
+        "单盘 2TB",
+        "数据可恢复（不能仅依赖本地盘）"
+      ],
+      "reasoning": [
+        "高性能云硬盘：IOPS 上限 ~6000，远不够。",
+        "通用型 SSD 云硬盘：IOPS 上限 ~12000，仍不够。",
+        "增强型 SSD 云硬盘：IOPS 上限 50000，延迟 1-2ms，差一档。",
+        "极速型 SSD 云硬盘：IOPS 单卷可达 110w（按容量和规格），延迟 ~0.3ms，匹配 80000+ IOPS 和 < 1ms 延迟需求。",
+        "本地 NVMe SSD（IT5 实例）：性能极强但本地盘断电/迁移会丢数据，不能用于核心交易主库（题目要求数据可恢复）。",
+        "结论：D（极速型 SSD）。CBS 极速型 SSD 是腾讯云目前性能最高的云盘，针对延迟敏感型核心数据库专门设计；同时 CBS 本身具备三副本，可用区故障数据可恢复。"
+      ],
+      "pitfall": "常见误区：① 把『增强型 SSD』当万能型（实际 IOPS 上限 5w，扛不住核心交易）；② 选本地 NVMe（IT5）做主库（断电丢数据，违反交易系统数据安全）；③ 选高性能云硬盘（HDD 衍生）跑数据库（IOPS 6000，秒变瓶颈）。CBS 选型必须看『IOPS/延迟/容量上限』三个指标。"
+    },
+    "options": [
+      {
+        "label": "A",
+        "text": "高性能云硬盘（IOPS 6000）"
+      },
+      {
+        "label": "B",
+        "text": "通用型 SSD 云硬盘（IOPS 12000）"
+      },
+      {
+        "label": "C",
+        "text": "增强型 SSD 云硬盘（IOPS 上限 50000）"
+      },
+      {
+        "label": "D",
+        "text": "极速型 SSD 云硬盘（IOPS 单卷可达 110w，延迟 ~0.3ms）"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-storage",
+    "tags": [
+      "CBS",
+      "云硬盘",
+      "极速型SSD",
+      "数据库存储"
+    ],
+    "analysis": "CBS 云硬盘性能阶梯（从低到高）：高性能云硬盘 → 通用型 SSD → 增强型 SSD → 极速型 SSD。极速型 SSD 是腾讯云目前云盘最高性能档位（单卷 IOPS 百万级、延迟亚毫秒级），专为延迟敏感型数据库设计。本地 NVMe（IT 实例）虽然性能更强，但断电/迁移丢数据，不适合核心数据库主库。CBS 自带三副本，可用区故障数据可恢复，是核心库数据盘首选。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.7_%E4%BA%91%E5%AD%98%E5%82%A8%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "prac-ch2-cdb-001",
+    "kind": "practical",
+    "stem": "针对『读多写少 + 报表查询拖慢主库』的 MySQL 优化需求，下列架构最合理的是？",
+    "practical": {
+      "scenario": "某 SaaS 业务用云数据库 MySQL（CDB）一主一备，QPS 6000 中读 5500、写 500，主库 CPU 60%。运营每天上午跑大报表 SQL，扫描 5000w 行数据，导致主库 CPU 飙到 95%，业务接口 RT 从 50ms 涨到 800ms。客户希望：① 报表不影响主库；② 业务读写不受影响；③ 报表延迟容忍 < 1 分钟。",
+      "topology": {
+        "type": "mermaid",
+        "content": "flowchart LR\n  APP[\"业务 App\"]\n  RW[\"主库\\n读写\"]\n  RO1[\"只读实例 RO-1\\n业务读\"]\n  RO2[\"只读实例 RO-2\\n报表专用\"]\n  REPORT[\"报表服务\"]\n  APP -- 写 --> RW\n  APP -- 业务读 --> RO1\n  REPORT -- 报表读 --> RO2\n  RW -. 异步复制 .-> RO1\n  RW -. 异步复制 .-> RO2",
+        "caption": "读写分离 + 报表只读实例隔离架构"
+      },
+      "constraints": [
+        "读多写少（读 5500/写 500）",
+        "报表 SQL 不能拖垮主库",
+        "报表延迟容忍 < 1 分钟",
+        "业务接口 RT 不退化"
+      ],
+      "reasoning": [
+        "升级主库规格：能临时扛报表，但报表与业务争抢资源的本质问题没解决，规格越升越贵。",
+        "加 1 个只读实例承接所有读 + 报表：业务读和报表混用，报表 5000w 行扫描时仍会拖慢业务读。",
+        "加 2 个只读实例分离用途（RO-1 业务读 / RO-2 报表专用）：业务读和报表各自隔离，主库只承接写。报表延迟通过 MySQL 异步复制（通常秒级）满足 < 1 分钟。这是最佳实践。",
+        "完全用业务方分库分表：写少（500 QPS）远未到分库分表必要性，过度设计。",
+        "结论：C。"
+      ],
+      "pitfall": "常见误区：① 一上来就升主库规格，报表场景下规格无底洞；② 只加 1 个只读实例承接所有读，报表仍会拖慢业务读；③ 直接做分库分表，写仅 500 QPS 远未到分库分表门槛，过度设计且改造成本高。正确做法是『主写 + 业务只读 + 报表只读』三实例分工。"
+    },
+    "options": [
+      {
+        "label": "A",
+        "text": "把主库规格从 4C16G 升级到 32C128G，硬扛报表压力"
+      },
+      {
+        "label": "B",
+        "text": "加 1 个 MySQL 只读实例 RO-1，业务读和报表读全部走 RO-1"
+      },
+      {
+        "label": "C",
+        "text": "加 2 个 MySQL 只读实例：RO-1 承接业务读，RO-2 专供报表使用，主库仅写；通过监控只读实例延迟保证报表数据 < 1 分钟"
+      },
+      {
+        "label": "D",
+        "text": "对业务表做分库分表（按用户 ID hash 32 个分片），分散读压力"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-cdb",
+    "tags": [
+      "MySQL",
+      "读写分离",
+      "只读实例",
+      "报表"
+    ],
+    "analysis": "CDB MySQL 一主多从架构是『读多写少』场景的标配。核心原则：① 主库只承接写 + 强一致读；② 业务只读实例承接业务高并发读；③ 报表/分析 SQL 走专用只读实例与业务读隔离。监控『只读实例复制延迟』指标（毫秒级到秒级）保证业务可接受。该架构远比升级主库规格、做分库分表更经济、改造代价更小。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.9_%E4%BA%91%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "prac-ch2-tdsqlc-001",
+    "kind": "practical",
+    "stem": "针对下列两类业务的数据库选型，最合理的是？（多选）",
+    "practical": {
+      "scenario": "某零售集团两类业务都跑在腾讯云：① 在线交易系统：QPS 2w 写 + 5w 读，订单/库存/支付，强 OLTP 场景，需要弹性扩展、计算存储分离；② 经营分析系统：每天处理 10 亿行订单事实表，T+1 报表 + 即席分析（Ad-hoc），同时还需支持业务库的实时数据接入。请为两类业务选数据库。",
+      "constraints": [
+        "OLTP 业务对低延迟和强一致敏感",
+        "分析业务需要扫描大量数据并支持 SQL 即席查询",
+        "希望减少自建大数据平台的运维",
+        "成本可控"
+      ],
+      "reasoning": [
+        "TDSQL-C MySQL 版（云原生）：计算存储分离架构，秒级弹性、按使用量付费，最高单实例百 TB 容量，QPS 2w 写 + 5w 读完全 hold 得住，且兼容 MySQL 协议；在线交易首选。",
+        "TDSQL（分布式）：金融级强一致 + 水平扩展，适合超大规模分布式 OLTP（如银行核心账务），本场景 QPS 2w 写还在单实例 TDSQL-C 能扛范围内，TDSQL 略重。",
+        "经营分析、10 亿行级事实表 + Ad-hoc：典型 OLAP 场景，TDSQL-C 是 OLTP 不擅长 OLAP；正确选 CDW（云数据仓库）/CDW-PG/Doris 等 HTAP 数仓，按列存储 + MPP 并行计算，可承载 10 亿+ 行扫描和实时入库。",
+        "结论：A（TDSQL-C 选交易）+ D（CDW/HTAP 数仓选分析）。B（CDB 单实例）QPS 2w 写已接近天花板且不弹性；C（TDSQL-C 跑分析）OLTP 库不适合 OLAP；E（自建 Hadoop）运维负担重不符合诉求。"
+      ],
+      "pitfall": "常见误区：① 把 TDSQL-C 当万能数据库，连 OLAP 也塞进去（10 亿行扫描 OLTP 库会被打爆）；② 把 TDSQL（分布式）当 TDSQL-C（云原生）的同义词混用，两者架构和适用场景完全不同；③ 大报表场景一上来就自建 Hadoop/Spark，忽视云上 HTAP 数仓托管服务，运维成本高。"
+    },
+    "options": [
+      {
+        "label": "A",
+        "text": "在线交易系统选 TDSQL-C MySQL 版（云原生 OLTP，计算存储分离，弹性扩展）"
+      },
+      {
+        "label": "B",
+        "text": "在线交易系统选 CDB MySQL 单实例 + 一主多从"
+      },
+      {
+        "label": "C",
+        "text": "经营分析系统继续用 TDSQL-C MySQL 版扛 10 亿行扫描"
+      },
+      {
+        "label": "D",
+        "text": "经营分析系统选云数据仓库（CDW）/ HTAP 数仓（列存 + MPP 并行计算），承载实时入库 + Ad-hoc 分析"
+      },
+      {
+        "label": "E",
+        "text": "经营分析系统自建 Hadoop + Hive 集群，扛大数据"
+      }
+    ],
+    "answer": [
+      "A",
+      "D"
+    ],
+    "type": "multiple",
+    "chapter": 2,
+    "subChapter": "ch2-tdsqlc",
+    "tags": [
+      "TDSQL-C",
+      "TDSQL",
+      "数据仓库",
+      "OLTP",
+      "OLAP"
+    ],
+    "analysis": "腾讯云数据库选型：CDB MySQL（中小规模 OLTP）→ TDSQL-C（云原生 OLTP，计算存储分离，秒级弹性，最大支持百 TB 单实例）→ TDSQL（金融级分布式 OLTP，强一致 + 水平扩展）→ CDW/HTAP 数仓（OLAP，列存 + MPP，10 亿行级扫描）。OLTP 与 OLAP 必须分库，前者要求低延迟强一致，后者要求大数据量扫描和列式存储；用一个库扛两种 workload 一定会翻车。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.11_%E4%BA%91%E5%8E%9F%E7%94%9FTDSQL-C%2B%E4%BA%91%E6%95%B0%E6%8D%AE%E5%BA%93Redis/",
+    "difficulty": 3
+  },
+  {
+    "id": "prac-ch2-redis-001",
+    "kind": "practical",
+    "stem": "针对『单库 Redis 内存即将打满 + 大 key 频繁阻塞』的现状，下列优化方案最合理的是？",
+    "practical": {
+      "scenario": "某社区点赞计数业务用云 Redis 标准版（主从双副本）8GB 实例，目前已用 6.5GB，每天涨 200MB。监控发现：① 偶尔出现 SLOWLOG 中 HGETALL/SMEMBERS/DEL 大 key 操作 200ms+；② 部分热门帖子的 HASH 单 key 已达 200MB；③ 业务写入 QPS 5w、读 QPS 20w。客户希望：① 解决内存瓶颈 ② 消除大 key 阻塞 ③ 不停服改造。",
+      "topology": {
+        "type": "mermaid",
+        "content": "flowchart LR\n  APP[\"业务 App\"]\n  PROXY[\"Redis 集群版\\n(代理 + 多分片)\"]\n  S1[\"分片1 主从\"]\n  S2[\"分片2 主从\"]\n  S3[\"分片N 主从\"]\n  APP --> PROXY\n  PROXY --> S1\n  PROXY --> S2\n  PROXY --> S3",
+        "caption": "Redis 集群版多分片水平扩展架构"
+      },
+      "constraints": [
+        "内存即将打满",
+        "存在大 key 阻塞问题",
+        "不停服改造",
+        "QPS 高（写 5w + 读 20w）"
+      ],
+      "reasoning": [
+        "升级标准版规格到 32GB：临时缓解内存，但大 key（200MB HASH）阻塞依旧；且单实例性能上限难扛 25w QPS。",
+        "切换到集群版：多分片水平扩展，内存可达数 TB，QPS 可达数百万，且 DTS 工具支持不停服迁移。",
+        "大 key 改造：必须把 200MB 的 HASH 拆成『hash_帖子id_分片N』多个小 key 分散到不同分片，HGETALL 改为按分片 SCAN/HMGET 批量读取，DEL 改为 UNLINK 异步删除。",
+        "选项 A 治标不治本；选项 B（集群版 + 大 key 拆分 + UNLINK + DTS 迁移）正确；选项 C（自建 Redis Cluster）放弃云托管运维负担过重；选项 D（直接换 Memcached）丢失数据结构能力（HASH/SET/ZSET）。"
+      ],
+      "pitfall": "常见误区：① 一遇内存瓶颈就升级标准版规格（无法解决大 key 阻塞与 QPS 瓶颈）；② 用 KEYS / DEL 大 key（O(N) 阻塞所有客户端），生产应禁用 KEYS、用 UNLINK 异步删；③ 不拆分大 key（单 key 200MB 在网络/序列化/迁移时都是性能炸弹）。"
+    },
+    "options": [
+      {
+        "label": "A",
+        "text": "把云 Redis 标准版规格从 8GB 升级到 32GB，继续用单实例"
+      },
+      {
+        "label": "B",
+        "text": "迁移到云 Redis 集群版（多分片水平扩展），同时改造大 key 拆分为多个小 key、用 UNLINK 替代 DEL，DTS 工具不停服迁移"
+      },
+      {
+        "label": "C",
+        "text": "在 CVM 上自建 Redis Cluster 替代云 Redis"
+      },
+      {
+        "label": "D",
+        "text": "直接换成 Memcached 提升性能"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-redis",
+    "tags": [
+      "Redis",
+      "集群版",
+      "大key",
+      "热key",
+      "DTS"
+    ],
+    "analysis": "云 Redis 选型：单库（标准版主从）适合 < 16GB、QPS < 10w 的简单缓存场景；集群版（代理 + 多分片）适合大容量（数十 GB-TB）、高并发（数十万-百万 QPS）场景。大 key（> 10MB）和热 key 是 Redis 三大杀手（连同慢查询）：大 key 用 UNLINK 异步删除、拆分为多个小 key；热 key 用本地缓存或多副本承接。生产环境绝对禁用 KEYS、SMEMBERS（大 SET）、HGETALL（大 HASH）等 O(N) 命令。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.12_%E4%BA%91Redis%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%2B%E5%85%B6%E4%BB%96NoSQL/",
+    "difficulty": 3
+  },
+  {
+    "id": "prac-ch2-mq-001",
+    "kind": "practical",
+    "stem": "针对『CKafka 消息堆积 1000w 条 + 消费者组单分区单消费者』的现状，提升消费速度最有效的组合是？（多选）",
+    "practical": {
+      "scenario": "某电商订单流系统用 CKafka，订单 Topic 当前 4 个分区，消费者组里启动了 8 个消费者实例，但监控显示只有 4 个消费者在消费、另外 4 个空闲；高峰期堆积 1000w 条消息、消费 3 小时未追平。生产侧 QPS 5w/s，消费侧单实例处理能力约 5000 条/s。要求：① 在 1 小时内追平堆积；② 消费有序性按订单 ID 不可乱序。",
+      "topology": {
+        "type": "mermaid",
+        "content": "flowchart LR\n  P[\"生产者\\n5w/s\"]\n  K[\"CKafka Topic\\n4 分区 → 32 分区\"]\n  C1[\"消费者×N\\n按订单ID hash\"]\n  DB[\"DB\"]\n  P --> K --> C1 --> DB",
+        "caption": "Kafka 分区数与消费者数 1:1 才能并行最大化"
+      },
+      "constraints": [
+        "堆积 1000w，1 小时内追平",
+        "按订单 ID 有序，单订单不能乱序",
+        "可加分区、加消费者、不需要保留全局有序",
+        "下游 DB 写入能力可扩"
+      ],
+      "reasoning": [
+        "Kafka 消费并行度 = min(分区数, 消费者数)。当前 4 分区 8 消费者 → 4 个空闲是正常的（一个分区只能由消费者组内一个消费者消费）。瓶颈在分区数。",
+        "把 Topic 分区从 4 扩到 32（按订单 ID hash），消费者也开 32 个，并行度提升 8 倍，吞吐 1.6w 条/s × 32 ≈ 50w 条/s，1 小时内追完无压力。",
+        "订单 ID hash 到固定分区 → 同一订单始终在同一分区内有序，满足『订单内有序』；不要求『全局有序』即可大并行。",
+        "消费者优化：批量拉取（max.poll.records=500）+ 批量写 DB（INSERT 批 200）+ 异步处理 IO，单消费者 TPS 进一步翻倍。",
+        "选项 A 加分区到 32 + 消费者 32 个：正确。B 加分区到 32 + 仍按订单 ID hash 保证序：正确。C 仅加消费者不加分区：超出分区数的消费者闲置，无效。D 关闭顺序保证：违反业务约束。E 单消费者多线程并发处理批次：正确（每个分区内消费者用线程池但保证按订单 ID 串行）。"
+      ],
+      "pitfall": "常见误区：① 只加消费者不加分区（消费者组内多余的消费者会空闲，因为一个分区只能被组内一个消费者消费）；② 为了追求最大吞吐放弃 hash 分区策略，导致同一订单跨分区乱序；③ 不批量拉取/批量写 DB，单条处理把 DB 打死。"
+    },
+    "options": [
+      {
+        "label": "A",
+        "text": "把 Topic 分区数从 4 扩到 32，消费者实例同步扩到 32 个（与分区数 1:1）"
+      },
+      {
+        "label": "B",
+        "text": "生产侧按订单 ID hash 分区，确保同一订单始终落到同一分区，保留分区内有序"
+      },
+      {
+        "label": "C",
+        "text": "Topic 分区不变（仍 4 个），消费者扩到 32 个"
+      },
+      {
+        "label": "D",
+        "text": "关闭订单顺序保证，启用最大并行随机消费"
+      },
+      {
+        "label": "E",
+        "text": "消费者侧批量拉取（max.poll.records=500）+ 批量写 DB + 分区内多线程并行处理（按订单 ID 串行）"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "E"
+    ],
+    "type": "multiple",
+    "chapter": 2,
+    "subChapter": "ch2-mq",
+    "tags": [
+      "CKafka",
+      "分区",
+      "消费者组",
+      "消息堆积"
+    ],
+    "analysis": "Kafka 消费并行度上限 = min(分区数, 消费者组内消费者数)。提升消费速度的标准组合：① 扩分区（让并行度有空间）；② 消费者数量与分区数 1:1；③ 生产侧按业务键 hash 分区保证『分区内有序』而不是放弃顺序；④ 消费侧批量拉取 + 批量写 + 分区内线程池处理。仅加消费者不加分区是最常见的无效操作。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.13_%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 3
+  },
+  {
+    "id": "prac-ch2-scf-001",
+    "kind": "practical",
+    "stem": "针对『SCF 函数冷启动延迟 3-5 秒影响 C 端用户体验』的优化，下列方案最合理的组合是？（多选）",
+    "practical": {
+      "scenario": "某 C 端 API 用 SCF 云函数承接：Java 17 运行时，函数包 80MB，初始化阶段加载大模型（200MB）+ 建 DB 连接，冷启动 3-5 秒。流量特征：白天 QPS 200，夜间 QPS 5；偶发 5 秒延迟造成用户投诉。客户要求：① 用户侧 P99 < 500ms；② 成本可控；③ 不强制改用 CVM/容器。",
+      "topology": {
+        "type": "mermaid",
+        "content": "flowchart LR\n  U[\"用户\"]\n  AG[\"API 网关\"]\n  SCF[\"SCF 函数\\n预置并发 + 镜像化\"]\n  DB[\"DB\"]\n  U --> AG --> SCF --> DB",
+        "caption": "SCF 冷启动优化方案"
+      },
+      "constraints": [
+        "用户侧 P99 < 500ms",
+        "包大、初始化重",
+        "白天 QPS 200、夜间 QPS 5（差异大）",
+        "成本可控、不改架构"
+      ],
+      "reasoning": [
+        "包瘦身 + 镜像化部署：把 Java + 大模型 + 依赖打成容器镜像，腾讯云 SCF 支持镜像部署，初始化 IO 比 80MB 函数包加载快得多。",
+        "预置并发：SCF 支持设定预置并发实例数（如 5 个），始终保留这些实例『热』，新请求直接命中已初始化的实例，零冷启动。白天 QPS 200 一般 5-10 个预置实例可覆盖。",
+        "异步触发器替代同步调用：对延迟不敏感的场景（如订单写库后异步发短信）改用消息队列触发，不影响用户感知。但本题是 C 端同步 API，异步触发不适用。",
+        "完全弃 SCF 用 CVM：违反『不改架构』前提且废了 SCF 弹性优势。",
+        "选项 A 镜像化部署：正确。B 预置并发：正确。C 异步化：本场景同步 API 不适用。D 弃 SCF：不符合前提。E 拆分函数：把『加载模型』和『请求处理』分开，模型加载常驻 + 请求处理快返回，是合理优化。"
+      ],
+      "pitfall": "常见误区：① 一遇冷启动就放弃 SCF 上 CVM/TKE（失去 Serverless 弹性和成本优势）；② 单纯调整内存规格上限（内存是次要因素，主要是加载逻辑重 + 初始化慢）；③ 不开预置并发，对 C 端同步 API 来说冷启动直接打用户脸。"
+    },
+    "options": [
+      {
+        "label": "A",
+        "text": "把 Java 函数包打成容器镜像部署到 SCF（镜像化），减小冷启动 IO"
+      },
+      {
+        "label": "B",
+        "text": "为 SCF 函数开启『预置并发』，常驻 5-10 个已初始化实例，白天 QPS 200 可零冷启动覆盖"
+      },
+      {
+        "label": "C",
+        "text": "把同步 API 改成消息队列异步触发，规避冷启动"
+      },
+      {
+        "label": "D",
+        "text": "放弃 SCF，迁移到 CVM 长期保留实例"
+      },
+      {
+        "label": "E",
+        "text": "拆分函数职责：让大模型加载在常驻预置实例中完成，请求处理函数只做轻量逻辑"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "E"
+    ],
+    "type": "multiple",
+    "chapter": 2,
+    "subChapter": "ch2-scf",
+    "tags": [
+      "Serverless",
+      "SCF",
+      "冷启动",
+      "预置并发"
+    ],
+    "analysis": "SCF 冷启动优化三板斧：① 镜像化部署（容器镜像比函数包加载快、且可以预热基础镜像）；② 预置并发（保留 N 个常驻热实例避免新请求触发冷启动，是 C 端同步 API 标配）；③ 函数职责拆分 + 异步触发器（只把可异步的工作放 SCF，不可异步的同步调用配预置并发）。盲目放弃 SCF 改用 CVM 会丢失 Serverless 的弹性和零运维优势。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.15_Serverless%E4%BA%91%E5%87%BD%E6%95%B0SCF/",
+    "difficulty": 3
+  },
+  {
+    "id": "prac-ch1-cap-001",
+    "kind": "practical",
+    "stem": "对于「电商秒杀系统」场景，下列哪种 CAP 取舍与架构组合最合理？",
+    "practical": {
+      "scenario": "某电商平台筹备双 11 大促秒杀活动：iPhone 16 限量 5000 台，预计开抢瞬间 100 万用户同时点击「立即抢购」，QPS 峰值预估 50 万。CTO 要求：① 绝对不能超卖（库存数据强一致）；② 大促期间网络分区或部分节点抖动时，秒杀页可短暂返回「活动太火爆，请稍后重试」，但不能错卖；③ 用户下单成功后订单结果必须真实有效。",
+      "constraints": [
+        "QPS 峰值 50 万，瞬时流量",
+        "库存仅 5000 台，绝对不允许超卖",
+        "网络分区时业务方可接受『拒绝服务』而非『错卖』",
+        "强一致性 > 可用性（在分区时）"
+      ],
+      "reasoning": [
+        "CAP 三选二：分布式系统 P（分区容忍）必选，剩下在 C（一致性）和 A（可用性）中二选一。",
+        "秒杀核心矛盾是『库存不能超卖』→ 必须 CP（牺牲部分可用性保一致性），分区时宁可让部分用户失败重试，也不能让库存数据出现两个真相。",
+        "落地方案：库存扣减放 Redis（Lua 脚本原子操作）+ TDSQL 强一致回写，前端用消息队列削峰，CLB 限流。Redis 主从同步异常时立即拒绝下单（Fail Fast）而非读旧数据。",
+        "选项 A（CP + Redis Lua + TDSQL 强一致 + MQ 削峰）正确。",
+        "选项 B（AP + 最终一致）会出现超卖：两个分区都看到库存还有，都扣减成功，合并时已超卖。",
+        "选项 C（CA 放弃 P）在分布式系统里不现实，单机部署扛不住 50 万 QPS。",
+        "选项 D（不分库分表，单实例 MySQL 强一致）单点性能瓶颈，扛不住 50 万 QPS。"
+      ],
+      "pitfall": "常见误区：① 看到『高并发』就想 AP（可用性优先），忘了秒杀场景里『错卖』的代价远大于『拒绝服务』；② 以为 CAP 的 C 和数据库 ACID 的 C 是同一个 C（前者是分布式一致性，后者是事务约束）；③ 忽略 P 必选的事实，提『放弃 P 选 CA』是脱离分布式现实的答案。"
+    },
+    "options": [
+      {
+        "label": "A",
+        "text": "CP 优先：Redis Lua 原子扣减 + TDSQL 强一致回写 + MQ 削峰 + CLB 限流，分区/主从异常时 Fail Fast 拒绝下单"
+      },
+      {
+        "label": "B",
+        "text": "AP 优先：多地域 Redis 集群最终一致复制，让所有用户都能下单，事后对账纠正超卖"
+      },
+      {
+        "label": "C",
+        "text": "CA 优先：放弃分区容忍性 P，单机部署 MySQL 保证强一致+高可用"
+      },
+      {
+        "label": "D",
+        "text": "不分库分表，单实例 MySQL 直接顶住 50 万 QPS，依靠数据库行锁保证一致性"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": [
+      "CAP理论",
+      "秒杀架构",
+      "强一致性",
+      "高并发"
+    ],
+    "analysis": "秒杀场景核心是库存强一致（不能超卖），CAP 中 P 必选，剩下 C 和 A 取 C：分区时宁可拒绝下单也不能错卖。标准实现是 Redis Lua 原子扣减保证瞬时一致性 + TDSQL 强一致持久化 + MQ 削峰应对流量洪峰。AP 方案在秒杀场景会导致超卖，CA 在分布式系统里不成立。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 3
+  },
+  {
+    "id": "prac-ch1-waf-001",
+    "kind": "practical",
+    "stem": "依据 Well-Architected Framework 五大支柱评估下列方案，针对客户「金融级稳定 + 成本敏感」诉求，最合理的取舍是？（多选）",
+    "practical": {
+      "scenario": "某证券行情查询系统迁移上云，业务诉求：① 日均 PV 5000 万，市场开盘期间 QPS 峰值 8 万；② 故障容忍度极低（行情中断 5 分钟会被监管约谈）；③ 公司 CFO 严控云成本，年度预算 200 万；④ 需要等保 2.0 三级合规；⑤ 团队规模 8 人，运维资源有限。请基于 Well-Architected Framework 五大支柱（卓越运营/安全/可靠性/性能效率/成本优化）做架构选型权衡。",
+      "constraints": [
+        "QPS 峰值 8 万",
+        "RTO < 5 分钟（监管硬要求）",
+        "年度预算 200 万",
+        "等保 2.0 三级",
+        "运维 8 人，复杂度需可控"
+      ],
+      "reasoning": [
+        "可靠性支柱：RTO<5min 必须做同城双可用区 + CLB 自动切流，数据库 TDSQL-C 多可用区同步复制，单可用区方案直接淘汰。",
+        "性能效率支柱：8 万 QPS 行情查询读多写少，配 Redis 集群缓存热数据 + CDN 静态化非实时数据，CVM 用 SA3/S6 标准型而非 GPU/计算密集型。",
+        "成本优化支柱：年预算 200 万要省钱，CVM 包年包月（比按量便宜 30%-50%）+ 流量大头用 CDN（比直接 CVM 出口便宜）+ 冷数据进 COS 标准存储/低频访问，禁止过度配置（如顶配 GPU 实例）。",
+        "安全支柱：等保 2.0 三级硬要求，必须有 WAF + DDoS 高防 + 堡垒机 + 数据库审计 + CAM 子账号最小权限，这部分钱不能省。",
+        "卓越运营支柱：8 人小团队，优先选 Serverless / 托管服务（TKE 托管版、TDSQL-C、Redis 实例）而非自建 K8s/MySQL，运维成本占总成本权重大。",
+        "选项 A（同城双可用区 + 包年包月 + 托管数据库 + WAF/高防）符合多数支柱权衡，正确。",
+        "选项 B（跨地域三活 + 全按量计费 + 自建 K8s）成本严重超预算且小团队 hold 不住，不选。",
+        "选项 C（单可用区 + 全部按量）违反可靠性支柱，行情中断风险极高。",
+        "选项 D（包年包月 CVM + Redis 缓存 + CDN）符合成本+性能权衡，正确。",
+        "选项 E（省略 WAF/高防只靠安全组）违反安全+合规支柱（等保过不了）。"
+      ],
+      "pitfall": "常见误区：① 只看单支柱（如只看成本一刀切全按量、或只看可靠性盲目跨地域三活），忽略五大支柱的相互制约；② 把『成本优化』理解为『砍安全/砍可靠性』，结果违反合规或出故障损失更大；③ 忘了卓越运营支柱里的『运维复杂度』也是隐性成本，小团队不要碰自建大型集群。"
+    },
+    "options": [
+      {
+        "label": "A",
+        "text": "可靠性：同城双可用区 + CLB 跨 AZ 切流 + TDSQL-C 多可用区同步复制"
+      },
+      {
+        "label": "B",
+        "text": "可靠性升级：跨地域（广州+北京+上海）三活，所有 CVM 全按量计费保留弹性"
+      },
+      {
+        "label": "C",
+        "text": "成本优化：单可用区部署，所有资源全按量计费，故障靠业务方手工切"
+      },
+      {
+        "label": "D",
+        "text": "成本+性能：CVM 用包年包月 SA3/S6 标准型，热数据走 Redis 集群，静态行情走 CDN"
+      },
+      {
+        "label": "E",
+        "text": "安全：依赖 VPC 安全组即可，省略 WAF 与 DDoS 高防以节省预算"
+      }
+    ],
+    "answer": [
+      "A",
+      "D"
+    ],
+    "type": "multiple",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": [
+      "Well-Architected",
+      "架构权衡",
+      "成本优化",
+      "可靠性"
+    ],
+    "analysis": "Well-Architected Framework 五大支柱（卓越运营/安全/可靠性/性能效率/成本优化）需综合权衡。本题中 RTO<5min 锁死『同城双可用区』方案（A 对、C 错），等保三级锁死安全投入（E 错），200 万预算否决跨地域三活（B 错），8 万 QPS 读多写少匹配 Redis+CDN 缓存方案（D 对）。架构师价值在于在硬约束（RTO/合规）和软约束（成本/复杂度）间找到帕累托最优。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 3
+  },
+  {
+    "id": "prac-ch3-perf-001",
+    "kind": "practical",
+    "stem": "下列哪种架构组合最适合应对「秒级万人抢购图片商品」的性能挑战？（多选）",
+    "practical": {
+      "scenario": "某美妆电商即将上线限量盲盒抢购：商品详情页含 12 张高清图（单张 1.5MB，原图共 18MB），活动开始瞬间预计 2 万用户同时打开详情页。当前架构：用户 → CLB → CVM Nginx 直接吐图片 → 图片存本地磁盘。压测发现：CVM 出口带宽打满 1Gbps，详情页加载耗时 8 秒，大量用户超时返回。",
+      "topology": {
+        "type": "mermaid",
+        "content": "flowchart LR\n  U[\"2万用户\"]\n  CDN[\"腾讯云 CDN\"]\n  COS[\"对象存储 COS\"]\n  CI[\"数据万象 CI\\n图片处理\"]\n  CLB[\"CLB\"]\n  CVM[\"CVM\\n业务接口\"]\n  U -- 图片 --> CDN\n  CDN -- 回源 --> CI\n  CI --> COS\n  U -- API --> CLB --> CVM",
+        "caption": "目标架构：图片走 CDN+COS+CI，业务接口走 CLB+CVM"
+      },
+      "constraints": [
+        "瞬时 2 万并发详情页",
+        "单页 12 张图 ≈ 18MB 原图",
+        "CVM 出口仅 1Gbps，已被打满",
+        "首屏加载需 < 2 秒",
+        "图片需多终端适配（PC/Pad/手机）"
+      ],
+      "reasoning": [
+        "瓶颈分析：CVM 出口 1Gbps = 125 MB/s，2 万并发拉 18MB 图片需要 2880 GB/s 出口能力，差 23000 倍 → CVM 直接吐图模型彻底不适用。",
+        "正确路径：① 静态资源（图片）必须从 CVM 剥离，存 COS（无限容量+无限带宽，按需收费）；② 用 CDN 边缘节点缓存图片，2 万用户大部分被 CDN 节点扛走，回源压力 < 5%；③ 数据万象 CI 在边缘做实时图片处理（缩放、WebP 格式转换、按设备适配），原图 1.5MB → WebP 压缩后 < 200KB，再省 80% 流量；④ 业务接口（库存/下单）走 CVM+CLB，与图片彻底解耦。",
+        "选项 A（COS+CDN+CI 组合）正确，最佳实践。",
+        "选项 B（仅升级 CVM 带宽到 10Gbps）治标不治本，成本高且单点。",
+        "选项 C（图片走 CDN，但仍存 CVM 本地）回源仍打 CVM，未解决根本问题。",
+        "选项 D（业务接口与图片解耦，业务走 CLB+CVM 弹性伸缩）正确，避免相互拖累。",
+        "选项 E（CDN 强制不缓存以保证一致性）违背 CDN 价值，错误。"
+      ],
+      "pitfall": "常见误区：① 把图片存在 CVM 本地磁盘，扩容时一台台拷贝、版本不一致；② 给 CDN 配『不缓存』图片以保证更新及时，结果命中率为 0；③ 不用 CI 做格式转换，前端拉原图导致弱网用户白屏；④ 业务接口和静态资源混在一台 CVM 上，图片把带宽吃光后下单接口也跟着挂掉。"
+    },
+    "options": [
+      {
+        "label": "A",
+        "text": "图片存 COS + CDN 加速 + 数据万象 CI 实时压缩转 WebP 并按设备适配"
+      },
+      {
+        "label": "B",
+        "text": "把 CVM 出口带宽升级到 10Gbps，继续从 CVM 本地磁盘吐图"
+      },
+      {
+        "label": "C",
+        "text": "图片走 CDN 加速，源站仍是 CVM 本地磁盘"
+      },
+      {
+        "label": "D",
+        "text": "业务 API 走 CLB+CVM 弹性伸缩，与图片资源彻底解耦避免互相拖垮"
+      },
+      {
+        "label": "E",
+        "text": "CDN 配置全部图片『不缓存』，每次都回源以保证一致性"
+      }
+    ],
+    "answer": [
+      "A",
+      "D"
+    ],
+    "type": "multiple",
+    "chapter": 3,
+    "subChapter": "ch3-perf",
+    "tags": [
+      "CDN",
+      "COS",
+      "数据万象",
+      "性能优化",
+      "秒杀"
+    ],
+    "analysis": "高并发图片场景标准架构：『COS 存储 + CDN 加速 + 数据万象 CI 实时处理』。COS 提供无限带宽规避 CVM 出口瓶颈，CDN 边缘节点缓存命中率可达 95%+，数据万象 CI 实时把 1.5MB 原图压缩为 200KB WebP 再省 80% 流量。同时业务 API 与静态资源必须解耦，避免图片流量打挂业务接口。CVM 升带宽是单点+治标，CDN 不缓存违背产品价值。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.2_%E4%BA%91%E4%B8%8A%E6%9E%B6%E6%9E%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/",
+    "difficulty": 3
+  },
+  {
+    "id": "prac-ch3-container-001",
+    "kind": "practical",
+    "stem": "下列 Dockerfile 多阶段构建方案中，哪一种镜像最小、最符合容器化最佳实践？",
+    "practical": {
+      "scenario": "某 Java 微服务团队从虚拟机部署改造为 TKE 容器部署。现状：单镜像 1.8GB（基础镜像 openjdk:17 即 700MB + maven 构建工具 400MB + 源代码 100MB + jar 包 + 各种构建中间产物）。团队 200+ 微服务，每天发版数百次，镜像仓库存储和拉取成本快速膨胀。要求：在不影响运行的前提下，把单镜像压到 300MB 以内，启动 < 5 秒。",
+      "topology": {
+        "type": "mermaid",
+        "content": "flowchart LR\n  S[\"源码\"]\n  B1[\"Stage1: maven 构建\\nopenjdk:17 + mvn\"]\n  J[\"target/app.jar\"]\n  B2[\"Stage2: 运行时\\neclipse-temurin:17-jre-alpine\"]\n  IMG[\"最终镜像 < 300MB\"]\n  S --> B1 --> J --> B2 --> IMG",
+        "caption": "多阶段构建：构建产物从 stage1 拷贝到 stage2 运行时镜像"
+      },
+      "constraints": [
+        "单镜像 ≤ 300MB",
+        "Pod 启动时间 ≤ 5 秒",
+        "200+ 微服务 × 每天数百次发版",
+        "不允许私改业务代码（仅打包优化）"
+      ],
+      "reasoning": [
+        "Dockerfile 多阶段构建核心：把『构建工具』与『运行环境』拆开，最终镜像只保留运行所需。",
+        "选项 A（单 stage：FROM openjdk:17 + 全部 COPY + mvn package + ENTRYPOINT java -jar）镜像 1.8GB，构建工具+源码+中间产物全在镜像里，错误示范。",
+        "选项 B（多阶段：stage1 用 maven:3.9-openjdk-17 构建出 jar，stage2 用 eclipse-temurin:17-jre-alpine 仅 COPY --from=stage1 target/app.jar）jre-alpine 基础镜像 ~100MB + jar ~50MB ≈ 150MB，符合最佳实践。",
+        "选项 C（多阶段但 stage2 仍用 openjdk:17 完整 JDK）JDK 比 JRE 大 300MB+，未充分利用多阶段优势。",
+        "选项 D（直接 docker save 后 gzip 压缩存仓库）压缩只是传输优化，运行时仍要解压成原 size，不解决根本。",
+        "辅助优化：① .dockerignore 排除 .git/target/node_modules；② 高频变化的 COPY 放最后利用层缓存；③ jlink 进一步定制 JRE 子集（高级技巧，可省 50MB）。"
+      ],
+      "pitfall": "常见误区：① 不用多阶段构建，把 maven、git、构建中间产物全打进运行镜像；② 多阶段做了但 stage2 还用完整 openjdk JDK 而非 jre-alpine（JDK 含 javac/jdb 等运行时不需要的工具）；③ 用 latest 标签的基础镜像，导致每次构建可能拉到不同版本，破坏缓存；④ 把秘钥/配置文件直接 COPY 进镜像。"
+    },
+    "options": [
+      {
+        "label": "A",
+        "text": "单阶段：FROM openjdk:17，COPY 整个项目，RUN mvn package，ENTRYPOINT java -jar"
+      },
+      {
+        "label": "B",
+        "text": "多阶段：stage1 用 maven:3.9-openjdk-17 构建 jar，stage2 用 eclipse-temurin:17-jre-alpine 仅 COPY --from=stage1 jar 包并启动"
+      },
+      {
+        "label": "C",
+        "text": "多阶段：stage1 构建，stage2 仍用 openjdk:17 完整 JDK 镜像作为运行时"
+      },
+      {
+        "label": "D",
+        "text": "保留单阶段构建产物，但用 docker save | gzip 压缩后存仓库节省传输"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-container",
+    "tags": [
+      "Docker",
+      "多阶段构建",
+      "TKE",
+      "镜像优化"
+    ],
+    "analysis": "Dockerfile 多阶段构建（multi-stage build）是镜像瘦身的标准做法：stage1 用包含 maven/JDK 的 builder 镜像编译，stage2 用 jre-alpine 等极简运行时镜像，仅 COPY --from=stage1 拷贝构建产物（jar）。最终镜像只含 JRE+jar，约 150MB，比 1.8GB 单阶段镜像小 90%。配合 .dockerignore、合理的 COPY 顺序利用层缓存、固定基础镜像 tag 等技巧，可进一步优化构建速度与稳定性。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.3_%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%94%B9%E9%80%A0/",
+    "difficulty": 2
+  },
+  {
+    "id": "prac-ch3-ai-001",
+    "kind": "practical",
+    "stem": "对于「70B 参数大模型预训练 + 200 张 GPU 卡 + 训练周期 2 个月」场景，下列哪种算力方案最匹配？",
+    "practical": {
+      "scenario": "某 AI 公司计划自研 70B 参数大语言模型。预训练任务规模：① 200 张 H800 GPU 卡同时训练；② 训练周期 60 天连续不间断；③ 单次梯度同步通信量 ~10GB，每秒数次 AllReduce；④ 训练数据 50TB 存储于 COS。CTO 在『普通 CVM GPU 实例』和『HCC 高性能计算集群』之间纠结，请选最合理方案并说明关键差异。",
+      "constraints": [
+        "200 张 H800 GPU 多机分布式训练",
+        "节点间通信密集（AllReduce 频繁）",
+        "单作业 60 天连续运行",
+        "训练数据 50TB 在 COS"
+      ],
+      "reasoning": [
+        "大模型分布式训练性能瓶颈不在『单卡算力』而在『节点间通信带宽与延迟』。AllReduce 通信若慢，再多卡也是空跑。",
+        "普通 CVM GPU 实例（如 GN10X）默认 VPC 网络 25Gbps，节点间通信走标准 TCP，AllReduce 延迟 ~ms 级，200 卡线性扩展效率不到 50%，相当于浪费一半 GPU 算力，实际训练时间会拉长到 4 个月以上。",
+        "HCC 高性能计算集群专为大模型训练设计：① 节点间走 RDMA/RoCE 网络，带宽 1.6Tbps，延迟微秒级；② 同集群内 GPU 拓扑亲和编排（NVLink 全互联）；③ 配套高性能并行文件存储 CFS Turbo / GooseFS 加速 50TB 数据集读取；④ 整柜级液冷，支持长周期满载。200 卡线性扩展效率可达 90%+。",
+        "选项 A（HCC 高性能计算集群 + RDMA + GooseFS）正确。",
+        "选项 B（普通 GN10X CVM + VPC 标准网络）训练效率折半，60 天工期保不住，不选。",
+        "选项 C（用 CVM GPU 但跨地域分散部署增加冗余）跨地域延迟更糟，AllReduce 直接崩盘，反向操作。",
+        "选项 D（直接用 CPU 集群替代 GPU）70B 参数预训练用 CPU 是天方夜谭，至少慢 100 倍。"
+      ],
+      "pitfall": "常见误区：① 只比较单卡算力（H800 vs A100）忽略集群通信；② 把 HCC 当『普通 GPU 实例的高级版』，没意识到核心差异在 RDMA 网络与 GPU 拓扑亲和；③ 用 COS 直接挂载训练，数据读取成 IO 瓶颈，需配 GooseFS 缓存层；④ 跨地域『高可用』在大模型训练里反而是灾难，必须同集群同机房。"
+    },
+    "options": [
+      {
+        "label": "A",
+        "text": "HCC 高性能计算集群（H800）+ RDMA/RoCE 1.6Tbps 网络 + GooseFS 加速 COS 读取"
+      },
+      {
+        "label": "B",
+        "text": "200 台 GN10X 普通 GPU 云服务器，VPC 标准 25Gbps 网络互联即可"
+      },
+      {
+        "label": "C",
+        "text": "CVM GPU 实例跨地域（北京+上海+广州）分散部署，提升整体可用性"
+      },
+      {
+        "label": "D",
+        "text": "用大规模 CPU 集群替代 GPU，节省 GPU 卡采购成本"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-ai",
+    "tags": [
+      "HCC",
+      "大模型训练",
+      "RDMA",
+      "分布式训练"
+    ],
+    "analysis": "70B 大模型预训练的关键瓶颈是节点间通信而非单卡算力。腾讯云 HCC 高性能计算集群通过星脉 RDMA 网络（1.6Tbps、微秒级延迟）+ GPU 拓扑亲和编排 + GooseFS 数据加速，让 200 卡线性扩展效率从普通 CVM 的 ~50% 提升到 90%+，60 天训练周期可达成。普通 CVM GPU 跑大模型训练效率折半且不稳定；跨地域部署在训练任务里是负优化（通信延迟爆炸）；CPU 替代 GPU 不现实。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.4_AI%E5%92%8C%E5%A4%A7%E6%A8%A1%E5%9E%8B/",
+    "difficulty": 3
+  },
+  {
+    "id": "prac-ch4-mlps-001",
+    "kind": "practical",
+    "stem": "等保 2.0 三级测评中，对于『安全管理中心』要求，下列哪种产品组合是必备项？（多选）",
+    "practical": {
+      "scenario": "某政务云上系统申请等保 2.0 三级备案与测评。测评机构现场核查『安全管理中心』要求：① 系统管理员、安全管理员、审计管理员三权分立；② 所有运维操作可审计、可追溯，留存 6 个月以上；③ 数据库变更操作有完整审计日志；④ 集中收集分析安全设备日志。请为客户配置最小必备产品组合通过测评。",
+      "topology": {
+        "type": "mermaid",
+        "content": "flowchart TB\n  Admin[\"运维人员\"]\n  Bastion[\"堡垒机 CDS-OC\"]\n  CVM[\"CVM 业务主机\"]\n  DB[\"TDSQL/CDB\"]\n  DBA[\"数据库审计 DBAudit\"]\n  CAM[\"CAM 三权分立\"]\n  CLS[\"CLS 日志中心\\n留存180天+\"]\n  Audit[\"操作审计 CloudAudit\"]\n  Admin -- 跳板登录 --> Bastion --> CVM\n  Bastion -- 操作录像 --> CLS\n  CVM --> DB\n  DB -. 流量旁路 .-> DBAudit --> CLS\n  CAM -- 子账号策略 --> Admin\n  Admin -. 控制台操作 .-> Audit --> CLS",
+        "caption": "等保 2.0 三级『安全管理中心』产品组合"
+      },
+      "constraints": [
+        "等保 2.0 三级",
+        "三权分立：系统管理员/安全管理员/审计管理员",
+        "运维操作留存 ≥ 6 个月",
+        "数据库变更可审计",
+        "日志集中分析"
+      ],
+      "reasoning": [
+        "三权分立 → CAM 创建子账号 + 自定义策略 + 角色绑定，避免单一管理员权限过大。",
+        "运维操作审计 → 堡垒机（CDS-OC）强制所有 SSH/RDP/数据库登录走堡垒机跳转，自动录制操作录像与命令记录。",
+        "数据库变更审计 → 数据库审计（DBAudit）旁路镜像数据库流量，记录所有 SQL 操作，支持事后追溯（DDL/DML 全留痕）。",
+        "云控制台操作审计 → 操作审计（CloudAudit）记录所有 API 调用与控制台操作，6 个月留存。",
+        "日志集中分析 → CLS 集中收集堡垒机、DBAudit、CloudAudit、VPC 流日志、WAF 日志等，支持检索与告警。",
+        "选项 A（CAM）必备 - 三权分立基础。",
+        "选项 B（堡垒机）必备 - 主机运维审计。",
+        "选项 C（数据库审计）必备 - 数据库审计要求。",
+        "选项 D（操作审计 CloudAudit）必备 - 云平台操作审计。",
+        "选项 E（仅依赖 CVM 自带 OS 日志）不满足『集中审计』和『不可篡改』要求，错误。",
+        "选项 F（CLS 日志服务）必备 - 集中收集分析。"
+      ],
+      "pitfall": "常见误区：① 以为开了 CVM /var/log/secure 就够了（运维可篡改、不集中、易丢失）；② 数据库审计漏配（很多人以为数据库账号管控+CAM 就够，但 DBAudit 是测评必查项）；③ 堡垒机配置后没强制 SSH 直连禁用，运维仍走 CVM 公网 IP 直连，审计绕过；④ CLS 日志留存周期 < 6 个月，被现场判不符合项。"
+    },
+    "options": [
+      {
+        "label": "A",
+        "text": "CAM 子账号 + 三权分立（系统/安全/审计管理员）"
+      },
+      {
+        "label": "B",
+        "text": "堡垒机（CDS-OC）强制所有运维登录跳转，记录命令与操作录像"
+      },
+      {
+        "label": "C",
+        "text": "数据库审计（DBAudit）旁路记录所有 SQL 操作"
+      },
+      {
+        "label": "D",
+        "text": "操作审计 CloudAudit 记录所有云 API 与控制台操作"
+      },
+      {
+        "label": "E",
+        "text": "依赖 CVM 操作系统自带的 /var/log 日志即可"
+      },
+      {
+        "label": "F",
+        "text": "CLS 集中日志服务，统一收集分析并留存 ≥ 180 天"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "F"
+    ],
+    "type": "multiple",
+    "chapter": 4,
+    "subChapter": "ch4-mlps",
+    "tags": [
+      "等保2.0",
+      "堡垒机",
+      "数据库审计",
+      "CAM",
+      "CLS"
+    ],
+    "analysis": "等保 2.0 三级『安全管理中心』要求三权分立、操作审计、日志集中。最小必备产品组合：CAM（三权分立基础）+ 堡垒机 CDS-OC（主机运维审计）+ 数据库审计 DBAudit（SQL 审计）+ CloudAudit（云 API 审计）+ CLS（日志中心化与留存）。仅依赖 CVM OS 日志会被判『日志不集中、可篡改』而扣分。CLS 留存周期至少 180 天。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.1_%E5%9B%BD%E5%AE%B6%E5%AE%89%E5%85%A8%E7%AD%89%E7%BA%A7%E4%BF%9D%E6%8A%A4/",
+    "difficulty": 3
+  },
+  {
+    "id": "prac-ch4-net-002",
+    "kind": "practical",
+    "stem": "面对 800Gbps DDoS 攻击 + CC 攻击 + SQL 注入混合威胁，下列联动防护方案最合理的是？",
+    "practical": {
+      "scenario": "某游戏公司新游公测当天遭遇组合攻击：① SYN Flood 峰值 800Gbps；② 慢速 CC 攻击（每个 IP 每秒 5 次 /login 接口）；③ 安全运营平台告警 SQL 注入尝试。当前架构：CLB（公网）→ Nginx → Tomcat → MySQL。CLB 公网 IP 已被大流量打爆，业务全网中断。需要 30 分钟内恢复并构建长期防护。",
+      "topology": {
+        "type": "mermaid",
+        "content": "flowchart LR\n  ATK[\"DDoS+CC+注入攻击\"]\n  AAD[\"DDoS 高防 IP\\n清洗 800Gbps\"]\n  WAF[\"Web 应用防火墙\\n防 SQL 注入+CC\"]\n  CLB[\"CLB 内网\"]\n  N[\"Nginx\"]\n  T[\"Tomcat\"]\n  DB[\"MySQL\"]\n  ATK -. 流量回注 .-> AAD --> WAF --> CLB --> N --> T --> DB",
+        "caption": "DDoS 高防 + WAF 联动防护链路"
+      },
+      "constraints": [
+        "DDoS 峰值 800Gbps，CLB 公网带宽扛不住",
+        "CC 攻击伪装正常用户行为",
+        "SQL 注入需要应用层规则匹配",
+        "30 分钟内业务恢复"
+      ],
+      "reasoning": [
+        "L3/L4 大流量 DDoS（SYN Flood 800Gbps）→ 必须先经过『DDoS 高防 IP』做流量清洗，腾讯云高防 Tbps 级带宽，将清洗后纯净流量回注到源站。CLB 自身带宽再大也扛不住 800Gbps。",
+        "L7 应用层攻击（CC、SQL 注入、XSS）→ 必须经过 WAF（Web 应用防火墙）做规则匹配。CC 防护通过频次限制（如 /login 每 IP 每分钟 ≤ 10 次）+ 人机验证，SQL 注入靠规则库 + AI 识别。",
+        "正确链路：用户 → 高防 IP → WAF → CLB → Nginx → Tomcat。高防把流量打不死，WAF 把恶意请求挡掉，源站 IP 不暴露。",
+        "选项 A（高防 IP + WAF + 源站 IP 隐藏）联动防护链，正确。",
+        "选项 B（仅升级 CLB 带宽到 100Gbps）扛不住 800Gbps，且 CLB 不擅长 L7 应用层防护。",
+        "选项 C（仅 WAF）WAF 处理不了 800Gbps L3/L4 大流量，会被打爆。",
+        "选项 D（直接禁用公网 IP 改成 VPN 接入）业务中断，违反公测连通性要求。",
+        "辅助：高防 + WAF 联动后，源站 CLB 改为内网监听 / 公网只放行高防回源 IP 段，彻底隐藏源站。"
+      ],
+      "pitfall": "常见误区：① 单一产品打天下（仅 CLB / 仅 WAF / 仅高防）应对组合攻击会有短板；② 高防+WAF 部署后没改源站防火墙，攻击者绕过高防直击源站 IP；③ WAF 规则用默认模式，对业务自定义路径（/api/v2/*）防护粒度不够；④ CC 防护频次设太宽松起不到作用，太严苛误伤正常用户。"
+    },
+    "options": [
+      {
+        "label": "A",
+        "text": "DDoS 高防 IP（清洗 L3/L4 大流量）+ WAF（防 CC/SQL 注入）+ 源站安全组只放行高防回源 IP"
+      },
+      {
+        "label": "B",
+        "text": "升级 CLB 公网带宽到 100Gbps 直接抗下攻击"
+      },
+      {
+        "label": "C",
+        "text": "仅部署 WAF，统一防御 DDoS+CC+SQL 注入"
+      },
+      {
+        "label": "D",
+        "text": "禁用所有公网 IP，玩家通过 VPN 接入服务器"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 4,
+    "subChapter": "ch4-network",
+    "tags": [
+      "DDoS高防",
+      "WAF",
+      "CC攻击",
+      "纵深防御"
+    ],
+    "analysis": "DDoS+CC+注入是典型组合攻击，需 L3/L4 + L7 联动防护：DDoS 高防 IP 处理大流量清洗（Tbps 级），WAF 处理应用层威胁（CC 频次限制+SQL 注入规则库）。两者上下游串联：用户 → 高防 → WAF → CLB → 源站。同时源站安全组只放行高防回源 IP 段，隐藏源站避免被绕过直击。CLB 带宽再大也比不过专业 DDoS 高防，单 WAF 处理不了 L3/L4 大流量。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.3_%E6%9E%84%E5%BB%BA%E5%AE%89%E5%85%A8%E9%80%9A%E4%BF%A1%E7%BD%91%E7%BB%9C%E5%8F%8A%E5%AE%89%E5%85%A8%E5%8C%BA%E5%9F%9F%E8%BE%B9%E7%95%8C/",
+    "difficulty": 3
+  },
+  {
+    "id": "prac-ch4-compute-001",
+    "kind": "practical",
+    "stem": "为大型企业搭建 CAM 子账号最小权限体系，下列哪种策略组合最合理？（多选）",
+    "practical": {
+      "scenario": "某集团总部+5 个子公司上云后，需要划分多团队 CAM 权限：① 运维 30 人需管理 CVM 但不可碰 COS 业务数据；② 财务 5 人只看账单不能动资源；③ 开发 80 人开发环境全权限、生产环境只读；④ 临时外包工程师项目结束自动失权；⑤ 高危操作（删除生产数据库）需多人审批。请设计 CAM 策略。",
+      "constraints": [
+        "总人数 200+，5 个子公司",
+        "最小权限原则",
+        "环境隔离（开发/生产）",
+        "高危操作需审批",
+        "外包临时账号到期自动失权"
+      ],
+      "reasoning": [
+        "选项 A（按职能创建用户组：DevOps/Finance/Developer，每组绑定不同预设/自定义策略）正确，避免一人一策略管理混乱。",
+        "选项 B（财务组只绑定 QcloudFinanceFullAccess + 拒绝资源操作策略）正确，仅看账单。",
+        "选项 C（用 Tag 标签 + Condition 实现环境隔离：策略中 condition: env=dev 才允许写，env=prod 只允许读）正确，标准做法。",
+        "选项 D（外包账号设置有效期 ValidUntil，到期自动失效）正确，安全合规要求。",
+        "选项 E（高危操作通过角色 Role + STS 临时凭证 + 多人审批工作流）正确，例如删除生产数据库需要走审批流程拿到临时 STS Token。",
+        "选项 F（所有人共用一个 root 账号 AK/SK 简化管理）极端错误，违反最小权限+审计要求，root 账号泄漏全网失守。",
+        "选项 G（直接给所有运维 AdministratorAccess 全权限）违反最小权限，运维误操作能删除全部资源。",
+        "实操要点：① 主账号开 MFA 二次验证不直接用；② 子账号默认无任何权限，逐步加策略；③ 控制台与编程访问分开（控制台用户名密码+MFA，API 用 SecretId/Key）；④ 定期 CloudAudit 审计权限变更与访问行为。"
+      ],
+      "pitfall": "常见误区：① 为了省事给所有人 AdministratorAccess（违反最小权限）；② 长期使用 root 账号 AK/SK 嵌入代码（极高泄漏风险）；③ 不用 Tag+Condition 实现环境隔离，开发账号能误操作生产；④ 离职员工 / 外包账号忘记回收，长期保留风险账号；⑤ 高危操作没有审批流，误删事故难追溯。"
+    },
+    "options": [
+      {
+        "label": "A",
+        "text": "按职能创建用户组（DevOps/Finance/Developer），每组绑定不同策略集"
+      },
+      {
+        "label": "B",
+        "text": "财务组仅绑定账单查看权限（QcloudFinanceFullAccess）+ 拒绝资源操作策略"
+      },
+      {
+        "label": "C",
+        "text": "使用资源标签（Tag）+ Condition 实现环境隔离：dev 环境可写，prod 环境只读"
+      },
+      {
+        "label": "D",
+        "text": "外包/临时账号设置有效期（ValidUntil），到期自动失效"
+      },
+      {
+        "label": "E",
+        "text": "高危操作（删生产 DB）通过角色 + STS 临时凭证 + 多人审批工作流授予"
+      },
+      {
+        "label": "F",
+        "text": "为简化管理，所有人共用一个 root 账号的 AK/SK"
+      },
+      {
+        "label": "G",
+        "text": "运维全员授予 AdministratorAccess 简化日常操作"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "type": "multiple",
+    "chapter": 4,
+    "subChapter": "ch4-compute",
+    "tags": [
+      "CAM",
+      "最小权限",
+      "权限管理",
+      "STS"
+    ],
+    "analysis": "CAM 最小权限实战核心：① 用户组+策略分离，按职能划分不一人一策略；② 用 Tag+Condition 实现环境隔离（dev 可写、prod 只读）；③ 外包账号设有效期自动失效；④ 高危操作走 Role+STS 临时凭证+审批流；⑤ 主账号开 MFA 不直接用。共用 root 账号或 AdministratorAccess 一刀切都违反最小权限，会被等保和审计判不符合项。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.4_%E6%9E%84%E5%BB%BA%E5%AE%89%E5%85%A8%E8%AE%A1%E7%AE%97%E7%8E%AF%E5%A2%83%E5%8F%8A%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86%E4%B8%AD%E5%BF%83/",
+    "difficulty": 3
+  },
+  {
+    "id": "prac-ch5-method-001",
+    "kind": "practical",
+    "stem": "客户要求『MySQL 上云迁移停机窗口 ≤ 10 分钟』，下列迁移方案最合理的是？",
+    "practical": {
+      "scenario": "某 ERP 系统从 IDC 自建 MySQL 5.7（200GB 数据）迁移上腾讯云 TDSQL-C MySQL。业务约束：① 全天 7×24 在线，可接受单次 ≤ 10 分钟停机割接窗口；② 数据零丢失；③ 割接前可做完整演练；④ 出问题需 5 分钟内回滚到 IDC。请设计迁移方案。",
+      "topology": {
+        "type": "mermaid",
+        "content": "flowchart LR\n  IDC[\"IDC MySQL 5.7\\n源库\"]\n  DTS[\"DTS\\n全量+增量\"]\n  TDSQL[\"TDSQL-C\\n目标库\"]\n  APP[\"应用 ERP\"]\n  IDC -- 全量初始化 --> DTS --> TDSQL\n  IDC -- 增量 binlog --> DTS\n  APP -. 割接前 .-> IDC\n  APP -. 割接后 .-> TDSQL",
+        "caption": "DTS 全量+增量+割接的最小停机迁移"
+      },
+      "constraints": [
+        "停机窗口 ≤ 10 分钟",
+        "数据零丢失",
+        "需演练",
+        "5 分钟内可回滚"
+      ],
+      "reasoning": [
+        "10 分钟停机窗口 + 200GB 数据 → 不能用『冷备份+冷恢复』（200GB 导入需数小时）。",
+        "正确路径：DTS（数据传输服务）三步走：① 全量阶段：DTS 在不停机情况下从 IDC 抽取全量数据写入 TDSQL-C（耗时 1-2 小时但业务无感）；② 增量阶段：DTS 持续订阅 IDC binlog 增量同步到 TDSQL-C，主备延迟 < 1 秒；③ 割接阶段：业务停写（停应用写库 5-10 分钟）→ 等 DTS 增量追平（延迟=0）→ 切换应用配置指向 TDSQL-C → 校验关键表数据 → 重启应用。",
+        "回滚路径：割接后保留 IDC 库 24-72 小时，反向 DTS 同步 TDSQL-C → IDC，遇问题 5 分钟内切回 IDC。",
+        "选项 A（DTS 全量+增量+割接 + 反向同步回滚）正确。",
+        "选项 B（mysqldump 导出+导入）200GB 至少 4 小时，远超 10 分钟窗口。",
+        "选项 C（停业务整夜迁移）违反业务诉求 7×24 + 10 分钟约束。",
+        "选项 D（双写应用同时写 IDC 和云）改造侵入大、数据一致性难保证、回滚复杂。",
+        "演练：割接前在测试环境完整演练 1-2 次，包括回滚流程。"
+      ],
+      "pitfall": "常见误区：① 用 mysqldump 全量导出+导入，200GB 数据需要数小时停机，远超 10 分钟窗口；② 跳过演练，正式割接遇到字符集/触发器/外键问题手忙脚乱；③ 没有反向回滚链路，出问题只能硬切回 IDC 但数据已不一致；④ 割接前不停业务写就切换，DTS 增量没追平导致丢数据；⑤ DTS 任务忽略大事务、外键约束等细节，部分表同步异常。"
+    },
+    "options": [
+      {
+        "label": "A",
+        "text": "DTS 全量+增量同步 → 业务停写 5-10 分钟等增量追平 → 切换连接 → 保留反向同步可 5 分钟回滚"
+      },
+      {
+        "label": "B",
+        "text": "mysqldump 导出全量 → SCP 上传 → mysql 导入 → 切换连接"
+      },
+      {
+        "label": "C",
+        "text": "停业务整夜迁移：23:00 停服 → 全量备份恢复 → 06:00 启动"
+      },
+      {
+        "label": "D",
+        "text": "应用层双写：同时写 IDC 和云数据库，待数据一致后切流"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-method",
+    "tags": [
+      "DTS",
+      "数据迁移",
+      "停机窗口",
+      "MySQL"
+    ],
+    "analysis": "10 分钟停机窗口的标准方案是 DTS 三段式：全量（业务无感）+ 增量（持续追同步）+ 割接（业务停写 5-10 分钟等增量追平→切连接→校验）。同时配置反向 DTS（云→IDC）形成双向链路实现快速回滚。mysqldump 受限于物理速度（200GB 至少几小时）扛不住 10 分钟窗口；应用双写改造大且一致性难保证；停整夜违反 7×24 在线诉求。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.1_%E8%BF%81%E7%A7%BB%E6%96%B9%E6%B3%95%E8%AE%BA%E6%A6%82%E8%BF%B0/",
+    "difficulty": 3
+  },
+  {
+    "id": "prac-ch5-cost-001",
+    "kind": "practical",
+    "stem": "对于「常驻业务 50 台 CVM + 大促弹性 50 台 + 离线批处理 100 台」混合场景，下列计费方式组合在 3 年总成本上最优的是？",
+    "practical": {
+      "scenario": "某电商客户测算 3 年云成本：① 常驻业务（核心交易、CRM）需 50 台 CVM，全天 24 小时跑；② 大促弹性（双 11/618）每年累计 30 天需多 50 台；③ 离线数据分析批处理（夜间 22:00-06:00）需 100 台，可中断重试。预算紧张，需在保障业务前提下最小化总成本。",
+      "constraints": [
+        "常驻 50 台 7×24",
+        "弹性 50 台/年累计 30 天",
+        "离线 100 台/天 8 小时，可中断",
+        "3 年总成本最低",
+        "业务连续性不可妥协"
+      ],
+      "reasoning": [
+        "腾讯云三种计费：① 包年包月（PrePaid）：长期使用最便宜，3 年合同价 ≈ 按量 60%；② 按量计费（PostPaid）：弹性灵活，单价最贵；③ 竞价实例（Spot）：单价仅按量 10%-30%，但可被强制释放（适合可中断作业）。",
+        "RI（预留实例券）：按量计费 CVM 绑定 RI 后享受折扣，介于按量和包年包月之间，适合『有规律但不严格 7×24』的场景。",
+        "常驻 50 台 → 包年包月 3 年合同（最便宜，节省 40%）。",
+        "弹性 50 台/年 30 天 → 按量计费 + RI（30 天可买月度 RI 券享折扣，剩余时间不付费）。",
+        "离线 100 台/天 8 小时可中断 → 竞价实例（Spot），单价 10-30%，被释放就重启任务，对批处理无影响。",
+        "选项 A（常驻包年包月 + 弹性按量+RI + 离线竞价）正确，符合『工作负载特征匹配计费方式』原则。",
+        "选项 B（全部包年包月）大促 30 天和离线 8h 的资源剩余时间也付钱，浪费严重。",
+        "选项 C（全部按量计费）单价最贵，常驻 7×24 跑按量比包年包月贵 60%-100%，3 年差几百万。",
+        "选项 D（全部竞价实例）核心交易不能容忍被强制释放，业务中断风险，不可。"
+      ],
+      "pitfall": "常见误区：① 一刀切全包年包月（弹性资源浪费）或全按量（常驻资源贵 1 倍）；② 不知道竞价实例的存在，离线分析也用按量计费白白多花 70% 成本；③ 把核心业务跑在竞价实例上，被释放后数据库主从中断；④ RI 券买错地域/规格不能跨用；⑤ 不做 3 年总成本测算，只看月账单容易低估累计差距。"
+    },
+    "options": [
+      {
+        "label": "A",
+        "text": "常驻 50 台用包年包月 3 年合同；弹性 50 台用按量计费配合月度 RI 券；离线 100 台用竞价实例 Spot"
+      },
+      {
+        "label": "B",
+        "text": "全部 200 台资源都用包年包月 3 年合同，简化采购流程"
+      },
+      {
+        "label": "C",
+        "text": "全部 200 台用按量计费，需要时启动用完即释放"
+      },
+      {
+        "label": "D",
+        "text": "全部 200 台用竞价实例 Spot，最大化省成本"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-cost",
+    "tags": [
+      "成本优化",
+      "包年包月",
+      "竞价实例",
+      "RI预留实例",
+      "FinOps"
+    ],
+    "analysis": "成本优化核心是『工作负载特征匹配计费方式』：常驻 7×24 用包年包月（3 年合同最便宜，节省 ~40%）；周期性弹性用按量+RI 券；可中断的离线批处理用竞价实例（单价仅 10-30%）。一刀切全包年浪费弹性时间、全按量贵 1 倍、全竞价核心业务会被释放中断。配合 TCOP 成本中心做月度复盘，3 年累计差距可达数百万。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.3_%E8%BF%81%E7%A7%BB%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BA%91%E4%B8%8A%E8%B5%84%E6%BA%90%E6%88%90%E6%9C%AC%E7%AE%A1%E7%90%86/",
+    "difficulty": 3
+  }
+]

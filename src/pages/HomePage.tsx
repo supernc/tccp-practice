@@ -1,13 +1,15 @@
 import { useNavigate } from 'react-router-dom';
 import useStats from '../hooks/useStats';
 import { getTotalCount } from '../services/questionService';
-import { FileText, BookOpen, Shuffle, ArrowRight, Trophy, AlertTriangle } from 'lucide-react';
+import { FileText, BookOpen, Shuffle, ArrowRight, Trophy, AlertTriangle, Wrench } from 'lucide-react';
 import { chapters } from '../data/chapters';
+import { getPracticalQuestions } from '../data';
 
 export default function HomePage() {
   const navigate = useNavigate();
   const stats = useStats();
   const totalQuestions = getTotalCount();
+  const practicalCount = getPracticalQuestions().length;
 
   const quickActions = [
     {
@@ -23,6 +25,13 @@ export default function HomePage() {
       icon: BookOpen,
       color: 'from-purple-500 to-purple-700',
       path: '/practice',
+    },
+    {
+      label: '实操模拟题',
+      desc: `${practicalCount} 道场景题 · 含拓扑图`,
+      icon: Wrench,
+      color: 'from-amber-500 to-orange-600',
+      path: '/practical',
     },
     {
       label: '随机练习',
@@ -50,7 +59,7 @@ export default function HomePage() {
       </div>
 
       {/* Quick actions */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {quickActions.map(({ label, desc, icon: Icon, color, path }) => (
           <button
             key={path}
