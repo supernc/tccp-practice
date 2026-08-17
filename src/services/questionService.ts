@@ -48,6 +48,24 @@ export function getRandomQuestions(
   return shuffled.slice(0, Math.min(count, shuffled.length));
 }
 
+// 从指定 ID 集合中随机抽题（用于错题/收藏随机练习）
+export function getRandomQuestionsFromIds(
+  ids: string[],
+  count: number,
+  type?: 'single' | 'multiple' | 'mixed'
+): Question[] {
+  let pool = getQuestionsByIds(ids);
+
+  if (type === 'single') {
+    pool = pool.filter(q => q.type === 'single');
+  } else if (type === 'multiple') {
+    pool = pool.filter(q => q.type === 'multiple');
+  }
+
+  const shuffled = shuffleArray(pool);
+  return shuffled.slice(0, Math.min(count, shuffled.length));
+}
+
 // 按考试大纲比例抽题（模拟考试用）
 export function getExamQuestions(): Question[] {
   const all = getAllQuestions();
@@ -110,6 +128,7 @@ const questionService = {
   getQuestionsBySubChapter,
   getQuestionsByType,
   getRandomQuestions,
+  getRandomQuestionsFromIds,
   getExamQuestions,
   getQuestionById,
   getQuestionsByIds,

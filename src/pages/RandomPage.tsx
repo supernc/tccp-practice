@@ -1,19 +1,48 @@
 import { useState } from 'react';
 import usePractice from '../hooks/usePractice';
-import { getRandomQuestions } from '../services/questionService';
+import { getRandomQuestions, getRandomQuestionsFromIds } from '../services/questionService';
+import { getWrongQuestions, getFavorites } from '../services/storage';
+import { Question } from '../types';
 import QuestionCard from '../components/question/QuestionCard';
 import Button from '../components/common/Button';
 import ProgressBar from '../components/common/ProgressBar';
-import { ChevronLeft, ChevronRight, CheckCircle, Shuffle, Play } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CheckCircle, Shuffle, Play, BookOpen, Star } from 'lucide-react';
+
+type SourceType = 'all' | 'wrong' | 'favorites';
 
 export default function RandomPage() {
   const practice = usePractice('random');
   const [started, setStarted] = useState(false);
   const [count, setCount] = useState(20);
   const [qType, setQType] = useState<'mixed' | 'single' | 'multiple'>('mixed');
+  const [source, setSource] = useState<SourceType>('all');
+  const [error, setError] = useState('');
+
+  const wrongCount = getWrongQuestions().size;
+  const favCount = getFavorites().size;
 
   const startRandom = () => {
-    const qs = getRandomQuestions(count, qType);
+    let qs: Question[];
+    if (source === 'wrong') {
+      qs = getRandomQuestionsFromIds(Array.from(getWrongQuestions()), count, qType);
+    } else if (source === 'favorites') {
+      qs = getRandomQuestionsFromIds(Array.from(getFavorites()), count, qType);
+    } else {
+      qs = getRandomQuestions(count, qType);
+    }
+
+    if (qs.length === 0) {
+      setError(
+        source === 'wrong'
+          ? '错题本里没有符合当前题型的题目，请调整题型'
+          : source === 'favorites'
+            ? '收藏夹里没有符合当前题型的题目，请调整题型'
+            : '题库中没有符合条件的题目'
+      );
+      return;
+    }
+
+    setError('');
     practice.setQuestions(qs);
     setStarted(true);
   };
@@ -35,7 +64,43 @@ export default function RandomPage() {
             <Shuffle size={36} className="text-white" />
           </div>
           <h2 className="text-2xl font-bold text-text-primary mb-2">随机练习</h2>
-          <p className="text-text-secondary text-sm mb-8">从题库中随机抽取题目进行练习</p>
+          <p className="text-text-secondary text-sm mb-8">随机抽题练习，可自由选择题目来源</p>
+
+          {/* 题目来源 */}
+          <div className="mb-6">
+            <label className="text-sm text-text-secondary mb-3 block">选择题目来源</label>
+            <div className="flex gap-2 justify-center">
+              {[
+                { value: 'all' as const, label: '全部题库', icon: Shuffle, count: -1 },
+                { value: 'wrong' as const, label: '错题', icon: BookOpen, count: wrongCount },
+                { value: 'favorites' as const, label: '收藏', icon: Star, count: favCount },
+              ].map(({ value, label, icon: Icon, count: c }) => {
+                const disabled = c === 0;
+                return (
+                  <button
+                    key={value}
+                    disabled={disabled}
+                    onClick={() => setSource(value)}
+                    className={`flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                      disabled
+                        ? 'bg-bg-card text-text-muted opacity-50 cursor-not-allowed'
+                        : source === value
+                          ? 'bg-primary-cyan text-white cursor-pointer'
+                          : 'bg-bg-card text-text-secondary hover:text-text-primary border border-white/10 hover:border-white/20 cursor-pointer'
+                    }`}
+                  >
+                    <Icon size={16} />
+                    {label}
+                    {c >= 0 && (
+                      <span className={`text-xs ${source === value && !disabled ? 'text-white/80' : 'text-text-muted'}`}>
+                        {c > 0 ? c : '暂无'}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
           {/* 题数选择 */}
           <div className="mb-6">
@@ -80,6 +145,12 @@ export default function RandomPage() {
               ))}
             </div>
           </div>
+
+          {error && (
+            <div className="mb-4 text-sm text-danger bg-danger/10 border border-danger/20 rounded-xl px-4 py-2.5">
+              {error}
+            </div>
+          )}
 
           <Button variant="primary" size="lg" onClick={startRandom} className="w-full">
             <Play size={18} /> 开始练习
