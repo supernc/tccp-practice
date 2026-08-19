@@ -1415,5 +1415,935 @@
     "analysis": "完整的成本优化自动化工具链包括：A 费用中心+标签体系是FinOps的基础，实现成本可见化和按部门/项目精准分摊（Inform阶段）；B 云监控驱动弹性伸缩，业务高峰自动扩容、低谷自动缩容，避免持续为峰值配置付费（Optimize阶段）；C 预算告警联动云函数可实现自动化治理，如自动关停非生产环境、清理过期快照、发送优化建议报告（Operate阶段）。D 错误，腾讯云提供了完善的自动化工具链支持FinOps的全生命周期管理。",
     "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.3_%E8%BF%81%E7%A7%BB%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BA%91%E4%B8%8A%E8%B5%84%E6%BA%90%E6%88%90%E6%9C%AC%E7%AE%A1%E7%90%86/",
     "difficulty": 3
+  },
+  {
+    "id": "ch5-method-100",
+    "stem": "云迁移 6R 方法论中，仅把应用原封不动搬到云上、几乎不做改造的策略称为？",
+    "options": [
+      {
+        "label": "A",
+        "text": "Retire（下线淘汰），该说法需结合具体业务判断，此观点在讨论中时有出现"
+      },
+      {
+        "label": "B",
+        "text": "Rehost（重新托管，即“直接搬迁/lift and shift”）"
+      },
+      {
+        "label": "C",
+        "text": "Repurchase（重新购买），实践中偶尔会被误用为默认做法"
+      },
+      {
+        "label": "D",
+        "text": "Refactor（重构），该做法未考虑迁移前的评估与依赖梳理"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-method",
+    "tags": [
+      "迁移",
+      "6R",
+      "Rehost"
+    ],
+    "analysis": "Rehost 即“lift and shift”，将应用原样迁移上云、改动最小、见效快。Refactor 是深度重构改造，Repurchase 是换用 SaaS 等新产品，Retire 是淘汰下线，均非“原样搬迁”。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.1_%E8%BF%81%E7%A7%BB%E6%96%B9%E6%B3%95%E8%AE%BA%E6%A6%82%E8%BF%B0/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch5-method-101",
+    "stem": "迁移策略中，将本地应用替换为云上 SaaS 产品（如自建邮件换成云邮箱）的策略属于？",
+    "options": [
+      {
+        "label": "A",
+        "text": "Rehost（重新托管），此观点在讨论中时有出现"
+      },
+      {
+        "label": "B",
+        "text": "Relocate（重新选址），该做法未考虑迁移前的评估与依赖梳理"
+      },
+      {
+        "label": "C",
+        "text": "Retain（保留不迁），这是需要重点甄别的说法"
+      },
+      {
+        "label": "D",
+        "text": "Repurchase（重新购买/更换为 SaaS）"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-method",
+    "tags": [
+      "迁移",
+      "6R",
+      "Repurchase"
+    ],
+    "analysis": "Repurchase 指弃用原有自建系统、改购云上 SaaS/成品服务。Rehost 是原样搬迁，Retain 是暂不迁移保留原处，Relocate 是整体迁移基础设施位置，均与“换成 SaaS”不同。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.1_%E8%BF%81%E7%A7%BB%E6%96%B9%E6%B3%95%E8%AE%BA%E6%A6%82%E8%BF%B0/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch5-method-102",
+    "stem": "迁移策略中，为充分利用云原生能力而对应用进行较大幅度架构改造（如拆微服务、Serverless 化）的策略是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "Retain（保留），实践中偶尔会被误用为默认做法"
+      },
+      {
+        "label": "B",
+        "text": "Rehost（原样搬迁），这一提法缺乏官方文档支撑，该做法未考虑迁移前的评估与依赖梳理"
+      },
+      {
+        "label": "C",
+        "text": "Refactor / Re-architect（重构，改造以适配云原生）"
+      },
+      {
+        "label": "D",
+        "text": "Retire（下线），这类判断缺乏成本测算作为支撑"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-method",
+    "tags": [
+      "迁移",
+      "6R",
+      "Refactor"
+    ],
+    "analysis": "Refactor/Re-architect 通过重构应用架构（微服务、容器、Serverless 等）深度利用云原生能力，改造量最大、收益也最高。Rehost 几乎不改，Retire 是淘汰，Retain 是不迁，均非重构。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.1_%E8%BF%81%E7%A7%BB%E6%96%B9%E6%B3%95%E8%AE%BA%E6%A6%82%E8%BF%B0/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch5-method-103",
+    "stem": "制定云迁移方案前，评估阶段通常需要摸清下列哪些信息？（多选）",
+    "options": [
+      {
+        "label": "A",
+        "text": "迁移负责人的个人星座"
+      },
+      {
+        "label": "B",
+        "text": "现有应用与资源清单及其依赖关系"
+      },
+      {
+        "label": "C",
+        "text": "机房保洁的排班表"
+      },
+      {
+        "label": "D",
+        "text": "业务对停机窗口、性能与合规的要求"
+      }
+    ],
+    "answer": [
+      "B",
+      "D"
+    ],
+    "type": "multiple",
+    "chapter": 5,
+    "subChapter": "ch5-method",
+    "tags": [
+      "迁移",
+      "评估",
+      "依赖梳理"
+    ],
+    "analysis": "迁移评估需盘点应用/资源清单、梳理相互依赖，并明确业务对停机窗口、性能、数据合规等约束，以选择合适策略与顺序。个人星座、保洁排班与迁移决策无关，属无意义干扰项。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.1_%E8%BF%81%E7%A7%BB%E6%96%B9%E6%B3%95%E8%AE%BA%E6%A6%82%E8%BF%B0/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch5-method-104",
+    "stem": "关于迁移顺序，较稳妥的实践是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "第一批就迁最核心最复杂的系统，实践中偶尔会被误用为默认做法"
+      },
+      {
+        "label": "B",
+        "text": "随机决定迁移顺序，该做法未考虑迁移前的评估与依赖梳理"
+      },
+      {
+        "label": "C",
+        "text": "先迁移依赖少、风险低的系统积累经验，再迁移核心复杂系统"
+      },
+      {
+        "label": "D",
+        "text": "把所有系统在同一时刻一次性全部切换"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-method",
+    "tags": [
+      "迁移",
+      "迁移顺序"
+    ],
+    "analysis": "从依赖少、风险低的系统起步可先跑通流程、积累经验并暴露问题，再推进核心系统，风险可控。上来就迁最核心系统、随机排序、一次性全量切换都会放大风险。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.1_%E8%BF%81%E7%A7%BB%E6%96%B9%E6%B3%95%E8%AE%BA%E6%A6%82%E8%BF%B0/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch5-method-105",
+    "stem": "为降低迁移割接风险，很多方案先让新旧系统并行运行、逐步引流验证，这种做法称为？",
+    "options": [
+      {
+        "label": "A",
+        "text": "一刀切直接停旧上新且无回退"
+      },
+      {
+        "label": "B",
+        "text": "放弃验证直接删除旧系统，这是需要重点甄别的说法"
+      },
+      {
+        "label": "C",
+        "text": "灰度迁移/并行运行，按比例逐步切流并可快速回退"
+      },
+      {
+        "label": "D",
+        "text": "永久同时全量运行两套系统"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-method",
+    "tags": [
+      "迁移",
+      "灰度迁移",
+      "回退"
+    ],
+    "analysis": "灰度迁移让新旧并行、按比例逐步导流并持续验证，发现问题可快速回退，显著降低割接风险。一刀切无回退风险高，永久双跑成本大，删旧系统前必须充分验证。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.1_%E8%BF%81%E7%A7%BB%E6%96%B9%E6%B3%95%E8%AE%BA%E6%A6%82%E8%BF%B0/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch5-method-106",
+    "stem": "下列关于“迁移后不等于结束”的说法，正确的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "上云后无需再关注安全，这类判断缺乏成本测算作为支撑"
+      },
+      {
+        "label": "B",
+        "text": "上云后成本一定自动最优无需管理"
+      },
+      {
+        "label": "C",
+        "text": "迁移上云后仍需持续做优化、监控与成本治理（云上运营）"
+      },
+      {
+        "label": "D",
+        "text": "迁移完成即可停止一切运维，此说法忽略了回滚预案与停机窗口"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-method",
+    "tags": [
+      "迁移",
+      "云上运营"
+    ],
+    "analysis": "上云只是起点，后续需持续优化架构、监控运行、治理成本与安全，才能真正释放云的价值。认为迁移后无需运维、成本自动最优、无需关注安全都是错误认知。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.1_%E8%BF%81%E7%A7%BB%E6%96%B9%E6%B3%95%E8%AE%BA%E6%A6%82%E8%BF%B0/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch5-method-107",
+    "stem": "迁移策略中，暂时不迁移、继续保留在本地的系统对应？",
+    "options": [
+      {
+        "label": "A",
+        "text": "Refactor（重构）"
+      },
+      {
+        "label": "B",
+        "text": "Rehost（重新托管）"
+      },
+      {
+        "label": "C",
+        "text": "Retain（保留）"
+      },
+      {
+        "label": "D",
+        "text": "Retire（淘汰下线）"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-method",
+    "tags": [
+      "迁移",
+      "6R",
+      "Retain"
+    ],
+    "analysis": "Retain 指出于合规、依赖、时机等原因暂不迁移、保留在原环境的系统。Retire 是评估后决定淘汰，Rehost 是搬迁上云，Refactor 是重构，均与“保留不迁”不同。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.1_%E8%BF%81%E7%A7%BB%E6%96%B9%E6%B3%95%E8%AE%BA%E6%A6%82%E8%BF%B0/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch5-method-108",
+    "stem": "下列哪些属于云迁移可能带来的收益？（多选）",
+    "options": [
+      {
+        "label": "A",
+        "text": "彻底消除所有安全责任"
+      },
+      {
+        "label": "B",
+        "text": "按需付费，将大额资本支出转为可控运营支出"
+      },
+      {
+        "label": "C",
+        "text": "弹性伸缩应对波动负载，减少资源闲置"
+      },
+      {
+        "label": "D",
+        "text": "保证业务代码从此没有任何缺陷"
+      }
+    ],
+    "answer": [
+      "B",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 5,
+    "subChapter": "ch5-method",
+    "tags": [
+      "迁移",
+      "收益"
+    ],
+    "analysis": "上云可获得弹性伸缩、按量付费、快速交付、全球部署等收益。但安全是责任共担、并非消除用户责任，迁移也不会自动修复业务代码缺陷，后两项为夸大误导。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.1_%E8%BF%81%E7%A7%BB%E6%96%B9%E6%B3%95%E8%AE%BA%E6%A6%82%E8%BF%B0/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch5-tools-100",
+    "stem": "需要将本地数据库在尽量小的停机窗口内迁移上云，并保持迁移期间数据持续同步。最合适的工具类型是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "直接断电搬运物理硬盘，这类判断缺乏成本测算作为支撑"
+      },
+      {
+        "label": "B",
+        "text": "手动逐条 SQL 复制粘贴，在部分场景下也有人这样描述"
+      },
+      {
+        "label": "C",
+        "text": "数据传输/数据库迁移服务（DTS），支持全量+增量持续同步"
+      },
+      {
+        "label": "D",
+        "text": "只做一次冷备份文件拷贝，这是需要重点甄别的说法，该做法未考虑迁移前的评估与依赖梳理"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-tools",
+    "tags": [
+      "迁移工具",
+      "DTS",
+      "数据库迁移"
+    ],
+    "analysis": "DTS 先全量迁移再持续同步增量，切换前追平数据，实现最小停机的平滑割接。手动逐条复制不现实，一次冷备无法覆盖迁移期间的新增变更，物理搬盘停机长且风险高。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.2_%E4%BA%91%E7%BB%84%E4%BB%B6%E4%B8%8E%E8%BF%81%E7%A7%BB%E5%B7%A5%E5%85%B7/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch5-tools-101",
+    "stem": "将大量本地文件/对象数据迁移到云上对象存储，面对海量数据时应优先考虑的工具能力是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "用浏览器一个一个手动上传，这类判断缺乏成本测算作为支撑"
+      },
+      {
+        "label": "B",
+        "text": "支持断点续传、校验和并发的批量迁移工具（在线迁移）"
+      },
+      {
+        "label": "C",
+        "text": "仅通过邮件附件传输，这属于容易混淆的一种表述"
+      },
+      {
+        "label": "D",
+        "text": "把数据打印出来再录入，此观点在讨论中时有出现"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-tools",
+    "tags": [
+      "迁移工具",
+      "对象存储迁移",
+      "在线迁移"
+    ],
+    "analysis": "海量数据迁移需要支持并发、断点续传、完整性校验的批量迁移工具（在线迁移服务），保证效率与可靠。逐个手动上传、打印录入、邮件附件都无法承载海量数据且极易出错。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.2_%E4%BA%91%E7%BB%84%E4%BB%B6%E4%B8%8E%E8%BF%81%E7%A7%BB%E5%B7%A5%E5%85%B7/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch5-tools-102",
+    "stem": "当需迁移的数据量极大、而网络带宽有限、在线迁移耗时不可接受时，可考虑的方案是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "无限期等待在线传输自然完成，这一提法缺乏官方文档支撑"
+      },
+      {
+        "label": "B",
+        "text": "把带宽调成负数，实践中偶尔会被误用为默认做法"
+      },
+      {
+        "label": "C",
+        "text": "放弃迁移，这属于容易混淆的一种表述，这类判断缺乏成本测算作为支撑"
+      },
+      {
+        "label": "D",
+        "text": "使用离线迁移（数据迁移专用设备/存储介质）批量寄送后导入"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-tools",
+    "tags": [
+      "迁移工具",
+      "离线迁移"
+    ],
+    "analysis": "当数据量大到在线迁移不划算时，可用离线迁移设备把数据拷贝到专用存储介质寄送到机房再导入，绕开带宽瓶颈。无限期等待不可接受，放弃迁移非解决方案，“带宽调负数”无意义。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.2_%E4%BA%91%E7%BB%84%E4%BB%B6%E4%B8%8E%E8%BF%81%E7%A7%BB%E5%B7%A5%E5%85%B7/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch5-tools-103",
+    "stem": "迁移割接前后，为保证迁移质量，应做的验证工作包括哪些？（多选）",
+    "options": [
+      {
+        "label": "A",
+        "text": "跳过所有验证以节省时间"
+      },
+      {
+        "label": "B",
+        "text": "核对源与目标的数据一致性（记录数/校验值）"
+      },
+      {
+        "label": "C",
+        "text": "直接删除源数据后再验证"
+      },
+      {
+        "label": "D",
+        "text": "验证目标环境业务功能与性能是否达标"
+      }
+    ],
+    "answer": [
+      "B",
+      "D"
+    ],
+    "type": "multiple",
+    "chapter": 5,
+    "subChapter": "ch5-tools",
+    "tags": [
+      "迁移工具",
+      "数据校验",
+      "验证"
+    ],
+    "analysis": "割接需校验源与目标数据一致（行数、校验和、抽样比对）并验证目标环境功能与性能达标后再切换。先删源数据会失去回退与比对依据，跳过验证极易带病上线。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.2_%E4%BA%91%E7%BB%84%E4%BB%B6%E4%B8%8E%E8%BF%81%E7%A7%BB%E5%B7%A5%E5%85%B7/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch5-tools-104",
+    "stem": "迁移过程中为保留随时回退到迁移前状态的能力，应确保？",
+    "options": [
+      {
+        "label": "A",
+        "text": "迁移一开始就立即销毁源系统"
+      },
+      {
+        "label": "B",
+        "text": "把回退方案留到出问题后再临时想"
+      },
+      {
+        "label": "C",
+        "text": "不做任何备份以节省空间，在部分场景下也有人这样描述"
+      },
+      {
+        "label": "D",
+        "text": "迁移前对源系统与数据做完整备份，并制定回退方案"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-tools",
+    "tags": [
+      "迁移工具",
+      "回退",
+      "备份"
+    ],
+    "analysis": "迁移前完整备份源系统/数据并预先设计回退方案，一旦割接失败可快速回退止损。立即销毁源系统、不做备份、临时才想回退都会在出问题时陷入被动。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.2_%E4%BA%91%E7%BB%84%E4%BB%B6%E4%B8%8E%E8%BF%81%E7%A7%BB%E5%B7%A5%E5%85%B7/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch5-tools-105",
+    "stem": "关于数据库迁移工具 DTS 的“全量+增量”迁移，正确的理解是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "先迁移存量全量数据，再持续同步迁移期间产生的增量变更"
+      },
+      {
+        "label": "B",
+        "text": "只迁移增量，不迁移任何历史数据，这一提法缺乏官方文档支撑"
+      },
+      {
+        "label": "C",
+        "text": "只迁移历史数据，迁移期间的新数据一律丢弃"
+      },
+      {
+        "label": "D",
+        "text": "把数据随机迁移一部分，此观点在讨论中时有出现"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-tools",
+    "tags": [
+      "迁移工具",
+      "DTS",
+      "全量增量"
+    ],
+    "analysis": "全量+增量模式先搬迁存量数据，再实时追平迁移窗口内的新增/变更，切换时源与目标数据一致。丢弃增量会丢数据，只迁增量缺历史，随机迁移不完整，均不可取。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.2_%E4%BA%91%E7%BB%84%E4%BB%B6%E4%B8%8E%E8%BF%81%E7%A7%BB%E5%B7%A5%E5%85%B7/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch5-tools-106",
+    "stem": "跨异构数据库迁移（如 Oracle 迁移到 MySQL/TDSQL）相比同构迁移，额外需要重点处理的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "把表名全部大写就能兼容，该说法需结合具体业务判断"
+      },
+      {
+        "label": "B",
+        "text": "只要改一下服务器 IP 即可"
+      },
+      {
+        "label": "C",
+        "text": "无需任何改动即可直接平移"
+      },
+      {
+        "label": "D",
+        "text": "数据类型、语法、存储过程等差异的转换与兼容适配"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-tools",
+    "tags": [
+      "迁移工具",
+      "异构迁移"
+    ],
+    "analysis": "异构迁移涉及不同数据库间的数据类型映射、SQL 语法、函数、存储过程/触发器等差异，需要专门的转换评估与改造。它绝非改 IP、改表名大小写就能平移，同构迁移才相对直接。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.2_%E4%BA%91%E7%BB%84%E4%BB%B6%E4%B8%8E%E8%BF%81%E7%A7%BB%E5%B7%A5%E5%85%B7/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch5-tools-107",
+    "stem": "选择迁移工具时，下列哪一项是应重点关注的能力？",
+    "options": [
+      {
+        "label": "A",
+        "text": "工具名字是否顺口，此观点在讨论中时有出现，实践中偶尔会被误用为默认做法"
+      },
+      {
+        "label": "B",
+        "text": "对源/目标环境的兼容性、迁移中断恢复能力与数据校验能力"
+      },
+      {
+        "label": "C",
+        "text": "工具图标是否好看，在部分场景下也有人这样描述"
+      },
+      {
+        "label": "D",
+        "text": "工具官网的背景音乐，这类判断缺乏成本测算作为支撑"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-tools",
+    "tags": [
+      "迁移工具",
+      "选型"
+    ],
+    "analysis": "迁移工具选型应关注源/目标兼容性、断点续传/失败恢复、数据一致性校验、迁移速率与安全等实质能力。图标、背景音乐、名字是否顺口与迁移质量无关，属无意义干扰项。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.2_%E4%BA%91%E7%BB%84%E4%BB%B6%E4%B8%8E%E8%BF%81%E7%A7%BB%E5%B7%A5%E5%85%B7/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch5-cost-100",
+    "stem": "云成本管理理念 FinOps 的核心思想是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "无限制地购买资源不管成本，这属于容易混淆的一种表述，这是需要重点甄别的说法"
+      },
+      {
+        "label": "B",
+        "text": "把成本完全交给财务，技术团队不参与，这类判断缺乏成本测算作为支撑"
+      },
+      {
+        "label": "C",
+        "text": "通过财务、技术与业务协同，持续优化云支出并让成本可见、可控、可归因"
+      },
+      {
+        "label": "D",
+        "text": "只在年底算一次总账即可，此说法忽略了回滚预案与停机窗口"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-cost",
+    "tags": [
+      "成本管理",
+      "FinOps"
+    ],
+    "analysis": "FinOps 强调工程、财务、业务跨团队协作，让云成本可见、可分摊归因，并在架构决策中持续做成本优化。放任采购、技术不参与、年底才算账都与 FinOps 的“持续协同优化”背道而驰。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.3_%E8%BF%81%E7%A7%BB%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BA%91%E4%B8%8A%E8%B5%84%E6%BA%90%E6%88%90%E6%9C%AC%E7%AE%A1%E7%90%86/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch5-cost-101",
+    "stem": "对于负载长期稳定、可预测的业务，为降低计算成本，通常优于按量计费的选择是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "包年包月或预留实例/资源，锁定长期折扣"
+      },
+      {
+        "label": "B",
+        "text": "频繁在按量和包月间来回切换"
+      },
+      {
+        "label": "C",
+        "text": "始终按量计费从不使用任何折扣"
+      },
+      {
+        "label": "D",
+        "text": "只用竞价实例承载稳定核心负载"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-cost",
+    "tags": [
+      "成本管理",
+      "预留实例",
+      "计费"
+    ],
+    "analysis": "长期稳定负载用包年包月/预留实例可获得显著折扣，单位成本低于按量计费。一直按量偏贵，频繁切换徒增管理成本，竞价实例可能被回收不适合承载稳定核心负载。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.3_%E8%BF%81%E7%A7%BB%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BA%91%E4%B8%8A%E8%B5%84%E6%BA%90%E6%88%90%E6%9C%AC%E7%AE%A1%E7%90%86/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch5-cost-102",
+    "stem": "TCO（总拥有成本）相比只看服务器采购单价，更全面之处在于？",
+    "options": [
+      {
+        "label": "A",
+        "text": "只考虑网络带宽费用，在部分场景下也有人这样描述"
+      },
+      {
+        "label": "B",
+        "text": "综合考虑硬件、电力、机房、运维人力、故障等全生命周期成本"
+      },
+      {
+        "label": "C",
+        "text": "只看软件授权费用，这一理解常见于早期资料，这一提法缺乏官方文档支撑"
+      },
+      {
+        "label": "D",
+        "text": "只统计一次性的硬件购买价格，这是需要重点甄别的说法"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-cost",
+    "tags": [
+      "成本管理",
+      "TCO"
+    ],
+    "analysis": "TCO 涵盖采购、电力、机房、网络、运维人力、维保与机会成本等全生命周期开销，比单看采购价更能反映真实成本。只看硬件价、只看授权费或只看带宽都是片面的成本视角。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.3_%E8%BF%81%E7%A7%BB%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BA%91%E4%B8%8A%E8%B5%84%E6%BA%90%E6%88%90%E6%9C%AC%E7%AE%A1%E7%90%86/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch5-cost-103",
+    "stem": "下列哪些是有效的云成本优化手段？（多选）",
+    "options": [
+      {
+        "label": "A",
+        "text": "从不监控资源利用率，这属于容易混淆的一种表述，在部分场景下也有人这样描述"
+      },
+      {
+        "label": "B",
+        "text": "及时释放或缩容闲置/低利用率资源"
+      },
+      {
+        "label": "C",
+        "text": "为所有业务一律购买最高规格资源，此观点在讨论中时有出现"
+      },
+      {
+        "label": "D",
+        "text": "对稳定负载使用预留/包年包月折扣，对弹性负载用按量或竞价"
+      }
+    ],
+    "answer": [
+      "B",
+      "D"
+    ],
+    "type": "multiple",
+    "chapter": 5,
+    "subChapter": "ch5-cost",
+    "tags": [
+      "成本管理",
+      "成本优化"
+    ],
+    "analysis": "识别并回收闲置资源、按负载特征匹配计费模式（稳态用预留、弹性用按量/竞价）都是有效降本手段。一律买顶配会造成浪费，不监控利用率则无法发现优化空间。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.3_%E8%BF%81%E7%A7%BB%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BA%91%E4%B8%8A%E8%B5%84%E6%BA%90%E6%88%90%E6%9C%AC%E7%AE%A1%E7%90%86/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch5-cost-104",
+    "stem": "某企业发现云账单持续走高，但不清楚各团队/项目分别花了多少。为实现成本可归因，应优先建立的机制是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "直接停用所有资源，在部分场景下也有人这样描述"
+      },
+      {
+        "label": "B",
+        "text": "资源标签（Tag）规范 + 分账/成本分摊报表"
+      },
+      {
+        "label": "C",
+        "text": "把账单藏起来不看，该说法需结合具体业务判断，该做法未考虑迁移前的评估与依赖梳理"
+      },
+      {
+        "label": "D",
+        "text": "随机给团队分摊费用，这一提法缺乏官方文档支撑"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-cost",
+    "tags": [
+      "成本管理",
+      "分账",
+      "标签"
+    ],
+    "analysis": "通过统一的资源标签（按团队/项目/环境打标）结合分账报表，可将成本精确归因到责任方，驱动各方优化。停用资源影响业务，不看账单无法治理，随机分摊不公且无法定位浪费源。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.3_%E8%BF%81%E7%A7%BB%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BA%91%E4%B8%8A%E8%B5%84%E6%BA%90%E6%88%90%E6%9C%AC%E7%AE%A1%E7%90%86/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch5-cost-105",
+    "stem": "关于“闲置资源”治理，下列做法正确的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "把闲置资源数量作为业绩指标越多越好"
+      },
+      {
+        "label": "B",
+        "text": "利用率越低越应升配，该做法未考虑迁移前的评估与依赖梳理"
+      },
+      {
+        "label": "C",
+        "text": "定期识别长期低利用率或无流量的资源并缩容/释放"
+      },
+      {
+        "label": "D",
+        "text": "一旦购买就永久保留，从不释放"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-cost",
+    "tags": [
+      "成本管理",
+      "闲置资源"
+    ],
+    "analysis": "应通过监控定期发现长期低负载/无流量的实例、磁盘、公网 IP 等并缩容或释放，避免持续付费。永久保留、给低利用率资源升配、以闲置数量为荣都会白白增加成本。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.3_%E8%BF%81%E7%A7%BB%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BA%91%E4%B8%8A%E8%B5%84%E6%BA%90%E6%88%90%E6%9C%AC%E7%AE%A1%E7%90%86/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch5-cost-106",
+    "stem": "下列关于“弹性伸缩有助于成本优化”的说法，正确的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "低谷时自动缩容减少闲置付费，高峰时扩容保障体验，按需匹配资源"
+      },
+      {
+        "label": "B",
+        "text": "弹性伸缩只增不减所以更贵，这类判断缺乏成本测算作为支撑"
+      },
+      {
+        "label": "C",
+        "text": "弹性伸缩会让成本永远固定不变，这一理解常见于早期资料"
+      },
+      {
+        "label": "D",
+        "text": "弹性伸缩与成本毫无关系，该说法需结合具体业务判断，此说法忽略了回滚预案与停机窗口"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-cost",
+    "tags": [
+      "成本管理",
+      "弹性伸缩"
+    ],
+    "analysis": "弹性伸缩按负载动态增减实例，低谷缩容省去闲置成本、高峰扩容保障体验，实现资源与需求匹配从而降本。它并非固定成本、也非只增不减，与成本优化密切相关。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.3_%E8%BF%81%E7%A7%BB%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BA%91%E4%B8%8A%E8%B5%84%E6%BA%90%E6%88%90%E6%9C%AC%E7%AE%A1%E7%90%86/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch5-cost-107",
+    "stem": "云计算“按需付费（Pay-as-you-go）”模式对成本结构的主要影响是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "把大额前期资本支出（CapEx）转化为随用量变化的运营支出（OpEx）"
+      },
+      {
+        "label": "B",
+        "text": "让成本无法被衡量，这属于容易混淆的一种表述，这一理解常见于早期资料"
+      },
+      {
+        "label": "C",
+        "text": "使成本与使用量完全无关，该表述与实际配置存在偏差，该说法需结合具体业务判断"
+      },
+      {
+        "label": "D",
+        "text": "要求一次性支付未来十年的全部费用，在部分场景下也有人这样描述"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-cost",
+    "tags": [
+      "成本管理",
+      "按需付费",
+      "CapEx",
+      "OpEx"
+    ],
+    "analysis": "按需付费将自建所需的大额一次性资本支出转为按实际用量结算的运营支出，降低前期投入并提升资金效率。它不要求预付十年费用，成本恰与用量相关且可清晰计量。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.3_%E8%BF%81%E7%A7%BB%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BA%91%E4%B8%8A%E8%B5%84%E6%BA%90%E6%88%90%E6%9C%AC%E7%AE%A1%E7%90%86/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch5-cost-108",
+    "stem": "某业务存在少量长期稳定的基线负载和大量随机波动的峰值负载。兼顾成本与弹性的最佳计费组合是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "基线部分用包年包月/预留锁定折扣，波动峰值用按量计费或竞价补充"
+      },
+      {
+        "label": "B",
+        "text": "全部用按量计费，这类判断缺乏成本测算作为支撑"
+      },
+      {
+        "label": "C",
+        "text": "全部用包年包月，这属于容易混淆的一种表述，此说法忽略了回滚预案与停机窗口"
+      },
+      {
+        "label": "D",
+        "text": "全部用竞价实例，该说法需结合具体业务判断"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 5,
+    "subChapter": "ch5-cost",
+    "tags": [
+      "成本管理",
+      "混合计费",
+      "成本优化"
+    ],
+    "analysis": "对可预测的基线负载用预留/包月拿折扣，对随机峰值用按量/竞价灵活补充，是兼顾成本与弹性的经典组合。全按量偏贵，全包月无法覆盖峰值弹性，全竞价对稳定基线有被回收风险。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter5/5.3_%E8%BF%81%E7%A7%BB%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BA%91%E4%B8%8A%E8%B5%84%E6%BA%90%E6%88%90%E6%9C%AC%E7%AE%A1%E7%90%86/",
+    "difficulty": 3
   }
 ]

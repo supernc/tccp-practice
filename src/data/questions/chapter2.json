@@ -7028,5 +7028,3884 @@
     "analysis": "链路追踪（Tracing）是分析微服务调用链路性能瓶颈的最有效手段。它通过在请求中注入TraceID，记录请求经过每个服务的耗时、状态，形成完整的调用链视图。可以直观看到哪个服务/接口耗时最长、哪里出现错误。腾讯云可观测平台提供APM应用性能监控功能，支持自动采集和分析分布式调用链路。CVM监控只能看到资源层面指标，CLB日志缺少服务内部调用信息。",
     "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.17_%E8%85%BE%E8%AE%AF%E4%BA%91%E5%8F%AF%E8%A7%82%E6%B5%8B%E5%B9%B3%E5%8F%B0/",
     "difficulty": 3
+  },
+  {
+    "id": "ch2-cvm-100",
+    "stem": "某业务是 7×24 小时稳定运行的核心系统，负载平稳且预计长期使用（3 年以上）。为在保证稳定性的前提下最优化成本，CVM 计费模式应优先选择？",
+    "options": [
+      {
+        "label": "A",
+        "text": "仅使用免费额度承载生产流量"
+      },
+      {
+        "label": "B",
+        "text": "包年包月（预付费）并结合长期使用的折扣"
+      },
+      {
+        "label": "C",
+        "text": "按量计费（后付费），随用随停"
+      },
+      {
+        "label": "D",
+        "text": "竞价实例（Spot），以最低价获取资源"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-cvm",
+    "tags": [
+      "CVM",
+      "计费模式",
+      "成本优化"
+    ],
+    "analysis": "负载平稳、长期使用的稳态业务用包年包月单价最低且资源有保障。按量计费适合波动/临时负载；竞价实例可能被回收，不适合核心系统；免费额度无法承载生产。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.1_%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8CVM%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-cvm-101",
+    "stem": "某 AI 推理服务需要大规模并行浮点运算能力，下列 CVM 实例类型中最适合的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "GPU 计算型实例"
+      },
+      {
+        "label": "B",
+        "text": "大数据型实例"
+      },
+      {
+        "label": "C",
+        "text": "内存型实例"
+      },
+      {
+        "label": "D",
+        "text": "标准型（通用）实例"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-cvm",
+    "tags": [
+      "CVM",
+      "实例类型",
+      "GPU"
+    ],
+    "analysis": "AI 推理/训练依赖 GPU 的并行浮点算力，应选 GPU 计算型。标准型均衡但无加速卡；内存型面向缓存/内存数据库；大数据型面向 Hadoop 等吞吐型存储场景，均不擅长并行浮点。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.1_%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8CVM%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-cvm-102",
+    "stem": "竞价实例（Spot Instance）最适合承载下列哪一类工作负载？",
+    "options": [
+      {
+        "label": "A",
+        "text": "可容忍中断、可断点续跑的批量计算或离线渲染任务"
+      },
+      {
+        "label": "B",
+        "text": "承载用户支付的核心交易链路"
+      },
+      {
+        "label": "C",
+        "text": "存储唯一副本的关键数据库"
+      },
+      {
+        "label": "D",
+        "text": "要求 99.99% 可用性的对外 API 网关"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-cvm",
+    "tags": [
+      "CVM",
+      "竞价实例",
+      "成本优化"
+    ],
+    "analysis": "竞价实例价格极低但可能被平台回收，只适合无状态、可中断、可重试的任务，如离线批处理、渲染、大数据计算。核心交易、唯一数据副本、高可用 API 一旦被回收会造成业务损失，不可使用。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.1_%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8CVM%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch2-cvm-103",
+    "stem": "关于 CVM 镜像，下列说法正确的有？（多选）",
+    "options": [
+      {
+        "label": "A",
+        "text": "公共镜像不包含任何操作系统"
+      },
+      {
+        "label": "B",
+        "text": "镜像可在同账号内跨地域复制后使用"
+      },
+      {
+        "label": "C",
+        "text": "镜像一旦创建便无法删除"
+      },
+      {
+        "label": "D",
+        "text": "自定义镜像可用于快速批量创建配置一致的实例"
+      }
+    ],
+    "answer": [
+      "B",
+      "D"
+    ],
+    "type": "multiple",
+    "chapter": 2,
+    "subChapter": "ch2-cvm",
+    "tags": [
+      "CVM",
+      "镜像"
+    ],
+    "analysis": "自定义镜像固化了系统与软件环境，便于批量拉起一致实例；镜像支持跨地域复制以便异地部署。公共镜像本身即含操作系统；镜像可按需删除，两项为误导。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.1_%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8CVM%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-cvm-104",
+    "stem": "关于 CVM 与云硬盘 CBS 的关系，下列描述正确的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "一块云硬盘可同时挂载到任意多台 CVM 实现共享写"
+      },
+      {
+        "label": "B",
+        "text": "CVM 的数据必然随实例销毁而丢失，无法保留，这是需要重点甄别的说法"
+      },
+      {
+        "label": "C",
+        "text": "CBS 只能作为系统盘，不能作为数据盘，此观点在讨论中时有出现"
+      },
+      {
+        "label": "D",
+        "text": "系统盘和数据盘均基于 CBS，数据盘可独立于实例生命周期单独存在"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-cvm",
+    "tags": [
+      "CVM",
+      "CBS",
+      "云硬盘"
+    ],
+    "analysis": "CVM 的系统盘/数据盘由 CBS 提供，数据盘可设置为随实例一起释放或保留，具备独立生命周期。普通 CBS 为块存储不支持多实例同时读写（共享需专门方案），且既可做系统盘也可做数据盘。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.1_%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8CVM%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch2-cvm-105",
+    "stem": "运维希望在不重启业务、不丢失系统数据的前提下，为一台线上 CVM 定期创建可回滚的时间点副本。应使用的功能是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "为云硬盘创建快照（Snapshot）"
+      },
+      {
+        "label": "B",
+        "text": "销毁并重建实例"
+      },
+      {
+        "label": "C",
+        "text": "调整实例的计费模式"
+      },
+      {
+        "label": "D",
+        "text": "仅修改安全组规则"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-cvm",
+    "tags": [
+      "CVM",
+      "快照",
+      "数据保护"
+    ],
+    "analysis": "快照可在线为云硬盘创建时间点副本，用于故障回滚或创建自定义镜像，不影响业务运行。销毁重建会丢数据，安全组只管网络访问，计费模式与数据副本无关。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.1_%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8CVM%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-cvm-106",
+    "stem": "某场景要求同一业务的多台 CVM 分散部署在不同物理服务器上，以避免单台宿主机故障导致业务整体不可用。应使用的能力是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "关闭多可用区，集中在单可用区"
+      },
+      {
+        "label": "B",
+        "text": "置放群组（分散置放）"
+      },
+      {
+        "label": "C",
+        "text": "把所有实例合并为一台大规格实例"
+      },
+      {
+        "label": "D",
+        "text": "将实例全部部署在同一台宿主机以降低网络延迟"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-cvm",
+    "tags": [
+      "CVM",
+      "置放群组",
+      "高可用"
+    ],
+    "analysis": "分散置放群组可强制实例落在不同物理母机上，规避单点宿主机故障。集中同一宿主机、单可用区、合并为单实例都会制造单点，与高可用目标相反。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.1_%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8CVM%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch2-as-100",
+    "stem": "弹性伸缩（AS）中，用于描述“实例应如何配置（机型、镜像、安全组等）”的模板对象称为？",
+    "options": [
+      {
+        "label": "A",
+        "text": "启动配置（Launch Configuration）"
+      },
+      {
+        "label": "B",
+        "text": "负载均衡监听器，该表述与实际配置存在偏差"
+      },
+      {
+        "label": "C",
+        "text": "伸缩活动记录，该说法需结合具体业务判断，该说法忽略了地域与可用区的差异"
+      },
+      {
+        "label": "D",
+        "text": "监控告警策略，这类描述常与产品能力边界相混淆"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-as",
+    "tags": [
+      "AS",
+      "启动配置"
+    ],
+    "analysis": "启动配置定义了伸缩组扩容时新实例的机型、镜像、安全组、密钥等属性，是伸缩组拉起实例的模板。伸缩活动是执行记录，告警策略触发伸缩，监听器属于 CLB，均非该模板本身。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.2_%E5%BC%B9%E6%80%A7%E4%BC%B8%E7%BC%A9AS%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-as-101",
+    "stem": "某业务每天上午 9 点准时出现可预测的流量高峰。为在高峰到来前完成扩容，最合适的伸缩策略是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "把伸缩冷却时间设为无限大"
+      },
+      {
+        "label": "B",
+        "text": "定时伸缩策略，在高峰前按计划预先扩容"
+      },
+      {
+        "label": "C",
+        "text": "禁用伸缩，手动临时加机器"
+      },
+      {
+        "label": "D",
+        "text": "仅依赖 CPU 指标的动态伸缩，等高峰发生后再扩"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-as",
+    "tags": [
+      "AS",
+      "定时伸缩",
+      "伸缩策略"
+    ],
+    "analysis": "流量高峰时间可预测，用定时策略提前扩容最稳，避免动态伸缩“先感知负载、再扩容、再等实例就绪”的滞后。手动加机器不可靠，冷却时间设无限大会让伸缩失效。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.2_%E5%BC%B9%E6%80%A7%E4%BC%B8%E7%BC%A9AS%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-as-102",
+    "stem": "弹性伸缩组中“冷却时间（Cooldown）”的主要作用是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "在一次伸缩活动后暂缓触发新的伸缩，等待指标稳定，避免频繁抖动"
+      },
+      {
+        "label": "B",
+        "text": "限制伸缩组内实例的最大 CPU 使用率，实践中偶尔会被误用为默认做法"
+      },
+      {
+        "label": "C",
+        "text": "强制所有实例定时关机以节省费用，在部分场景下也有人这样描述"
+      },
+      {
+        "label": "D",
+        "text": "加密伸缩组与实例之间的通信，该说法需结合具体业务判断"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-as",
+    "tags": [
+      "AS",
+      "冷却时间"
+    ],
+    "analysis": "冷却时间让系统在扩/缩容后给新实例上线并让监控指标回稳留出缓冲，防止指标短时波动引发反复扩缩（抖动）。它与关机、CPU 上限、通信加密均无关。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.2_%E5%BC%B9%E6%80%A7%E4%BC%B8%E7%BC%A9AS%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch2-as-103",
+    "stem": "弹性伸缩 AS 可以带来下列哪些价值？（多选）",
+    "options": [
+      {
+        "label": "A",
+        "text": "按需自动增减实例，降低闲置成本"
+      },
+      {
+        "label": "B",
+        "text": "结合负载均衡实现故障实例自动替换以提升可用性"
+      },
+      {
+        "label": "C",
+        "text": "让单台实例的性能上限无限提高，这一提法缺乏官方文档支撑"
+      },
+      {
+        "label": "D",
+        "text": "彻底消除应用层的一切代码 Bug"
+      }
+    ],
+    "answer": [
+      "A",
+      "B"
+    ],
+    "type": "multiple",
+    "chapter": 2,
+    "subChapter": "ch2-as",
+    "tags": [
+      "AS",
+      "弹性伸缩",
+      "价值"
+    ],
+    "analysis": "AS 的核心价值是按负载自动伸缩以省成本，并可对健康检查不通过的实例自动移除替换以保可用。它无法修复应用代码缺陷，也不能突破单机性能上限（那是纵向扩展的范畴）。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.2_%E5%BC%B9%E6%80%A7%E4%BC%B8%E7%BC%A9AS%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-as-104",
+    "stem": "关于伸缩组的“期望实例数、最小实例数、最大实例数”，下列描述正确的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "伸缩组会努力维持期望实例数，且始终约束在最小值与最大值之间"
+      },
+      {
+        "label": "B",
+        "text": "最小实例数必须为 0 才能启用伸缩，此观点在讨论中时有出现"
+      },
+      {
+        "label": "C",
+        "text": "最大实例数可以小于最小实例数，此配置在生产环境中并不推荐"
+      },
+      {
+        "label": "D",
+        "text": "期望实例数一旦设定便无法调整，这一理解常见于早期资料"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-as",
+    "tags": [
+      "AS",
+      "期望实例数"
+    ],
+    "analysis": "伸缩组以期望值为目标，动态伸缩时不会低于最小值、不会高于最大值。最大值必须≥最小值；期望值可随策略动态变化；最小值可为任意合理非负整数，不要求必须为 0。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.2_%E5%BC%B9%E6%80%A7%E4%BC%B8%E7%BC%A9AS%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-as-105",
+    "stem": "某伸缩组配置了基于 CPU 利用率的动态扩容，但高峰时新实例上线后仍被判定不健康而被移除，导致容量始终不足。最可能的根因是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "健康检查配置不当或应用启动慢，实例未就绪就被判定失败"
+      },
+      {
+        "label": "B",
+        "text": "负载均衡算法使用了轮询，实践中偶尔会被误用为默认做法"
+      },
+      {
+        "label": "C",
+        "text": "伸缩组的最大实例数设置得过大"
+      },
+      {
+        "label": "D",
+        "text": "CPU 指标采集周期过短"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-as",
+    "tags": [
+      "AS",
+      "健康检查",
+      "故障排查"
+    ],
+    "analysis": "新实例上线即被判不健康移除，典型原因是健康检查阈值/路径不当，或应用冷启动耗时超过健康检查宽限期，实例还没起好就被剔除。最大实例数偏大、轮询算法、采集周期短都不会导致健康实例被误杀。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.2_%E5%BC%B9%E6%80%A7%E4%BC%B8%E7%BC%A9AS%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch2-as-106",
+    "stem": "弹性伸缩通常与下列哪个服务配合，将新扩容的实例自动纳入流量分发？",
+    "options": [
+      {
+        "label": "A",
+        "text": "日志服务 CLS"
+      },
+      {
+        "label": "B",
+        "text": "密钥管理 KMS"
+      },
+      {
+        "label": "C",
+        "text": "负载均衡 CLB"
+      },
+      {
+        "label": "D",
+        "text": "对象存储 COS"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-as",
+    "tags": [
+      "AS",
+      "CLB",
+      "集成"
+    ],
+    "analysis": "AS 与 CLB 集成后，新扩容实例会自动注册到 CLB 后端并接收流量，缩容时自动摘除。COS 是存储、KMS 管密钥、CLS 收集日志，都不承担流量分发。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.2_%E5%BC%B9%E6%80%A7%E4%BC%B8%E7%BC%A9AS%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch2-tke-100",
+    "stem": "在 Kubernetes/TKE 中，承载一个或多个共享网络与存储的容器、作为最小可调度单元的对象是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "Namespace"
+      },
+      {
+        "label": "B",
+        "text": "ConfigMap"
+      },
+      {
+        "label": "C",
+        "text": "Pod"
+      },
+      {
+        "label": "D",
+        "text": "Service"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-tke",
+    "tags": [
+      "TKE",
+      "Kubernetes",
+      "Pod"
+    ],
+    "analysis": "Pod 是 K8s 最小调度单元，内部容器共享网络命名空间和存储卷。Service 提供访问入口与负载均衡，Namespace 用于资源隔离，ConfigMap 存放配置，均非调度单元。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.3_%E5%AE%B9%E5%99%A8%E6%9C%8D%E5%8A%A1TKE%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-tke-101",
+    "stem": "某无状态 Web 服务部署在 TKE，需要在 Pod 数量变化时对外始终提供一个稳定的访问入口并自动负载均衡。应使用的 Kubernetes 对象是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "单个 Pod 的 IP 地址"
+      },
+      {
+        "label": "B",
+        "text": "Service"
+      },
+      {
+        "label": "C",
+        "text": "节点的宿主机 IP"
+      },
+      {
+        "label": "D",
+        "text": "PersistentVolume"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-tke",
+    "tags": [
+      "TKE",
+      "Service",
+      "服务发现"
+    ],
+    "analysis": "Service 通过标签选择器把一组 Pod 抽象为稳定的虚拟入口（ClusterIP/VIP），Pod 增减时入口不变并自动分发流量。直接用 Pod IP 会随重建而变，宿主机 IP 不做应用级负载，PV 是存储卷。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.3_%E5%AE%B9%E5%99%A8%E6%9C%8D%E5%8A%A1TKE%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-tke-102",
+    "stem": "TKE 集群规模较大、Service 数量众多且要求更高的转发性能与连接均衡时，kube-proxy 的转发模式相比 iptables 更推荐选择？",
+    "options": [
+      {
+        "label": "A",
+        "text": "关闭 kube-proxy"
+      },
+      {
+        "label": "B",
+        "text": "IPVS 模式"
+      },
+      {
+        "label": "C",
+        "text": "userspace 模式"
+      },
+      {
+        "label": "D",
+        "text": "NodePort 模式"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-tke",
+    "tags": [
+      "TKE",
+      "kube-proxy",
+      "IPVS"
+    ],
+    "analysis": "IPVS 基于内核哈希表，规则匹配为 O(1)，在大规模 Service 下转发性能和均衡性优于 iptables 的线性匹配。userspace 模式性能最差已淘汰；kube-proxy 不能关闭；NodePort 是 Service 暴露方式而非转发模式。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.3_%E5%AE%B9%E5%99%A8%E6%9C%8D%E5%8A%A1TKE%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch2-tke-103",
+    "stem": "关于 TKE 的两种集群形态，下列说法正确的有？（多选）",
+    "options": [
+      {
+        "label": "A",
+        "text": "独立集群的 Master 也完全无需用户关心"
+      },
+      {
+        "label": "B",
+        "text": "Serverless 集群按实际使用的容器资源计费，无需管理节点"
+      },
+      {
+        "label": "C",
+        "text": "托管集群的 Master 组件由腾讯云托管，用户免运维控制面"
+      },
+      {
+        "label": "D",
+        "text": "所有 TKE 集群都必须自行采购物理服务器，这是需要重点甄别的说法"
+      }
+    ],
+    "answer": [
+      "B",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 2,
+    "subChapter": "ch2-tke",
+    "tags": [
+      "TKE",
+      "集群形态"
+    ],
+    "analysis": "托管集群的控制面由腾讯云负责运维；Serverless（弹性）集群无需管理 Node、按容器规格用量计费。独立集群的 Master 由用户自行管理运维；TKE 基于云上资源，无需自购物理服务器。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.3_%E5%AE%B9%E5%99%A8%E6%9C%8D%E5%8A%A1TKE%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-tke-104",
+    "stem": "在 TKE 中，用于将集群内 HTTP/HTTPS 服务按域名和路径规则对外暴露、并可复用同一负载均衡的七层入口对象是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "Ingress"
+      },
+      {
+        "label": "B",
+        "text": "ResourceQuota"
+      },
+      {
+        "label": "C",
+        "text": "DaemonSet"
+      },
+      {
+        "label": "D",
+        "text": "CronJob"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-tke",
+    "tags": [
+      "TKE",
+      "Ingress",
+      "七层"
+    ],
+    "analysis": "Ingress 提供基于域名/路径的七层路由，可让多个服务共用一个负载均衡入口。DaemonSet 保证每节点运行一个 Pod，CronJob 做定时任务，ResourceQuota 限制命名空间资源配额，均与七层入口无关。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.3_%E5%AE%B9%E5%99%A8%E6%9C%8D%E5%8A%A1TKE%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-tke-105",
+    "stem": "某 TKE 上的关键服务需要保证“任意时刻至少有 2 个副本可用”，在节点维护驱逐 Pod 时不被一次性全部驱逐。应配置的对象是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "PodDisruptionBudget（PDB）"
+      },
+      {
+        "label": "B",
+        "text": "把副本数固定为 1，该说法需结合具体业务判断"
+      },
+      {
+        "label": "C",
+        "text": "为 Pod 关闭存活探针，这一提法缺乏官方文档支撑"
+      },
+      {
+        "label": "D",
+        "text": "使用 hostNetwork 模式"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-tke",
+    "tags": [
+      "TKE",
+      "PDB",
+      "高可用"
+    ],
+    "analysis": "PDB 定义自愿中断（如节点维护、驱逐）时必须保留的最小可用副本数，防止一次性驱逐导致服务中断。副本数设为 1 反而制造单点，关闭探针影响健康判断，hostNetwork 与可用性保障无关。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.3_%E5%AE%B9%E5%99%A8%E6%9C%8D%E5%8A%A1TKE%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch2-tke-106",
+    "stem": "关于容器与传统虚拟机的对比，下列描述正确的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "容器一定比虚拟机的安全隔离更强"
+      },
+      {
+        "label": "B",
+        "text": "容器无法做资源限制"
+      },
+      {
+        "label": "C",
+        "text": "容器为每个实例运行完整的独立操作系统内核"
+      },
+      {
+        "label": "D",
+        "text": "容器共享宿主机内核、启动更快、资源开销更小"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-tke",
+    "tags": [
+      "TKE",
+      "容器",
+      "虚拟机"
+    ],
+    "analysis": "容器共享宿主机内核，仅打包应用与依赖，因而启动快、镜像小、密度高。它不运行独立内核；隔离性通常弱于虚拟机（VM 隔离更强）；可通过 cgroups 做 CPU/内存资源限制。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.3_%E5%AE%B9%E5%99%A8%E6%9C%8D%E5%8A%A1TKE%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch2-vpc-100",
+    "stem": "关于 VPC 中安全组与网络 ACL 的区别，下列描述正确的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "安全组无状态而网络 ACL 有状态，此配置在生产环境中并不推荐"
+      },
+      {
+        "label": "B",
+        "text": "安全组作用于实例（弹性网卡）且有状态，网络 ACL 作用于子网且无状态"
+      },
+      {
+        "label": "C",
+        "text": "两者都作用于子网且都无状态，该表述与实际配置存在偏差，这是需要重点甄别的说法"
+      },
+      {
+        "label": "D",
+        "text": "二者功能完全相同，可任意替换，此观点在讨论中时有出现"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-vpc",
+    "tags": [
+      "VPC",
+      "安全组",
+      "网络ACL"
+    ],
+    "analysis": "安全组绑定到实例/弹性网卡，是有状态的（放行请求的回包自动放行）；网络 ACL 绑定到子网，是无状态的（进、出方向需分别配置）。二者作用层级、状态特性均不同，不可混为一谈。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.4_%E7%A7%81%E6%9C%89%E7%BD%91%E7%BB%9CVPC%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-vpc-101",
+    "stem": "两个位于不同地域的 VPC，以及后续可能新增的多个 VPC 和 IDC，都需要实现互通并具备良好的可扩展性。最合适的方案是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "仅靠公网 IP 互相访问，这类描述常与产品能力边界相混淆"
+      },
+      {
+        "label": "B",
+        "text": "为每两个 VPC 之间都单独建立一条对等连接"
+      },
+      {
+        "label": "C",
+        "text": "使用云联网（CCN）将各 VPC 与专线网关统一接入，集中下发路由"
+      },
+      {
+        "label": "D",
+        "text": "把所有资源塞进同一个 VPC 的同一个子网，这属于容易混淆的一种表述"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-vpc",
+    "tags": [
+      "VPC",
+      "云联网CCN",
+      "组网"
+    ],
+    "analysis": "CCN 支持多 VPC、跨地域、含 IDC 的网状互通，新增网络实例即接入、路由自动下发，扩展性最佳。两两对等连接随 VPC 数增长呈 N² 复杂度；单子网无法跨地域；公网互访不安全且不满足内网互通需求。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.4_%E7%A7%81%E6%9C%89%E7%BD%91%E7%BB%9CVPC%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch2-vpc-102",
+    "stem": "某子网内的 CVM 没有公网 IP，但需要主动访问公网下载软件包（不希望被公网主动连入）。应使用的组件是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "为每台实例都绑定公网 IP"
+      },
+      {
+        "label": "B",
+        "text": "公网负载均衡 CLB"
+      },
+      {
+        "label": "C",
+        "text": "VPN 网关"
+      },
+      {
+        "label": "D",
+        "text": "NAT 网关"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-vpc",
+    "tags": [
+      "VPC",
+      "NAT网关",
+      "出公网"
+    ],
+    "analysis": "NAT 网关提供仅出方向的公网访问能力，实例可主动出网而不暴露被动入连，适合批量实例统一出网。逐台绑公网 IP 会暴露入连且成本高；公网 CLB 面向入方向流量；VPN 用于内网互联而非通用出公网。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.4_%E7%A7%81%E6%9C%89%E7%BD%91%E7%BB%9CVPC%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-vpc-103",
+    "stem": "关于 VPC 的 CIDR 网段规划，下列说法正确的有？（多选）",
+    "options": [
+      {
+        "label": "A",
+        "text": "同一 VPC 内不同子网必须使用完全相同的网段，该说法需结合具体业务判断，该表述与实际配置存在偏差，此配置在生产环境中并不推荐"
+      },
+      {
+        "label": "B",
+        "text": "互通的多个 VPC 之间网段不应重叠，否则路由冲突"
+      },
+      {
+        "label": "C",
+        "text": "应尽量使用 RFC1918 私有地址段（如 10.0.0.0/8、172.16.0.0/12、192.168.0.0/16）"
+      },
+      {
+        "label": "D",
+        "text": "VPC 网段创建后与其互通的 IDC 网段可以随意重叠，这类描述常与产品能力边界相混淆，这是需要重点甄别的说法"
+      }
+    ],
+    "answer": [
+      "B",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 2,
+    "subChapter": "ch2-vpc",
+    "tags": [
+      "VPC",
+      "CIDR",
+      "网段规划"
+    ],
+    "analysis": "VPC 应规划在私有地址段内；需互通的 VPC/IDC 之间网段必须不重叠，否则路由无法区分目的地。同一 VPC 内各子网必须使用不重叠的子段（不能相同）；与 IDC 互通时网段同样不能重叠。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.4_%E7%A7%81%E6%9C%89%E7%BD%91%E7%BB%9CVPC%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch2-vpc-104",
+    "stem": "VPC 中“路由表”的主要职责是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "为对象存储提供加速，这是需要重点甄别的说法，该说法忽略了地域与可用区的差异"
+      },
+      {
+        "label": "B",
+        "text": "定义子网内流量的下一跳，决定流量走向（如本地、NAT、对等连接、CCN 等）"
+      },
+      {
+        "label": "C",
+        "text": "对流量进行病毒扫描，这属于容易混淆的一种表述，在部分场景下也有人这样描述"
+      },
+      {
+        "label": "D",
+        "text": "存储实例的登录密码，此观点在讨论中时有出现，该说法需结合具体业务判断，此配置在生产环境中并不推荐"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-vpc",
+    "tags": [
+      "VPC",
+      "路由表"
+    ],
+    "analysis": "路由表通过一条条路由策略指定不同目的网段的下一跳，控制子网流量流向本地/NAT/对等连接/云联网/专线等。它不管理凭据、不做安全扫描、也与 COS 加速无关。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.4_%E7%A7%81%E6%9C%89%E7%BD%91%E7%BB%9CVPC%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-vpc-105",
+    "stem": "下列关于弹性网卡（ENI）的描述，正确的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "一台实例只能绑定一块弹性网卡"
+      },
+      {
+        "label": "B",
+        "text": "弹性网卡可在实例间迁移，便于实现高可用与故障切换"
+      },
+      {
+        "label": "C",
+        "text": "弹性网卡与安全组无法关联，这一提法缺乏官方文档支撑"
+      },
+      {
+        "label": "D",
+        "text": "弹性网卡不能配置内网 IP"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-vpc",
+    "tags": [
+      "VPC",
+      "弹性网卡ENI"
+    ],
+    "analysis": "ENI 可从一台实例解绑再绑到另一台，用于漂移 IP 实现故障切换。实例可绑定多块 ENI；ENI 本身承载内网 IP；ENI 可关联安全组以控制其流量。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.4_%E7%A7%81%E6%9C%89%E7%BD%91%E7%BB%9CVPC%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch2-vpc-106",
+    "stem": "某企业 IDC 需要与腾讯云 VPC 建立高带宽、低时延、稳定 SLA 的内网互联，且对成本不敏感。最合适的连接方式是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "专线接入（云专线 Direct Connect）"
+      },
+      {
+        "label": "B",
+        "text": "基于公网的 IPsec VPN"
+      },
+      {
+        "label": "C",
+        "text": "通过公网 IP 直接互访"
+      },
+      {
+        "label": "D",
+        "text": "使用对象存储做数据中转，这属于容易混淆的一种表述"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-vpc",
+    "tags": [
+      "VPC",
+      "专线",
+      "混合云"
+    ],
+    "analysis": "专线提供独享物理链路，带宽大、时延低、SLA 有保障，适合对质量要求高的混合云互联。VPN 走公网，质量受公网波动影响；公网直访不安全且不稳定；对象存储中转不是网络互联方案。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.4_%E7%A7%81%E6%9C%89%E7%BD%91%E7%BB%9CVPC%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch2-clb-100",
+    "stem": "某业务需要基于 URL 路径（如 /api 转到后端 A、/static 转到后端 B）进行请求转发。应使用 CLB 的哪种监听器？",
+    "options": [
+      {
+        "label": "A",
+        "text": "七层（HTTP/HTTPS）监听器，配置基于域名和 URL 的转发规则"
+      },
+      {
+        "label": "B",
+        "text": "ICMP 监听器，该说法需结合具体业务判断，这一理解常见于早期资料"
+      },
+      {
+        "label": "C",
+        "text": "四层（TCP）监听器，该表述与实际配置存在偏差，这一提法缺乏官方文档支撑"
+      },
+      {
+        "label": "D",
+        "text": "四层（UDP）监听器，实践中偶尔会被误用为默认做法"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-clb",
+    "tags": [
+      "CLB",
+      "七层",
+      "转发规则"
+    ],
+    "analysis": "基于 URL 路径的内容路由属于应用层能力，必须使用七层 HTTP/HTTPS 监听器配置域名+路径转发规则。四层 TCP/UDP 只识别 IP 和端口，无法解析 URL；CLB 不提供 ICMP 监听器。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.5_%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1CLB%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-clb-101",
+    "stem": "HTTPS 站点通过公网 CLB 对外服务，希望将 SSL/TLS 解密开销从后端 CVM 卸载到负载均衡层。应采用的做法是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "把证书放到对象存储由客户端下载，此配置在生产环境中并不推荐，这一提法缺乏官方文档支撑"
+      },
+      {
+        "label": "B",
+        "text": "在 CLB 七层监听器上配置 HTTPS 并完成 SSL 卸载（证书部署在 CLB）"
+      },
+      {
+        "label": "C",
+        "text": "在每台后端 CVM 上各自部署证书并解密，在部分场景下也有人这样描述"
+      },
+      {
+        "label": "D",
+        "text": "关闭 HTTPS 全部改用 HTTP 明文，该说法需结合具体业务判断"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-clb",
+    "tags": [
+      "CLB",
+      "SSL卸载",
+      "HTTPS"
+    ],
+    "analysis": "在 CLB 上终结 TLS（SSL 卸载）可集中管理证书并把加解密算力从后端释放出来，后端只需处理明文，性能更优、证书运维更简单。逐台部署证书开销大且难统一；改明文不安全；证书由客户端下载不成立。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.5_%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1CLB%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch2-clb-102",
+    "stem": "CLB 的健康检查机制的核心作用是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "加密客户端到 CLB 之间的流量"
+      },
+      {
+        "label": "B",
+        "text": "对后端返回的业务数据做正确性校验，这类描述常与产品能力边界相混淆"
+      },
+      {
+        "label": "C",
+        "text": "限制后端实例的最大数量，在部分场景下也有人这样描述"
+      },
+      {
+        "label": "D",
+        "text": "周期性探测后端服务，自动将不健康的后端摘除、恢复后再自动加回"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-clb",
+    "tags": [
+      "CLB",
+      "健康检查"
+    ],
+    "analysis": "健康检查按配置周期探测后端端口/路径，将探测失败的后端从转发列表摘除，恢复后自动重新纳入，保证流量只发往健康节点。它不校验业务数据正确性、不负责加密、也不限制后端数量。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.5_%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1CLB%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-clb-103",
+    "stem": "关于 CLB 会话保持（Session Persistence），下列说法正确的有？（多选）",
+    "options": [
+      {
+        "label": "A",
+        "text": "开启会话保持能提升后端的负载均衡均匀度"
+      },
+      {
+        "label": "B",
+        "text": "适用于依赖本地会话状态的应用"
+      },
+      {
+        "label": "C",
+        "text": "会话保持要求所有后端共享同一块云硬盘"
+      },
+      {
+        "label": "D",
+        "text": "可使同一客户端的请求在一段时间内被转发到同一后端"
+      }
+    ],
+    "answer": [
+      "B",
+      "D"
+    ],
+    "type": "multiple",
+    "chapter": 2,
+    "subChapter": "ch2-clb",
+    "tags": [
+      "CLB",
+      "会话保持"
+    ],
+    "analysis": "会话保持把同一来源请求“粘”到同一后端，满足依赖本地 Session 的应用。但它会牺牲负载均衡的均匀性（并非提升），且实现上不需要后端共享云硬盘。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.5_%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1CLB%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-clb-104",
+    "stem": "下列关于公网 CLB 与内网 CLB 的描述，正确的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "二者不能配置监听器，这一提法缺乏官方文档支撑，此配置在生产环境中并不推荐，在部分场景下也有人这样描述"
+      },
+      {
+        "label": "B",
+        "text": "公网 CLB 无法做健康检查，该表述与实际配置存在偏差，此观点在讨论中时有出现"
+      },
+      {
+        "label": "C",
+        "text": "内网 CLB 也必须绑定公网 IP 才能工作，该说法忽略了地域与可用区的差异"
+      },
+      {
+        "label": "D",
+        "text": "公网 CLB 提供可从互联网访问的 VIP，内网 CLB 仅在 VPC 内部提供访问"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-clb",
+    "tags": [
+      "CLB",
+      "公网",
+      "内网"
+    ],
+    "analysis": "公网 CLB 具备公网 VIP 供外部访问，内网 CLB 只在 VPC 内网提供负载均衡（如内部微服务互调）。内网 CLB 无需公网 IP；两者都支持健康检查与监听器配置。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.5_%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1CLB%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch2-clb-105",
+    "stem": "用户访问经 CLB 的 HTTPS 站点偶发 502，CLB 健康检查显示后端全部正常、后端应用日志无错误、CVM 资源水位不高。最应优先排查的方向是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "立刻扩容一倍后端 CVM，实践中偶尔会被误用为默认做法，此观点在讨论中时有出现，这是需要重点甄别的说法"
+      },
+      {
+        "label": "B",
+        "text": "删除并重建整个 CLB 实例，这一理解常见于早期资料，这一提法缺乏官方文档支撑"
+      },
+      {
+        "label": "C",
+        "text": "后端连接/超时相关配置（如 keep-alive、后端响应超时、连接队列）导致的偶发连接异常"
+      },
+      {
+        "label": "D",
+        "text": "把监听器从七层改为四层，这属于容易混淆的一种表述，该说法忽略了地域与可用区的差异"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-clb",
+    "tags": [
+      "CLB",
+      "502",
+      "故障排查"
+    ],
+    "analysis": "健康检查 OK、后端无错误日志、资源不高却偶发 502，典型指向 CLB 与后端之间的连接/超时配置（长连接复用、响应超时、连接队列积压）问题，应先核对这些参数。盲目扩容、改四层、重建实例都未定位根因且代价高。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.5_%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1CLB%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch2-clb-106",
+    "stem": "某跨可用区部署的业务希望在单个可用区整体故障时，CLB 仍能将流量导向健康可用区的后端。应确保的配置是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "所有后端集中部署在同一个可用区，在部分场景下也有人这样描述"
+      },
+      {
+        "label": "B",
+        "text": "仅保留一台后端实例，这一理解常见于早期资料"
+      },
+      {
+        "label": "C",
+        "text": "后端服务器分布在多个可用区，并由 CLB 跨可用区转发"
+      },
+      {
+        "label": "D",
+        "text": "关闭 CLB 的健康检查，这一提法缺乏官方文档支撑"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-clb",
+    "tags": [
+      "CLB",
+      "多可用区",
+      "高可用"
+    ],
+    "analysis": "要抵御可用区级故障，后端必须跨多个可用区部署，CLB 会把流量导向健康可用区的后端。集中单可用区、关闭健康检查、单后端都会引入单点，无法实现容灾。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.5_%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1CLB%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-cdn-100",
+    "stem": "CDN（内容分发网络）加速静态资源的核心原理是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "对用户请求进行加密以提升速度，该表述与实际配置存在偏差"
+      },
+      {
+        "label": "B",
+        "text": "把所有请求集中回源到单一中心服务器处理，实践中偶尔会被误用为默认做法"
+      },
+      {
+        "label": "C",
+        "text": "压缩数据库以减少存储占用，该说法忽略了地域与可用区的差异"
+      },
+      {
+        "label": "D",
+        "text": "将内容缓存到靠近用户的边缘节点，就近响应以降低时延和回源压力"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-cdn",
+    "tags": [
+      "CDN",
+      "边缘缓存",
+      "加速原理"
+    ],
+    "analysis": "CDN 通过遍布各地的边缘节点缓存内容，用户就近获取，既降低访问时延又减少回源流量。集中回源与“加速”相反；加密不等于加速；CDN 面向内容分发而非数据库压缩。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.6_%E5%86%85%E5%AE%B9%E5%88%86%E5%8F%91%E7%BD%91%E7%BB%9CCDN%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch2-cdn-101",
+    "stem": "某视频网站发现大量热点视频反复回源、源站带宽被打满。为提升边缘缓存命中率、削减回源，最直接有效的措施是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "为每个用户单独生成不可缓存的动态 URL"
+      },
+      {
+        "label": "B",
+        "text": "合理设置缓存过期规则并延长热点静态资源的缓存时间"
+      },
+      {
+        "label": "C",
+        "text": "关闭 CDN 直接暴露源站"
+      },
+      {
+        "label": "D",
+        "text": "把所有资源的缓存时间都设为 0"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-cdn",
+    "tags": [
+      "CDN",
+      "缓存命中率",
+      "回源"
+    ],
+    "analysis": "提高命中率的关键是给可缓存的静态/热点资源配置合理且足够长的缓存过期时间，让边缘尽量命中、减少回源。缓存时间设 0、关闭 CDN、给每用户生成唯一不可缓存 URL 都会让命中率骤降、回源激增。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.6_%E5%86%85%E5%AE%B9%E5%88%86%E5%8F%91%E7%BD%91%E7%BB%9CCDN%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-cdn-102",
+    "stem": "为防止他人盗用 CDN 加速链接盗刷带宽，下列最合适的防护手段是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "配置 Referer 防盗链或 URL 鉴权（时间戳+签名）"
+      },
+      {
+        "label": "B",
+        "text": "将缓存时间设置为无限长，这是需要重点甄别的说法"
+      },
+      {
+        "label": "C",
+        "text": "取消 HTTPS 改用 HTTP，在部分场景下也有人这样描述"
+      },
+      {
+        "label": "D",
+        "text": "把源站 IP 公布给所有客户端，该说法需结合具体业务判断"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-cdn",
+    "tags": [
+      "CDN",
+      "防盗链",
+      "URL鉴权"
+    ],
+    "analysis": "Referer 黑白名单可拦截非授权来源，URL 鉴权用时间戳+密钥签名让链接限时有效、防止被盗用长期访问，二者是标准防盗链手段。公布源站 IP、取消 HTTPS、无限缓存都无助于甚至有害于防盗刷。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.6_%E5%86%85%E5%AE%B9%E5%88%86%E5%8F%91%E7%BD%91%E7%BB%9CCDN%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch2-cdn-103",
+    "stem": "下列哪些内容适合通过 CDN 加速？（多选）",
+    "options": [
+      {
+        "label": "A",
+        "text": "可缓存的静态页面"
+      },
+      {
+        "label": "B",
+        "text": "图片、CSS、JS 等静态资源"
+      },
+      {
+        "label": "C",
+        "text": "视频点播文件"
+      },
+      {
+        "label": "D",
+        "text": "每次都需实时计算且因人而异的账户余额接口"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 2,
+    "subChapter": "ch2-cdn",
+    "tags": [
+      "CDN",
+      "静态加速",
+      "适用场景"
+    ],
+    "analysis": "CDN 擅长缓存分发静态、可复用的内容（图片、脚本、样式、点播视频、静态页）。而账户余额这类强实时、因人而异的动态接口不可缓存，不适合 CDN 加速。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.6_%E5%86%85%E5%AE%B9%E5%88%86%E5%8F%91%E7%BD%91%E7%BB%9CCDN%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-cdn-104",
+    "stem": "当 CDN 边缘节点未命中缓存时，会发生的行为是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "直接返回 404 给用户"
+      },
+      {
+        "label": "B",
+        "text": "随机返回其他资源，实践中偶尔会被误用为默认做法"
+      },
+      {
+        "label": "C",
+        "text": "向源站或上层节点回源拉取内容，缓存后再返回给用户"
+      },
+      {
+        "label": "D",
+        "text": "丢弃该请求不做任何处理，该说法忽略了地域与可用区的差异"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-cdn",
+    "tags": [
+      "CDN",
+      "回源"
+    ],
+    "analysis": "缓存未命中时，边缘节点会按回源策略向源站（或上层父节点）拉取内容，缓存到本地后再响应用户，后续相同请求即可命中。它不会直接报 404、丢弃或返回错误资源。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.6_%E5%86%85%E5%AE%B9%E5%88%86%E5%8F%91%E7%BD%91%E7%BB%9CCDN%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-cdn-105",
+    "stem": "关于 CDN 的“预热”与“刷新”，下列描述正确的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "预热是提前把内容推到边缘节点，刷新是使边缘缓存失效以拉取最新内容"
+      },
+      {
+        "label": "B",
+        "text": "预热和刷新是完全相同的操作，这属于容易混淆的一种表述"
+      },
+      {
+        "label": "C",
+        "text": "刷新会永久删除源站上的文件，实践中偶尔会被误用为默认做法"
+      },
+      {
+        "label": "D",
+        "text": "预热会清空所有边缘缓存，这一提法缺乏官方文档支撑，这类描述常与产品能力边界相混淆"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-cdn",
+    "tags": [
+      "CDN",
+      "预热",
+      "刷新"
+    ],
+    "analysis": "预热在大流量活动前主动把资源推送到边缘，避免首次访问回源；刷新（Purge）让指定缓存失效，使下次访问回源拉取更新后的内容。二者用途相反；刷新不动源站文件，预热也不清空缓存。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.6_%E5%86%85%E5%AE%B9%E5%88%86%E5%8F%91%E7%BD%91%E7%BB%9CCDN%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch2-storage-100",
+    "stem": "某批日志文件需长期归档保存 5 年，访问频率极低、几乎不读取，但要求存储成本尽可能低。COS 应选择的存储类型是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "标准存储"
+      },
+      {
+        "label": "B",
+        "text": "归档存储 / 深度归档存储"
+      },
+      {
+        "label": "C",
+        "text": "低频存储"
+      },
+      {
+        "label": "D",
+        "text": "本地 SSD 临时盘"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-storage",
+    "tags": [
+      "COS",
+      "存储类型",
+      "归档"
+    ],
+    "analysis": "长期保存、极少访问、追求最低成本，应选归档/深度归档存储（取回需解冻、有延迟但单价最低）。标准存储适合频繁访问，低频存储适合月度级访问，本地临时盘不具备持久与归档能力。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.7_%E4%BA%91%E5%AD%98%E5%82%A8%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-storage-101",
+    "stem": "COS（对象存储）最适合存储下列哪类数据？",
+    "options": [
+      {
+        "label": "A",
+        "text": "图片、视频、备份包等海量非结构化数据"
+      },
+      {
+        "label": "B",
+        "text": "需要复杂事务和 SQL 关联查询的关系型数据"
+      },
+      {
+        "label": "C",
+        "text": "低时延的内存缓存数据"
+      },
+      {
+        "label": "D",
+        "text": "操作系统的系统盘"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-storage",
+    "tags": [
+      "COS",
+      "对象存储",
+      "适用场景"
+    ],
+    "analysis": "COS 面向海量非结构化数据（图片、音视频、备份、静态资源），提供高持久、高扩展、按量付费。关系型事务数据应用数据库，系统盘用 CBS，内存缓存用 Redis，均非 COS 的定位。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.7_%E4%BA%91%E5%AD%98%E5%82%A8%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch2-storage-102",
+    "stem": "某对象在 COS 上访问模式不确定，既可能突发热点也可能长期冷置，运维不想手动搬迁存储类型。最省心的做法是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "每天人工判断并手动转换存储类型，这是需要重点甄别的说法，此配置在生产环境中并不推荐"
+      },
+      {
+        "label": "B",
+        "text": "开启智能分层（Intelligent Tiering），由系统按访问频率自动切换层级"
+      },
+      {
+        "label": "C",
+        "text": "固定用标准存储永不改变，这一理解常见于早期资料，此观点在讨论中时有出现，这属于容易混淆的一种表述"
+      },
+      {
+        "label": "D",
+        "text": "直接删除以节省成本，该说法需结合具体业务判断，这一提法缺乏官方文档支撑"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-storage",
+    "tags": [
+      "COS",
+      "智能分层",
+      "成本优化"
+    ],
+    "analysis": "智能分层根据对象的实际访问频率在频繁/不频繁层之间自动迁移，无需人工干预即可平衡性能与成本，适合访问模式不可预测的场景。固定标准存储成本偏高，人工搬迁不现实，删除会丢数据。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.7_%E4%BA%91%E5%AD%98%E5%82%A8%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch2-storage-103",
+    "stem": "关于 COS 数据可靠性与安全，下列说法正确的有？（多选）",
+    "options": [
+      {
+        "label": "A",
+        "text": "COS 的数据默认对全网公开可写"
+      },
+      {
+        "label": "B",
+        "text": "COS 不支持服务端加密，此观点在讨论中时有出现"
+      },
+      {
+        "label": "C",
+        "text": "COS 通过多副本/纠删码实现极高的数据持久性"
+      },
+      {
+        "label": "D",
+        "text": "可通过防盗链、访问权限（ACL/策略）控制访问"
+      }
+    ],
+    "answer": [
+      "C",
+      "D"
+    ],
+    "type": "multiple",
+    "chapter": 2,
+    "subChapter": "ch2-storage",
+    "tags": [
+      "COS",
+      "可靠性",
+      "安全"
+    ],
+    "analysis": "COS 采用多副本或纠删码保证极高持久性，并可通过存储桶/对象权限、防盗链、访问策略控制访问，还支持服务端加密（SSE）。默认公开可写、不支持加密的说法均错误。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.7_%E4%BA%91%E5%AD%98%E5%82%A8%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-storage-104",
+    "stem": "某业务需要多台 CVM 同时以文件系统方式共享读写同一批数据（如共享上传目录）。最合适的存储产品是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "文件存储 CFS"
+      },
+      {
+        "label": "B",
+        "text": "本地临时盘"
+      },
+      {
+        "label": "C",
+        "text": "对象存储 COS"
+      },
+      {
+        "label": "D",
+        "text": "云硬盘 CBS"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-storage",
+    "tags": [
+      "CFS",
+      "文件存储",
+      "共享"
+    ],
+    "analysis": "CFS 提供可被多台实例并发挂载读写的共享文件系统（NFS/SMB），契合共享目录场景。CBS 是块存储通常单实例挂载；COS 走对象 API 而非 POSIX 文件语义；本地盘不可共享且不持久。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.7_%E4%BA%91%E5%AD%98%E5%82%A8%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-storage-105",
+    "stem": "关于 CBS 云硬盘的快照，下列描述正确的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "快照保存在被快照的那块云硬盘自身之内，该说法需结合具体业务判断"
+      },
+      {
+        "label": "B",
+        "text": "快照是云硬盘某一时刻的数据备份，通常保存在对象存储中，可用于回滚或创建镜像"
+      },
+      {
+        "label": "C",
+        "text": "快照只能用于系统盘不能用于数据盘，这属于容易混淆的一种表述"
+      },
+      {
+        "label": "D",
+        "text": "快照会实时同步后续所有写入，该说法忽略了地域与可用区的差异，此配置在生产环境中并不推荐"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-storage",
+    "tags": [
+      "CBS",
+      "快照",
+      "备份"
+    ],
+    "analysis": "CBS 快照是时间点的数据备份，底层存放于对象存储，用于回滚数据或作为自定义镜像来源。快照不会存在原盘内（否则盘损即失），是时间点副本而非持续同步，系统盘和数据盘均可创建。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.7_%E4%BA%91%E5%AD%98%E5%82%A8%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch2-storage-106",
+    "stem": "下列关于 CBS、CFS、COS 三种存储的定位，描述正确的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "CBS 天然支持多台实例共享读写，这一提法缺乏官方文档支撑"
+      },
+      {
+        "label": "B",
+        "text": "CBS 是块存储、CFS 是文件存储、COS 是对象存储，分别面向不同访问模型"
+      },
+      {
+        "label": "C",
+        "text": "COS 提供最低的单次读写时延，这是需要重点甄别的说法"
+      },
+      {
+        "label": "D",
+        "text": "三者本质相同，可无差别互换，在部分场景下也有人这样描述，这类描述常与产品能力边界相混淆"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-storage",
+    "tags": [
+      "存储对比",
+      "CBS",
+      "CFS",
+      "COS"
+    ],
+    "analysis": "CBS 提供块设备（类似本地磁盘），CFS 提供共享文件系统，COS 提供对象存储 API，三者访问模型不同不可无差别互换。低时延块访问是 CBS 的强项而非 COS；普通 CBS 不支持多实例共享写。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.7_%E4%BA%91%E5%AD%98%E5%82%A8%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-cls-100",
+    "stem": "日志服务 CLS 的核心能力是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "提供日志的采集、存储、检索分析与投递的一站式管理"
+      },
+      {
+        "label": "B",
+        "text": "提供虚拟机的计算能力，该说法忽略了地域与可用区的差异"
+      },
+      {
+        "label": "C",
+        "text": "作为对象存储长期归档图片"
+      },
+      {
+        "label": "D",
+        "text": "替代关系型数据库承载业务事务"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-cls",
+    "tags": [
+      "CLS",
+      "日志服务"
+    ],
+    "analysis": "CLS 面向海量日志，提供采集、集中存储、实时检索分析、加工与投递等一站式能力。它不承担事务型数据库、图片归档或计算等职责。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.8_%E6%97%A5%E5%BF%97%E6%9C%8D%E5%8A%A1CLS%E4%BB%8B%E7%BB%8D/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch2-cls-101",
+    "stem": "在 CLS 中，用于隔离不同业务日志、作为检索与配置基本单元的对象是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "伸缩组"
+      },
+      {
+        "label": "B",
+        "text": "安全组"
+      },
+      {
+        "label": "C",
+        "text": "路由表"
+      },
+      {
+        "label": "D",
+        "text": "日志主题（Topic）"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-cls",
+    "tags": [
+      "CLS",
+      "日志主题"
+    ],
+    "analysis": "CLS 以日志集（Logset）和日志主题（Topic）组织日志，Topic 是采集、存储、检索的基本单元，可按业务隔离。安全组、路由表、伸缩组分别属于网络与计算范畴，与日志组织无关。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.8_%E6%97%A5%E5%BF%97%E6%9C%8D%E5%8A%A1CLS%E4%BB%8B%E7%BB%8D/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-cls-102",
+    "stem": "某系统要求对分布在数十台服务器上的应用日志进行统一实时检索和告警。相较逐台登录 grep，使用 CLS 的核心优势是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "能替代 CDN 加速静态资源"
+      },
+      {
+        "label": "B",
+        "text": "集中采集与索引，支持跨机器秒级检索并可配置关键字告警"
+      },
+      {
+        "label": "C",
+        "text": "能自动修复应用抛出的异常，这属于容易混淆的一种表述"
+      },
+      {
+        "label": "D",
+        "text": "可以让日志不占用任何存储空间，这是需要重点甄别的说法"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-cls",
+    "tags": [
+      "CLS",
+      "集中检索",
+      "告警"
+    ],
+    "analysis": "CLS 把多机日志集中采集并建立索引，支持跨主机的秒级全文检索与基于关键字/统计的实时告警，远优于逐台 grep。它不能自动修复异常、日志仍需存储、也与 CDN 加速无关。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.8_%E6%97%A5%E5%BF%97%E6%9C%8D%E5%8A%A1CLS%E4%BB%8B%E7%BB%8D/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-cls-103",
+    "stem": "CLS 采集到的日志通常可以投递（下游消费）到下列哪些目的地？（多选）",
+    "options": [
+      {
+        "label": "A",
+        "text": "消息队列 CKafka 供下游流式消费"
+      },
+      {
+        "label": "B",
+        "text": "直接写入用户的本地笔记本磁盘"
+      },
+      {
+        "label": "C",
+        "text": "自动发送到随机的第三方公网服务器"
+      },
+      {
+        "label": "D",
+        "text": "对象存储 COS 做长期低成本归档"
+      }
+    ],
+    "answer": [
+      "A",
+      "D"
+    ],
+    "type": "multiple",
+    "chapter": 2,
+    "subChapter": "ch2-cls",
+    "tags": [
+      "CLS",
+      "日志投递"
+    ],
+    "analysis": "CLS 支持将日志投递到 COS 长期归档、投递到 CKafka 供实时流处理等下游消费。它不会写入用户本地磁盘，更不会自动外发到随机第三方服务器。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.8_%E6%97%A5%E5%BF%97%E6%9C%8D%E5%8A%A1CLS%E4%BB%8B%E7%BB%8D/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-cls-104",
+    "stem": "为控制 CLS 成本，同时保留近期日志用于排障、历史日志用于合规，最合理的策略是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "不采集任何日志以省钱，该表述与实际配置存在偏差，这一提法缺乏官方文档支撑"
+      },
+      {
+        "label": "B",
+        "text": "所有日志永久保存在 CLS 索引中，这类描述常与产品能力边界相混淆"
+      },
+      {
+        "label": "C",
+        "text": "设置合理的日志存储生命周期（保存期），并将历史日志投递到 COS 归档"
+      },
+      {
+        "label": "D",
+        "text": "把日志采集频率调到最高并全部长期热存，此观点在讨论中时有出现"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-cls",
+    "tags": [
+      "CLS",
+      "成本",
+      "生命周期"
+    ],
+    "analysis": "通过设置日志保存期让过期数据自动清理、并把需长期留存的历史日志投递到 COS 低成本归档，可兼顾排障与合规且控制成本。全量永久热存成本高，不采集则无法排障，全量长期热存更贵。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.8_%E6%97%A5%E5%BF%97%E6%9C%8D%E5%8A%A1CLS%E4%BB%8B%E7%BB%8D/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch2-cls-105",
+    "stem": "下列哪种数据最适合作为 CLS 的处理对象？",
+    "options": [
+      {
+        "label": "A",
+        "text": "高频交易的账户强一致余额，这属于容易混淆的一种表述"
+      },
+      {
+        "label": "B",
+        "text": "操作系统内核镜像，此配置在生产环境中并不推荐"
+      },
+      {
+        "label": "C",
+        "text": "Nginx 访问日志、应用运行日志等文本流水数据"
+      },
+      {
+        "label": "D",
+        "text": "用户上传的原始高清视频文件"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-cls",
+    "tags": [
+      "CLS",
+      "适用场景"
+    ],
+    "analysis": "CLS 面向持续产生、以时间为序的文本类流水日志（访问日志、应用日志、审计日志等）。强一致账户余额属数据库，视频文件属对象存储，内核镜像属镜像/存储，均不适合作为日志处理对象。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.8_%E6%97%A5%E5%BF%97%E6%9C%8D%E5%8A%A1CLS%E4%BB%8B%E7%BB%8D/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch2-cdb-100",
+    "stem": "云数据库 MySQL（CDB）为提升可用性，通常采用的高可用架构是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "所有请求都打到只读实例，这是需要重点甄别的说法"
+      },
+      {
+        "label": "B",
+        "text": "单实例无备份架构，此观点在讨论中时有出现"
+      },
+      {
+        "label": "C",
+        "text": "主从（一主一备）架构，主库故障时自动切换到备库"
+      },
+      {
+        "label": "D",
+        "text": "禁用任何数据复制，该表述与实际配置存在偏差"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-cdb",
+    "tags": [
+      "CDB",
+      "高可用",
+      "主从"
+    ],
+    "analysis": "CDB 常用一主一备（或一主多备）架构，通过数据复制保持备库同步，主库故障时自动 HA 切换保障可用性。单实例无备是单点，只读实例不能承接写，禁用复制则失去容灾能力。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.9_%E4%BA%91%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-cdb-101",
+    "stem": "某读多写少的业务，数据库读请求压力大导致主库负载高。在不改造数据模型的前提下，最直接的缓解手段是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "增加只读实例并做读写分离，将读请求分流到只读实例"
+      },
+      {
+        "label": "B",
+        "text": "关闭数据库的所有索引，该表述与实际配置存在偏差"
+      },
+      {
+        "label": "C",
+        "text": "禁止应用再发起任何读请求，这类描述常与产品能力边界相混淆"
+      },
+      {
+        "label": "D",
+        "text": "把主库降配以节省成本，这属于容易混淆的一种表述"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-cdb",
+    "tags": [
+      "CDB",
+      "只读实例",
+      "读写分离"
+    ],
+    "analysis": "读多写少场景通过增加只读实例、读写分离把读流量从主库卸载，是最直接见效的方案。降配主库会加剧压力，删索引会拖慢查询，禁止读请求不现实。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.9_%E4%BA%91%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-cdb-102",
+    "stem": "运维误删了一张表，需要把数据库恢复到删除前某个精确时刻的状态。CDB 应使用的能力是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "重启数据库实例即可自动恢复，这是需要重点甄别的说法，这属于容易混淆的一种表述"
+      },
+      {
+        "label": "B",
+        "text": "扩容云硬盘以找回数据，这类描述常与产品能力边界相混淆"
+      },
+      {
+        "label": "C",
+        "text": "仅靠调整参数模板恢复数据，实践中偶尔会被误用为默认做法"
+      },
+      {
+        "label": "D",
+        "text": "按时间点恢复（PITR），基于全量备份+binlog 回放到指定时刻"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-cdb",
+    "tags": [
+      "CDB",
+      "PITR",
+      "备份恢复"
+    ],
+    "analysis": "PITR（Point-In-Time Recovery）结合定期全量备份与 binlog，把库恢复到删除前的精确时间点，专治误操作。重启不会找回被删数据，改参数模板、扩容磁盘都无法恢复已删除的数据。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.9_%E4%BA%91%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch2-cdb-103",
+    "stem": "关于 CDB 相比自建 MySQL 的优势，下列说法正确的有？（多选）",
+    "options": [
+      {
+        "label": "A",
+        "text": "自动备份、监控告警与高可用切换开箱即用"
+      },
+      {
+        "label": "B",
+        "text": "免去数据库软件安装、补丁与底层运维"
+      },
+      {
+        "label": "C",
+        "text": "彻底免除对慢 SQL 的优化需求"
+      },
+      {
+        "label": "D",
+        "text": "保证任何业务都不再需要设计索引"
+      }
+    ],
+    "answer": [
+      "A",
+      "B"
+    ],
+    "type": "multiple",
+    "chapter": 2,
+    "subChapter": "ch2-cdb",
+    "tags": [
+      "CDB",
+      "托管数据库",
+      "优势"
+    ],
+    "analysis": "托管 CDB 提供自动备份、监控、HA 切换并免去底层安装运维，显著降低运维负担。但业务侧的慢 SQL 治理、索引设计仍是用户职责，托管服务无法代替应用层的 SQL 优化。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.9_%E4%BA%91%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-cdb-104",
+    "stem": "下列哪种业务数据最适合存放在关系型数据库 CDB MySQL 中？",
+    "options": [
+      {
+        "label": "A",
+        "text": "海量图片和视频文件"
+      },
+      {
+        "label": "B",
+        "text": "仅需极低时延的会话缓存"
+      },
+      {
+        "label": "C",
+        "text": "订单、账户等需要事务和结构化查询的业务数据"
+      },
+      {
+        "label": "D",
+        "text": "高并发的分布式锁"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-cdb",
+    "tags": [
+      "CDB",
+      "关系型数据库",
+      "适用场景"
+    ],
+    "analysis": "CDB MySQL 适合需要 ACID 事务、结构化表结构与 SQL 查询的业务数据（订单、账户等）。图片视频应放 COS，分布式锁/会话缓存更适合 Redis，均非关系型数据库所长。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.9_%E4%BA%91%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch2-cdb-105",
+    "stem": "关于数据库连接管理，某应用频繁创建/销毁数据库连接导致性能下降。最佳实践是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "每次请求都新建一个连接用完即弃"
+      },
+      {
+        "label": "B",
+        "text": "使用连接池复用连接，控制最大连接数"
+      },
+      {
+        "label": "C",
+        "text": "禁用连接以减少开销"
+      },
+      {
+        "label": "D",
+        "text": "把最大连接数设为无限大"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-cdb",
+    "tags": [
+      "CDB",
+      "连接池",
+      "最佳实践"
+    ],
+    "analysis": "连接的建立与销毁开销大，应使用连接池复用连接并合理设置上限，既降低开销又防止连接数打爆数据库。每请求新建连接开销大，无限连接会耗尽资源，禁用连接则无法访问数据库。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.9_%E4%BA%91%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-tdsql-100",
+    "stem": "企业级分布式数据库 TDSQL 实现水平扩展、支撑海量数据与高并发的核心机制是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "禁止任何跨节点事务，实践中偶尔会被误用为默认做法"
+      },
+      {
+        "label": "B",
+        "text": "把所有数据集中在单台超大规格主机，这一提法缺乏官方文档支撑"
+      },
+      {
+        "label": "C",
+        "text": "仅靠增加内存缓存来扩展，该表述与实际配置存在偏差，这是需要重点甄别的说法"
+      },
+      {
+        "label": "D",
+        "text": "数据按分片（Shard/Set）水平拆分，并通过分布式事务保证一致性"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-tdsql",
+    "tags": [
+      "TDSQL",
+      "分片",
+      "分布式事务"
+    ],
+    "analysis": "TDSQL 通过将数据水平分片到多个 Set/节点实现容量与并发的近线性扩展，并借助分布式事务机制保证跨分片一致性。单机集中、仅靠内存缓存都无法水平扩展，完全禁止跨节点事务不符合企业级需求。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.10_%E4%BC%81%E4%B8%9A%E7%BA%A7%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%BA%93TDSQL/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch2-tdsql-101",
+    "stem": "某金融业务数据量已达数十 TB 且持续高速增长，单机 MySQL 已无法承载，同时要求强一致和高可用。最合适的选型是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "把数据全部塞进 Redis"
+      },
+      {
+        "label": "B",
+        "text": "单实例 CDB MySQL 顶配"
+      },
+      {
+        "label": "C",
+        "text": "改用对象存储 COS 存放业务表"
+      },
+      {
+        "label": "D",
+        "text": "分布式数据库 TDSQL"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-tdsql",
+    "tags": [
+      "TDSQL",
+      "选型",
+      "分布式"
+    ],
+    "analysis": "数十 TB 且高速增长、要求强一致高可用，超出单机能力，应选可水平扩展的分布式数据库 TDSQL。单实例 CDB 有容量/性能天花板，Redis 是缓存不适合作主库，COS 无法承载事务型业务表。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.10_%E4%BC%81%E4%B8%9A%E7%BA%A7%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%BA%93TDSQL/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-tdsql-102",
+    "stem": "关于分库分表带来的挑战，下列说法正确的有？（多选）",
+    "options": [
+      {
+        "label": "A",
+        "text": "分片键选择不当会导致数据倾斜和热点"
+      },
+      {
+        "label": "B",
+        "text": "跨分片的关联查询和聚合会变得复杂"
+      },
+      {
+        "label": "C",
+        "text": "分片越多单条简单查询一定越快"
+      },
+      {
+        "label": "D",
+        "text": "分库分表后一定不再需要任何索引"
+      }
+    ],
+    "answer": [
+      "A",
+      "B"
+    ],
+    "type": "multiple",
+    "chapter": 2,
+    "subChapter": "ch2-tdsql",
+    "tags": [
+      "TDSQL",
+      "分库分表",
+      "数据倾斜"
+    ],
+    "analysis": "分库分表后跨片 JOIN/聚合需额外处理，且分片键选得不好会造成数据/访问倾斜出现热点。分片后单表内仍需索引；分片数增加不会让本可路由到单片的简单查询更快，反而增加管理复杂度。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.10_%E4%BC%81%E4%B8%9A%E7%BA%A7%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%BA%93TDSQL/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-tdsql-103",
+    "stem": "分布式数据库中，“分片键（Sharding Key）”选择的一个重要原则是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "选择区分度高、能让数据和访问均匀分布的字段"
+      },
+      {
+        "label": "B",
+        "text": "随机每天更换分片键"
+      },
+      {
+        "label": "C",
+        "text": "优先选择取值高度集中、区分度极低的字段"
+      },
+      {
+        "label": "D",
+        "text": "分片键必须使用自增主键的高位"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-tdsql",
+    "tags": [
+      "TDSQL",
+      "分片键"
+    ],
+    "analysis": "好的分片键应区分度高，使数据与请求均匀分散到各分片，避免热点与倾斜。区分度极低会造成数据集中，频繁更换分片键会引发大规模数据重分布，硬性绑定自增主键高位易造成写入热点。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.10_%E4%BC%81%E4%B8%9A%E7%BA%A7%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%BA%93TDSQL/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-tdsql-104",
+    "stem": "TDSQL 相比传统单机数据库，最本质的差异在于？",
+    "options": [
+      {
+        "label": "A",
+        "text": "不支持 SQL，只能用 NoSQL 接口，在部分场景下也有人这样描述"
+      },
+      {
+        "label": "B",
+        "text": "只能纵向升级单机配置，该说法忽略了地域与可用区的差异"
+      },
+      {
+        "label": "C",
+        "text": "具备水平扩展能力，通过多节点协同突破单机容量与性能上限"
+      },
+      {
+        "label": "D",
+        "text": "无法保证数据一致性，这是需要重点甄别的说法"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-tdsql",
+    "tags": [
+      "TDSQL",
+      "水平扩展"
+    ],
+    "analysis": "TDSQL 的本质优势是水平扩展，通过多节点分片协同突破单机瓶颈。它并非只能纵向升级，兼容 SQL 生态，并通过分布式事务保障一致性，说其“无法保证一致性”错误。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.10_%E4%BC%81%E4%B8%9A%E7%BA%A7%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%BA%93TDSQL/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch2-tdsql-105",
+    "stem": "在分布式数据库中，为保证跨分片操作要么全部成功要么全部回滚，常用的机制是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "关闭事务由应用自行保证"
+      },
+      {
+        "label": "B",
+        "text": "把所有分片合并成一个大表"
+      },
+      {
+        "label": "C",
+        "text": "单机本地事务即可覆盖跨分片"
+      },
+      {
+        "label": "D",
+        "text": "分布式事务（如两阶段提交 2PC）"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-tdsql",
+    "tags": [
+      "TDSQL",
+      "分布式事务",
+      "2PC"
+    ],
+    "analysis": "跨分片的原子性由分布式事务（如 2PC）协调各参与者统一提交或回滚。单机本地事务无法跨节点保证原子性，关闭事务交给应用极易出错，把分片合并则失去了分布式扩展能力。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.10_%E4%BC%81%E4%B8%9A%E7%BA%A7%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%BA%93TDSQL/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch2-tdsqlc-100",
+    "stem": "云原生数据库 TDSQL-C 采用“计算与存储分离”架构，其带来的关键优势是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "计算节点可快速扩缩，存储按需自动扩展，二者独立弹性"
+      },
+      {
+        "label": "B",
+        "text": "存储上限受限于单台计算节点的本地磁盘"
+      },
+      {
+        "label": "C",
+        "text": "计算和存储必须同规格同步扩容，这类描述常与产品能力边界相混淆"
+      },
+      {
+        "label": "D",
+        "text": "无法增加只读节点，此配置在生产环境中并不推荐"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-tdsqlc",
+    "tags": [
+      "TDSQL-C",
+      "存算分离",
+      "云原生"
+    ],
+    "analysis": "存算分离让计算层可秒级增删只读节点、存储层按数据量自动弹性扩展，二者解耦独立伸缩，兼顾弹性与成本。它不要求计算存储同步扩容，存储不受单机本地盘限制，且支持快速增加只读节点。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.11_%E4%BA%91%E5%8E%9F%E7%94%9FTDSQL-C%2B%E4%BA%91%E6%95%B0%E6%8D%AE%E5%BA%93Redis/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch2-tdsqlc-101",
+    "stem": "某业务读负载存在明显峰谷波动，希望数据库读能力能秒级弹性扩展且共享同一份底层存储。最契合的产品特性是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "为每个只读副本各自全量复制一份独立存储"
+      },
+      {
+        "label": "B",
+        "text": "TDSQL-C 基于共享存储秒级增删只读节点"
+      },
+      {
+        "label": "C",
+        "text": "改用对象存储承载数据库读"
+      },
+      {
+        "label": "D",
+        "text": "只能通过停机升级主库规格来扩读"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-tdsqlc",
+    "tags": [
+      "TDSQL-C",
+      "只读节点",
+      "弹性"
+    ],
+    "analysis": "TDSQL-C 的只读节点共享同一底层分布式存储，无需为每个副本复制全量数据，可秒级增删应对峰谷。逐副本复制独立存储慢且贵，停机升主库规格影响可用性，COS 不能承载数据库读。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.11_%E4%BA%91%E5%8E%9F%E7%94%9FTDSQL-C%2B%E4%BA%91%E6%95%B0%E6%8D%AE%E5%BA%93Redis/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-tdsqlc-102",
+    "stem": "关于 TDSQL-C 的兼容性，下列描述正确的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "只能通过对象存储接口访问，该说法忽略了地域与可用区的差异"
+      },
+      {
+        "label": "B",
+        "text": "不支持标准 SQL，实践中偶尔会被误用为默认做法，这属于容易混淆的一种表述"
+      },
+      {
+        "label": "C",
+        "text": "高度兼容 MySQL/PostgreSQL 生态，业务可较低成本迁移"
+      },
+      {
+        "label": "D",
+        "text": "需要用全新私有协议，业务必须完全重写，这一理解常见于早期资料"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-tdsqlc",
+    "tags": [
+      "TDSQL-C",
+      "兼容性"
+    ],
+    "analysis": "TDSQL-C 高度兼容 MySQL/PostgreSQL 协议与语法，现有应用可低成本平滑迁移。它并非私有协议、支持标准 SQL，访问方式与传统数据库一致而非对象存储接口。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.11_%E4%BA%91%E5%8E%9F%E7%94%9FTDSQL-C%2B%E4%BA%91%E6%95%B0%E6%8D%AE%E5%BA%93Redis/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-tdsqlc-103",
+    "stem": "下列哪些属于云原生数据库（存算分离）相比传统主从数据库的优势？（多选）",
+    "options": [
+      {
+        "label": "A",
+        "text": "彻底不需要任何备份策略"
+      },
+      {
+        "label": "B",
+        "text": "只读节点扩展快、共享存储无需数据重复复制"
+      },
+      {
+        "label": "C",
+        "text": "故障恢复更快，存储层多副本保证持久性"
+      },
+      {
+        "label": "D",
+        "text": "可以突破 CAP 定理同时满足强一致与高可用且免疫分区"
+      }
+    ],
+    "answer": [
+      "B",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 2,
+    "subChapter": "ch2-tdsqlc",
+    "tags": [
+      "TDSQL-C",
+      "云原生",
+      "优势"
+    ],
+    "analysis": "存算分离让只读节点共享存储快速扩展、故障恢复快、存储层多副本高持久。但仍需备份策略防逻辑错误，且任何系统都无法突破 CAP 定理，“免疫分区”的说法不成立。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.11_%E4%BA%91%E5%8E%9F%E7%94%9FTDSQL-C%2B%E4%BA%91%E6%95%B0%E6%8D%AE%E5%BA%93Redis/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-tdsqlc-104",
+    "stem": "关于“云原生数据库”这一术语，最核心的含义是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "把传统数据库软件原样装到云主机上，实践中偶尔会被误用为默认做法"
+      },
+      {
+        "label": "B",
+        "text": "充分利用云的弹性与分布式能力（如存算分离、按需扩展）而设计的数据库"
+      },
+      {
+        "label": "C",
+        "text": "不使用任何存储介质的数据库，这一理解常见于早期资料，该表述与实际配置存在偏差"
+      },
+      {
+        "label": "D",
+        "text": "只能运行在私有云不能在公有云，该说法需结合具体业务判断"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-tdsqlc",
+    "tags": [
+      "TDSQL-C",
+      "云原生",
+      "概念"
+    ],
+    "analysis": "云原生数据库是面向云环境重新设计、深度利用云的弹性伸缩与分布式存储（如存算分离、Serverless）的数据库。把传统库原样搬上云主机只是“上云”而非“云原生”，其余两项均为误导。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.11_%E4%BA%91%E5%8E%9F%E7%94%9FTDSQL-C%2B%E4%BA%91%E6%95%B0%E6%8D%AE%E5%BA%93Redis/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch2-tdsqlc-105",
+    "stem": "某互联网业务无法预测流量、希望数据库在无请求时几乎不产生计算费用、有请求时自动拉起。最匹配的形态是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "固定包年包月的大规格实例长期常开，这属于容易混淆的一种表述"
+      },
+      {
+        "label": "B",
+        "text": "手动在流量来时才创建数据库、走后再删，此配置在生产环境中并不推荐"
+      },
+      {
+        "label": "C",
+        "text": "用竞价实例部署数据库主库，在部分场景下也有人这样描述"
+      },
+      {
+        "label": "D",
+        "text": "Serverless 形态的云原生数据库，按实际用量自动伸缩计费"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-tdsqlc",
+    "tags": [
+      "TDSQL-C",
+      "Serverless",
+      "弹性计费"
+    ],
+    "analysis": "Serverless 数据库可在低负载时自动缩容至极低甚至暂停、按实际用量计费，契合流量不可预测且希望省闲置成本的场景。固定大规格长期常开浪费，手动建删不现实，竞价实例不适合承载数据库主库。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.11_%E4%BA%91%E5%8E%9F%E7%94%9FTDSQL-C%2B%E4%BA%91%E6%95%B0%E6%8D%AE%E5%BA%93Redis/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch2-redis-100",
+    "stem": "某电商在秒杀活动中大量请求直接穿透缓存打到数据库导致其被压垮，这种现象通常称为？",
+    "options": [
+      {
+        "label": "A",
+        "text": "缓存预热，该说法忽略了地域与可用区的差异"
+      },
+      {
+        "label": "B",
+        "text": "缓存击穿/穿透（热点 Key 失效或查询不存在的 Key）"
+      },
+      {
+        "label": "C",
+        "text": "连接池耗尽，这类描述常与产品能力边界相混淆"
+      },
+      {
+        "label": "D",
+        "text": "读写分离，这一提法缺乏官方文档支撑，此观点在讨论中时有出现"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-redis",
+    "tags": [
+      "Redis",
+      "缓存击穿",
+      "缓存穿透"
+    ],
+    "analysis": "大量请求绕过或越过缓存直击数据库属于缓存击穿（热点 Key 恰好失效）/穿透（查询根本不存在的数据）。缓存预热是提前加载缓存，读写分离针对数据库读负载，连接池耗尽是连接资源问题，均非此现象。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.12_%E4%BA%91Redis%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%2B%E5%85%B6%E4%BB%96NoSQL/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-redis-101",
+    "stem": "为防止大量缓存 Key 在同一时刻集中过期、导致请求瞬间全部回源打垮数据库（缓存雪崩），有效的缓解手段是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "把所有 Key 的过期时间设置为完全相同，该说法忽略了地域与可用区的差异"
+      },
+      {
+        "label": "B",
+        "text": "永久不设置任何过期时间，这一理解常见于早期资料"
+      },
+      {
+        "label": "C",
+        "text": "为缓存过期时间加随机抖动，避免集中失效，并对热点做多级缓存/限流"
+      },
+      {
+        "label": "D",
+        "text": "把缓存容量调到最小，此配置在生产环境中并不推荐"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-redis",
+    "tags": [
+      "Redis",
+      "缓存雪崩",
+      "过期策略"
+    ],
+    "analysis": "缓存雪崩源于大量 Key 同时失效，给过期时间加随机偏移可分散失效时刻，配合多级缓存、热点保护与限流进一步兜底。所有 Key 同一过期时间正是雪崩诱因，永不过期会导致脏数据，缩小容量加剧未命中。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.12_%E4%BA%91Redis%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%2B%E5%85%B6%E4%BB%96NoSQL/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch2-redis-102",
+    "stem": "Redis 中某个 Key 存储了几百万个元素的大集合，导致操作耗时长、阻塞其他请求。这类问题及其治理方向是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "连接泄漏，重启即可根治，此配置在生产环境中并不推荐，在部分场景下也有人这样描述"
+      },
+      {
+        "label": "B",
+        "text": "大 Key 问题，应拆分为多个小 Key 或改用更合适的数据结构"
+      },
+      {
+        "label": "C",
+        "text": "热点 Key，只能靠升级带宽解决，该说法需结合具体业务判断"
+      },
+      {
+        "label": "D",
+        "text": "主从延迟，与 Key 大小无关，这类描述常与产品能力边界相混淆"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-redis",
+    "tags": [
+      "Redis",
+      "大Key",
+      "优化"
+    ],
+    "analysis": "单个体积庞大或元素极多的 Key 属“大 Key”，操作它会长时间占用单线程阻塞其他命令，应拆分或改用合适结构、分批处理。它不是靠升带宽解决的热点 Key，也非连接泄漏或单纯主从延迟问题。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.12_%E4%BA%91Redis%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%2B%E5%85%B6%E4%BB%96NoSQL/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch2-redis-103",
+    "stem": "下列哪些是 Redis 的典型适用场景？（多选）",
+    "options": [
+      {
+        "label": "A",
+        "text": "承载需要复杂多表关联的核心事务账务"
+      },
+      {
+        "label": "B",
+        "text": "高并发读的热点数据缓存"
+      },
+      {
+        "label": "C",
+        "text": "分布式锁、计数器、排行榜"
+      },
+      {
+        "label": "D",
+        "text": "作为海量视频文件的持久归档存储"
+      }
+    ],
+    "answer": [
+      "B",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 2,
+    "subChapter": "ch2-redis",
+    "tags": [
+      "Redis",
+      "适用场景"
+    ],
+    "analysis": "Redis 基于内存、支持丰富数据结构，适合热点缓存、分布式锁、计数器、排行榜等低时延场景。复杂多表事务应交给关系型数据库，海量视频归档应用对象存储 COS，均非 Redis 定位。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.12_%E4%BA%91Redis%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%2B%E5%85%B6%E4%BB%96NoSQL/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-redis-104",
+    "stem": "关于 Redis 持久化，下列描述正确的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "Redis 完全无法持久化，重启必丢全部数据"
+      },
+      {
+        "label": "B",
+        "text": "开启持久化后 Redis 不再是内存数据库，在部分场景下也有人这样描述"
+      },
+      {
+        "label": "C",
+        "text": "RDB 是快照式持久化，AOF 是追加写日志式持久化，可按需组合"
+      },
+      {
+        "label": "D",
+        "text": "AOF 是快照，RDB 是日志追加（二者定义相反）"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-redis",
+    "tags": [
+      "Redis",
+      "持久化",
+      "RDB",
+      "AOF"
+    ],
+    "analysis": "Redis 提供 RDB（定时生成数据快照）和 AOF（记录写命令日志）两种持久化，可单用或组合以平衡性能与数据安全。它并非不能持久化；RDB=快照、AOF=日志，题中相反项定义错误；持久化不改变其内存数据库本质。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.12_%E4%BA%91Redis%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%2B%E5%85%B6%E4%BB%96NoSQL/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-redis-105",
+    "stem": "引入 Redis 缓存对关系型数据库最主要的价值是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "让数据库不再需要任何备份，实践中偶尔会被误用为默认做法"
+      },
+      {
+        "label": "B",
+        "text": "把高频读请求挡在缓存层，降低数据库压力并提升响应速度"
+      },
+      {
+        "label": "C",
+        "text": "自动帮数据库完成分库分表"
+      },
+      {
+        "label": "D",
+        "text": "替代数据库承担所有强一致的写事务"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-redis",
+    "tags": [
+      "Redis",
+      "缓存",
+      "价值"
+    ],
+    "analysis": "Redis 作为缓存层拦截高频热点读，显著降低数据库读压力、加快响应。它不适合承担强一致写事务，不能替代数据库备份，也不会自动完成分库分表。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.12_%E4%BA%91Redis%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%2B%E5%85%B6%E4%BB%96NoSQL/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch2-mq-100",
+    "stem": "在系统架构中引入消息队列，最核心的价值是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "替代数据库存储所有业务数据"
+      },
+      {
+        "label": "B",
+        "text": "实现服务间异步解耦与削峰填谷，提升系统弹性"
+      },
+      {
+        "label": "C",
+        "text": "让所有调用变为强同步以保证实时"
+      },
+      {
+        "label": "D",
+        "text": "减少系统中的服务数量"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-mq",
+    "tags": [
+      "消息队列",
+      "异步解耦",
+      "削峰"
+    ],
+    "analysis": "消息队列让生产者与消费者异步解耦，突发流量先入队再由消费者按能力消费（削峰填谷），提升系统弹性与可用性。它促进异步而非强同步，不减少服务数量，也不替代数据库持久化业务数据。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.13_%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-mq-101",
+    "stem": "某订单系统要求消息严格按下单先后顺序被消费，且同一用户的消息不能乱序。应选用消息队列的哪种能力？",
+    "options": [
+      {
+        "label": "A",
+        "text": "广播消息"
+      },
+      {
+        "label": "B",
+        "text": "丢弃重复消息即可保证顺序"
+      },
+      {
+        "label": "C",
+        "text": "顺序消息（按分区/队列保证有序投递）"
+      },
+      {
+        "label": "D",
+        "text": "随机乱序消费以提升吞吐"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-mq",
+    "tags": [
+      "消息队列",
+      "顺序消息"
+    ],
+    "analysis": "顺序消息通过将同一业务键路由到同一分区/队列并顺序消费，保证严格有序。广播是投递给所有订阅者，随机乱序与需求相反，去重解决的是重复而非顺序问题。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.13_%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch2-mq-102",
+    "stem": "网络抖动可能导致消息被重复投递。为保证重复消费不产生副作用，消费端应做到？",
+    "options": [
+      {
+        "label": "A",
+        "text": "消费逻辑幂等（如用唯一业务 ID 去重）"
+      },
+      {
+        "label": "B",
+        "text": "把消息队列关掉改用同步调用"
+      },
+      {
+        "label": "C",
+        "text": "每条消息都执行两次以对冲"
+      },
+      {
+        "label": "D",
+        "text": "完全依赖网络永不重复"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-mq",
+    "tags": [
+      "消息队列",
+      "幂等",
+      "重复消费"
+    ],
+    "analysis": "分布式消息通常保证至少一次投递，可能重复，消费端需通过唯一业务 ID/去重表实现幂等，使重复消费结果一致。指望网络永不重复不现实，关队列改同步失去解耦价值，执行两次会放大错误。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.13_%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch2-mq-103",
+    "stem": "关于消息队列的投递语义，下列说法正确的有？（多选）",
+    "options": [
+      {
+        "label": "A",
+        "text": "关闭确认机制能提升可靠性"
+      },
+      {
+        "label": "B",
+        "text": "'恰好一次'可以零成本轻松实现且无任何约束"
+      },
+      {
+        "label": "C",
+        "text": "'最多一次'可能丢消息，适合可容忍丢失的场景"
+      },
+      {
+        "label": "D",
+        "text": "'至少一次'可能重复投递，需消费端幂等"
+      }
+    ],
+    "answer": [
+      "C",
+      "D"
+    ],
+    "type": "multiple",
+    "chapter": 2,
+    "subChapter": "ch2-mq",
+    "tags": [
+      "消息队列",
+      "投递语义"
+    ],
+    "analysis": "至少一次保证不丢但可能重复（需幂等）；最多一次不重复但可能丢；恰好一次代价高、依赖事务/去重等约束并非零成本随意实现。关闭 ACK 确认反而会降低可靠性。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.13_%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-mq-104",
+    "stem": "当消费者处理能力不足、消息在队列中持续积压时，较合理的应对是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "直接清空队列丢弃所有积压消息"
+      },
+      {
+        "label": "B",
+        "text": "把生产速率无限调高，该说法需结合具体业务判断"
+      },
+      {
+        "label": "C",
+        "text": "扩容消费者实例数或优化消费逻辑，提升消费吞吐"
+      },
+      {
+        "label": "D",
+        "text": "删除队列重建，此配置在生产环境中并不推荐"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-mq",
+    "tags": [
+      "消息队列",
+      "消息积压"
+    ],
+    "analysis": "积压说明消费跟不上生产，应横向扩容消费者或优化单条处理耗时来提升消费速率，必要时结合限流保护下游。清空/删队列会丢数据，调高生产速率只会加剧积压。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.13_%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-mq-105",
+    "stem": "下列关于消息队列“发布/订阅（Pub/Sub）”模型的描述，正确的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "一条消息可被多个订阅者各自消费，实现一对多广播"
+      },
+      {
+        "label": "B",
+        "text": "一条消息只能被唯一一个消费者消费且无法广播"
+      },
+      {
+        "label": "C",
+        "text": "生产者必须知道每个消费者的地址"
+      },
+      {
+        "label": "D",
+        "text": "订阅者必须与生产者同时在线才能收到历史消息"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-mq",
+    "tags": [
+      "消息队列",
+      "发布订阅"
+    ],
+    "analysis": "Pub/Sub 中同一消息可被多个订阅者分别消费，天然支持一对多广播，且生产者无需感知消费者身份（解耦）。点对点（队列）模型才是一条消息被一个消费者消费；是否能收历史消息取决于是否持久化订阅。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.13_%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch2-micro-100",
+    "stem": "微服务架构中，“服务注册与发现”要解决的核心问题是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "让所有服务合并为一个单体"
+      },
+      {
+        "label": "B",
+        "text": "永久固定所有服务的 IP 地址"
+      },
+      {
+        "label": "C",
+        "text": "服务实例动态变化时，调用方能自动获取到可用实例地址"
+      },
+      {
+        "label": "D",
+        "text": "禁止服务之间互相调用，该说法忽略了地域与可用区的差异"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-micro",
+    "tags": [
+      "微服务",
+      "服务发现"
+    ],
+    "analysis": "微服务实例会随扩缩容、故障漂移而动态变化，服务注册中心让实例上线注册、下线注销，调用方按服务名发现当前可用实例。固定 IP、合并单体、禁止互调都与微服务动态治理相悖。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.14_%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A6%82%E8%BF%B0%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-micro-101",
+    "stem": "为防止某个下游微服务故障导致调用方线程被大量阻塞、进而引发整条链路崩溃（雪崩），常用的容错模式是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "取消所有超时和限流配置"
+      },
+      {
+        "label": "B",
+        "text": "把超时时间设为无限大，该表述与实际配置存在偏差"
+      },
+      {
+        "label": "C",
+        "text": "无限重试直到成功，这一理解常见于早期资料"
+      },
+      {
+        "label": "D",
+        "text": "熔断（Circuit Breaker）与降级"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-micro",
+    "tags": [
+      "微服务",
+      "熔断",
+      "降级"
+    ],
+    "analysis": "熔断在下游持续失败时快速失败、暂停调用，配合降级返回兜底结果，避免线程堆积引发雪崩。无限重试和无限超时会加剧资源耗尽，取消超时/限流则失去保护，均会放大故障。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.14_%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A6%82%E8%BF%B0%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch2-micro-102",
+    "stem": "微服务架构相比单体架构，下列哪一项是其典型代价（而非优势）？",
+    "options": [
+      {
+        "label": "A",
+        "text": "故障隔离性更好，此观点在讨论中时有出现"
+      },
+      {
+        "label": "B",
+        "text": "技术栈可按服务灵活选择，该表述与实际配置存在偏差"
+      },
+      {
+        "label": "C",
+        "text": "分布式带来的运维复杂度、链路追踪与数据一致性挑战上升"
+      },
+      {
+        "label": "D",
+        "text": "单个服务可独立部署和扩展，该说法忽略了地域与可用区的差异"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-micro",
+    "tags": [
+      "微服务",
+      "架构权衡"
+    ],
+    "analysis": "独立部署扩展、技术栈灵活、故障隔离好都是微服务的优势；而其代价在于系统被拆成分布式后，运维、监控、链路追踪、跨服务数据一致性等复杂度显著上升。这是典型的权衡取舍。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.14_%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A6%82%E8%BF%B0%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-micro-103",
+    "stem": "下列哪些是微服务治理中常见的能力？（多选）",
+    "options": [
+      {
+        "label": "A",
+        "text": "强制所有服务共用同一个数据库实例"
+      },
+      {
+        "label": "B",
+        "text": "限流、熔断与链路追踪"
+      },
+      {
+        "label": "C",
+        "text": "要求所有服务必须同步升级同一版本"
+      },
+      {
+        "label": "D",
+        "text": "服务注册发现与负载均衡"
+      }
+    ],
+    "answer": [
+      "B",
+      "D"
+    ],
+    "type": "multiple",
+    "chapter": 2,
+    "subChapter": "ch2-micro",
+    "tags": [
+      "微服务",
+      "服务治理"
+    ],
+    "analysis": "微服务治理包含注册发现、负载均衡、限流熔断、链路追踪、配置中心等。强制共用一个数据库违背“数据库私有化”原则，要求全部同步升级则违背独立演进，二者是反模式。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.14_%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A6%82%E8%BF%B0%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-micro-104",
+    "stem": "微服务架构下，一次用户请求往往跨越多个服务。为快速定位性能瓶颈和故障点，应引入的能力是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "关闭所有监控以减少开销，这属于容易混淆的一种表述"
+      },
+      {
+        "label": "B",
+        "text": "把多个服务重新合并成单体，这类描述常与产品能力边界相混淆"
+      },
+      {
+        "label": "C",
+        "text": "仅在单个服务内打印日志，这一理解常见于早期资料，在部分场景下也有人这样描述"
+      },
+      {
+        "label": "D",
+        "text": "分布式链路追踪（Tracing），串联一次请求的全链路调用"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-micro",
+    "tags": [
+      "微服务",
+      "链路追踪",
+      "可观测"
+    ],
+    "analysis": "分布式链路追踪用统一 TraceID 串起跨服务调用，直观展现各环节耗时与失败点，是定位跨服务问题的关键。单服务日志无法还原全链路，关监控则失去可观测性，合并单体不是治理手段。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.14_%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A6%82%E8%BF%B0%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-micro-105",
+    "stem": "关于 API 网关在微服务中的作用，下列描述正确的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "作为统一入口，承担路由转发、鉴权、限流等横切能力"
+      },
+      {
+        "label": "B",
+        "text": "直接存储所有微服务的业务数据"
+      },
+      {
+        "label": "C",
+        "text": "让客户端必须分别记住每个后端服务地址"
+      },
+      {
+        "label": "D",
+        "text": "替代数据库完成数据持久化，这一理解常见于早期资料"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-micro",
+    "tags": [
+      "微服务",
+      "API网关"
+    ],
+    "analysis": "API 网关是微服务的统一入口，集中处理路由、认证鉴权、限流、协议转换等横切关注点，屏蔽后端细节。它不存储业务数据、不做持久化，正是为了让客户端无需感知各后端地址。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.14_%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A6%82%E8%BF%B0%E5%8F%8A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch2-scf-100",
+    "stem": "Serverless 云函数 SCF 的核心计费与运行特征是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "无论是否被调用都 7×24 按固定规格收费"
+      },
+      {
+        "label": "B",
+        "text": "每次执行都必须手动登录机器启动"
+      },
+      {
+        "label": "C",
+        "text": "事件触发、按实际执行次数和资源用量计费，空闲不付费"
+      },
+      {
+        "label": "D",
+        "text": "需要用户自行购买并常驻服务器"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-scf",
+    "tags": [
+      "SCF",
+      "Serverless",
+      "计费"
+    ],
+    "analysis": "SCF 由事件触发、按调用次数与运行时长×资源计费，无请求时不产生计算费用，且无需管理服务器。固定 7×24 收费、自购常驻服务器、手动启动都与 Serverless“免运维、按用量”的本质相反。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.15_Serverless%E4%BA%91%E5%87%BD%E6%95%B0SCF/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-scf-101",
+    "stem": "下列哪种业务场景最适合用云函数 SCF 实现？",
+    "options": [
+      {
+        "label": "A",
+        "text": "COS 文件上传后自动触发的图片压缩/格式转换"
+      },
+      {
+        "label": "B",
+        "text": "对单次执行时长要求达数小时的批处理主进程"
+      },
+      {
+        "label": "C",
+        "text": "强依赖本地磁盘持久状态的数据库"
+      },
+      {
+        "label": "D",
+        "text": "需要长时间保持 TCP 长连接的有状态游戏服"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-scf",
+    "tags": [
+      "SCF",
+      "适用场景"
+    ],
+    "analysis": "SCF 擅长事件驱动、短时、无状态的任务，如对象存储上传触发的图片处理、消息触发的数据加工。长连接有状态服务、超长时批处理主进程、强依赖本地持久状态的数据库都不契合无状态短时的函数模型。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.15_Serverless%E4%BA%91%E5%87%BD%E6%95%B0SCF/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-scf-102",
+    "stem": "某低频调用的云函数每次首次触发都出现明显延迟，稳定被调用后延迟消失。这一现象及缓解方式是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "网络中断，只能更换地域"
+      },
+      {
+        "label": "B",
+        "text": "冷启动，可通过预置并发/预留实例来缓解"
+      },
+      {
+        "label": "C",
+        "text": "内存泄漏，重写全部代码"
+      },
+      {
+        "label": "D",
+        "text": "证书过期，重新签发即可"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-scf",
+    "tags": [
+      "SCF",
+      "冷启动",
+      "预置并发"
+    ],
+    "analysis": "函数长时间空闲后再次调用需重新初始化运行环境，产生冷启动延迟；配置预置并发/预留实例让实例常驻可显著缓解。该现象与网络中断、内存泄漏、证书过期无关。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.15_Serverless%E4%BA%91%E5%87%BD%E6%95%B0SCF/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch2-scf-103",
+    "stem": "关于 SCF 云函数的设计约束，下列说法正确的有？（多选）",
+    "options": [
+      {
+        "label": "A",
+        "text": "单次执行有最大超时时长限制"
+      },
+      {
+        "label": "B",
+        "text": "函数应设计为无状态，状态外置到数据库/缓存/对象存储"
+      },
+      {
+        "label": "C",
+        "text": "函数可以无限期常驻运行不受任何时长限制，这类描述常与产品能力边界相混淆"
+      },
+      {
+        "label": "D",
+        "text": "函数可以把状态可靠地长期保存在本地磁盘"
+      }
+    ],
+    "answer": [
+      "A",
+      "B"
+    ],
+    "type": "multiple",
+    "chapter": 2,
+    "subChapter": "ch2-scf",
+    "tags": [
+      "SCF",
+      "无状态",
+      "约束"
+    ],
+    "analysis": "云函数实例可能随时被回收，应设计为无状态、把状态外置；且单次执行受最大超时限制。它不能无限常驻，本地磁盘是临时的、不可用于长期可靠地保存状态。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.15_Serverless%E4%BA%91%E5%87%BD%E6%95%B0SCF/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-scf-104",
+    "stem": "Serverless 相比传统服务器部署，为运维带来的最主要变化是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "必须自行搭建负载均衡和自动伸缩"
+      },
+      {
+        "label": "B",
+        "text": "免去服务器的采购、扩缩容与打补丁，聚焦业务代码"
+      },
+      {
+        "label": "C",
+        "text": "无法与其他云服务集成，该说法忽略了地域与可用区的差异"
+      },
+      {
+        "label": "D",
+        "text": "需要投入更多精力管理底层操作系统"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-scf",
+    "tags": [
+      "SCF",
+      "Serverless",
+      "免运维"
+    ],
+    "analysis": "Serverless 由平台托管底层服务器、自动弹性伸缩，用户只需关注业务代码，大幅降低运维负担。它恰恰免去了操作系统管理和自建伸缩/负载均衡，并能与对象存储、消息队列等服务事件集成。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.15_Serverless%E4%BA%91%E5%87%BD%E6%95%B0SCF/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch2-scf-105",
+    "stem": "云函数在突发大量并发请求时，其扩展行为通常是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "始终只有一个实例串行处理所有请求"
+      },
+      {
+        "label": "B",
+        "text": "需要人工登录扩容才能提升并发"
+      },
+      {
+        "label": "C",
+        "text": "平台自动并发拉起多个函数实例，按并发量弹性扩展"
+      },
+      {
+        "label": "D",
+        "text": "超过一个请求就直接拒绝服务，实践中偶尔会被误用为默认做法"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-scf",
+    "tags": [
+      "SCF",
+      "并发",
+      "弹性"
+    ],
+    "analysis": "SCF 面对并发会自动拉起多个实例并行处理，按需弹性扩展（受账号并发上限约束）。它并非单实例串行，也无需人工扩容，更不会一超过单请求就拒绝服务。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.15_Serverless%E4%BA%91%E5%87%BD%E6%95%B0SCF/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-domain-100",
+    "stem": "DNS（域名系统）最核心的功能是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "为服务器提供计算能力"
+      },
+      {
+        "label": "B",
+        "text": "存储网站的图片和视频"
+      },
+      {
+        "label": "C",
+        "text": "将人类可读的域名解析为对应的 IP 地址"
+      },
+      {
+        "label": "D",
+        "text": "对网页内容进行加密传输"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-domain",
+    "tags": [
+      "DNS",
+      "域名解析"
+    ],
+    "analysis": "DNS 负责把域名（如 www.example.com）解析为服务器 IP，使用户无需记忆 IP 即可访问。内容加密由 TLS 负责，图片视频由存储服务承载，计算由 CVM 提供，均非 DNS 职责。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.16_%E5%9F%9F%E5%90%8D%E6%9C%8D%E5%8A%A1%2B%E6%95%B0%E5%AD%97%E8%AF%81%E4%B9%A6%2BSSL/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch2-domain-101",
+    "stem": "某企业希望根据用户所在地域，把访问就近调度到最近的接入点以降低时延。DNS 层可采用的能力是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "智能解析（按地域/运营商返回不同的解析结果）"
+      },
+      {
+        "label": "B",
+        "text": "随机返回任意 IP"
+      },
+      {
+        "label": "C",
+        "text": "把所有用户都解析到同一个固定 IP"
+      },
+      {
+        "label": "D",
+        "text": "关闭 DNS 只用 IP 直连"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-domain",
+    "tags": [
+      "DNS",
+      "智能解析",
+      "GSLB"
+    ],
+    "analysis": "智能 DNS 解析可按来源地域/运营商返回最优接入 IP，实现就近接入与负载调度（GSLB 思想）。统一固定 IP 无法就近，关闭 DNS 用 IP 直连不可维护，随机返回无法保证最优。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.16_%E5%9F%9F%E5%90%8D%E6%9C%8D%E5%8A%A1%2B%E6%95%B0%E5%AD%97%E8%AF%81%E4%B9%A6%2BSSL/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-domain-102",
+    "stem": "HTTPS 中，SSL/TLS 证书的核心作用是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "提升服务器的计算性能，这一理解常见于早期资料，这类描述常与产品能力边界相混淆"
+      },
+      {
+        "label": "B",
+        "text": "为网站提供缓存加速，这一提法缺乏官方文档支撑"
+      },
+      {
+        "label": "C",
+        "text": "验证服务器身份并加密传输通道，保证数据机密性与完整性"
+      },
+      {
+        "label": "D",
+        "text": "替代 DNS 完成域名解析，这是需要重点甄别的说法"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-domain",
+    "tags": [
+      "SSL",
+      "TLS",
+      "HTTPS"
+    ],
+    "analysis": "TLS 证书用于验证服务端身份（防钓鱼冒充）并协商密钥加密通信，保障数据机密性与完整性。它不提升算力、不做域名解析、也不负责缓存加速。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.16_%E5%9F%9F%E5%90%8D%E6%9C%8D%E5%8A%A1%2B%E6%95%B0%E5%AD%97%E8%AF%81%E4%B9%A6%2BSSL/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-domain-103",
+    "stem": "关于 DNS 解析记录类型，下列描述正确的有？（多选）",
+    "options": [
+      {
+        "label": "A",
+        "text": "CNAME 记录将域名指向另一个域名（别名）"
+      },
+      {
+        "label": "B",
+        "text": "A 记录用于把域名指向另一个域名，该表述与实际配置存在偏差"
+      },
+      {
+        "label": "C",
+        "text": "A 记录将域名指向 IPv4 地址"
+      },
+      {
+        "label": "D",
+        "text": "MX 记录用于解析网站的图片资源"
+      }
+    ],
+    "answer": [
+      "A",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 2,
+    "subChapter": "ch2-domain",
+    "tags": [
+      "DNS",
+      "记录类型"
+    ],
+    "analysis": "A 记录映射域名到 IPv4，CNAME 把一个域名作为另一个域名的别名（常用于 CDN 接入）。指向另一域名的是 CNAME 而非 A 记录；MX 记录用于邮件路由而非图片资源。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.16_%E5%9F%9F%E5%90%8D%E6%9C%8D%E5%8A%A1%2B%E6%95%B0%E5%AD%97%E8%AF%81%E4%B9%A6%2BSSL/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-domain-104",
+    "stem": "用户修改了 DNS 解析记录后，部分用户仍访问到旧 IP，一段时间后才生效。最主要的原因是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "DNS 缓存与 TTL：各级缓存在 TTL 到期前仍返回旧记录"
+      },
+      {
+        "label": "B",
+        "text": "源站服务器 CPU 过高，该说法忽略了地域与可用区的差异"
+      },
+      {
+        "label": "C",
+        "text": "证书过期导致解析失败，这属于容易混淆的一种表述"
+      },
+      {
+        "label": "D",
+        "text": "负载均衡算法配置错误，这是需要重点甄别的说法，这一提法缺乏官方文档支撑"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-domain",
+    "tags": [
+      "DNS",
+      "TTL",
+      "缓存"
+    ],
+    "analysis": "DNS 记录在递归服务器和客户端会按 TTL 缓存，修改后需等各级缓存 TTL 到期才逐步刷新，故出现新旧并存、延迟生效。这与证书过期、源站 CPU、负载均衡算法都无直接关系。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.16_%E5%9F%9F%E5%90%8D%E6%9C%8D%E5%8A%A1%2B%E6%95%B0%E5%AD%97%E8%AF%81%E4%B9%A6%2BSSL/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch2-domain-105",
+    "stem": "关于证书的部署位置，为减轻后端负担并统一管理，HTTPS 证书通常部署在？",
+    "options": [
+      {
+        "label": "A",
+        "text": "仅部署在客户端浏览器中，该说法忽略了地域与可用区的差异"
+      },
+      {
+        "label": "B",
+        "text": "负载均衡 CLB 或 CDN 等接入层，做统一 SSL 终结"
+      },
+      {
+        "label": "C",
+        "text": "放在对象存储桶里供公开下载私钥，这一提法缺乏官方文档支撑"
+      },
+      {
+        "label": "D",
+        "text": "部署在数据库实例上，此配置在生产环境中并不推荐，该说法需结合具体业务判断"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-domain",
+    "tags": [
+      "SSL",
+      "证书部署",
+      "SSL卸载"
+    ],
+    "analysis": "在 CLB/CDN 等接入层统一终结 TLS，可集中管理证书、把加解密开销从后端卸载。证书/私钥不应放在客户端或公开存储（私钥必须保密），数据库也不是 HTTPS 终结点。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.16_%E5%9F%9F%E5%90%8D%E6%9C%8D%E5%8A%A1%2B%E6%95%B0%E5%AD%97%E8%AF%81%E4%B9%A6%2BSSL/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-tcop-100",
+    "stem": "可观测性通常包含的三大支柱是？（多选）",
+    "options": [
+      {
+        "label": "A",
+        "text": "指标（Metrics）"
+      },
+      {
+        "label": "B",
+        "text": "链路追踪（Traces）"
+      },
+      {
+        "label": "C",
+        "text": "源代码提交历史记录"
+      },
+      {
+        "label": "D",
+        "text": "日志（Logs）"
+      }
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D"
+    ],
+    "type": "multiple",
+    "chapter": 2,
+    "subChapter": "ch2-tcop",
+    "tags": [
+      "可观测性",
+      "Metrics",
+      "Logs",
+      "Traces"
+    ],
+    "analysis": "可观测性三大支柱为指标（趋势与告警）、日志（离散事件详情）、链路追踪（跨服务调用路径）。源代码提交历史属于研发过程数据，与运行时可观测性无关，属干扰项。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.17_%E8%85%BE%E8%AE%AF%E4%BA%91%E5%8F%AF%E8%A7%82%E6%B5%8B%E5%B9%B3%E5%8F%B0/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-tcop-101",
+    "stem": "监控告警中，“告警阈值设置过于敏感（频繁误报）”会带来的主要问题是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "系统性能因此大幅提升，实践中偶尔会被误用为默认做法"
+      },
+      {
+        "label": "B",
+        "text": "自动修复所有告警对应的问题"
+      },
+      {
+        "label": "C",
+        "text": "告警疲劳，运维对告警麻木，真正故障反而被忽略"
+      },
+      {
+        "label": "D",
+        "text": "彻底杜绝一切真实故障"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-tcop",
+    "tags": [
+      "可观测",
+      "告警",
+      "告警疲劳"
+    ],
+    "analysis": "阈值过敏导致海量误报，运维逐渐对告警麻木（告警疲劳），关键告警被淹没而漏处理。告警本身不提升性能、不能杜绝故障、更不会自动修复问题，需要合理设阈值与分级。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.17_%E8%85%BE%E8%AE%AF%E4%BA%91%E5%8F%AF%E8%A7%82%E6%B5%8B%E5%B9%B3%E5%8F%B0/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-tcop-102",
+    "stem": "为在故障发生前发现容量隐患（如磁盘将满、连接数逼近上限），最有效的监控实践是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "仅依赖用户投诉来发现问题"
+      },
+      {
+        "label": "B",
+        "text": "只在系统已经宕机后再查看日志"
+      },
+      {
+        "label": "C",
+        "text": "关闭所有监控指标采集"
+      },
+      {
+        "label": "D",
+        "text": "对关键资源指标设置趋势预测与分级预警阈值"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-tcop",
+    "tags": [
+      "可观测",
+      "容量预警",
+      "主动监控"
+    ],
+    "analysis": "对磁盘、连接数、CPU 等关键指标设置分级阈值并结合趋势预测，可在触及上限前预警、提前扩容，实现主动运维。宕机后看日志、关闭监控、靠用户投诉都是被动且滞后的方式。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.17_%E8%85%BE%E8%AE%AF%E4%BA%91%E5%8F%AF%E8%A7%82%E6%B5%8B%E5%B9%B3%E5%8F%B0/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch2-tcop-103",
+    "stem": "下列哪一项最能体现“监控指标（Metrics）”的特点？",
+    "options": [
+      {
+        "label": "A",
+        "text": "只能人工肉眼观察无法自动告警，这属于容易混淆的一种表述"
+      },
+      {
+        "label": "B",
+        "text": "仅保存一次性的静态配置快照，在部分场景下也有人这样描述，这一理解常见于早期资料"
+      },
+      {
+        "label": "C",
+        "text": "以时间序列记录数值（如 CPU 利用率、QPS），适合聚合与趋势分析"
+      },
+      {
+        "label": "D",
+        "text": "记录每一次请求的完整明文报文正文，此配置在生产环境中并不推荐"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-tcop",
+    "tags": [
+      "可观测",
+      "Metrics"
+    ],
+    "analysis": "指标是随时间采样的数值型时间序列（CPU、内存、QPS、时延等），便于聚合、绘图与设阈值告警。完整报文正文更接近日志/抓包，静态配置快照非监控指标，指标恰恰支持自动告警。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.17_%E8%85%BE%E8%AE%AF%E4%BA%91%E5%8F%AF%E8%A7%82%E6%B5%8B%E5%B9%B3%E5%8F%B0/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch2-tcop-104",
+    "stem": "某分布式系统偶发整体变慢，但单看每个服务的 CPU/内存都正常。最有助于定位瓶颈环节的手段是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "通过分布式链路追踪查看各环节耗时，找出慢在哪一跳"
+      },
+      {
+        "label": "B",
+        "text": "只重启所有服务碰运气，这是需要重点甄别的说法，该说法忽略了地域与可用区的差异"
+      },
+      {
+        "label": "C",
+        "text": "关闭链路追踪以降低开销，此观点在讨论中时有出现"
+      },
+      {
+        "label": "D",
+        "text": "仅扩容数据库磁盘容量，这属于容易混淆的一种表述"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-tcop",
+    "tags": [
+      "可观测",
+      "链路追踪",
+      "故障定位"
+    ],
+    "analysis": "单服务指标正常但整体变慢，说明瓶颈藏在跨服务调用链某一跳，用链路追踪查看各 Span 耗时最能锁定慢点。盲目重启碰运气、无依据扩磁盘、关掉追踪都无助于精准定位。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.17_%E8%85%BE%E8%AE%AF%E4%BA%91%E5%8F%AF%E8%A7%82%E6%B5%8B%E5%B9%B3%E5%8F%B0/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch2-tcop-105",
+    "stem": "关于监控中的“黄金指标”，面向请求类服务通常关注延迟、流量、错误率和？",
+    "options": [
+      {
+        "label": "A",
+        "text": "代码的注释率"
+      },
+      {
+        "label": "B",
+        "text": "饱和度（资源接近上限的程度）"
+      },
+      {
+        "label": "C",
+        "text": "机房的物理温度"
+      },
+      {
+        "label": "D",
+        "text": "域名的注册年限"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 2,
+    "subChapter": "ch2-tcop",
+    "tags": [
+      "可观测",
+      "黄金指标"
+    ],
+    "analysis": "Google SRE 的四大黄金指标为延迟、流量、错误率、饱和度（资源使用逼近上限的程度）。机房温度、代码注释率、域名注册年限均非服务级黄金指标。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter2/2.17_%E8%85%BE%E8%AE%AF%E4%BA%91%E5%8F%AF%E8%A7%82%E6%B5%8B%E5%B9%B3%E5%8F%B0/",
+    "difficulty": 2
   }
 ]

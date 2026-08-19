@@ -1829,5 +1829,1000 @@
     "analysis": "安全基线检查关注的是系统配置是否符合安全规范：A检查SSH安全配置（禁止root直接登录、使用密钥认证替代密码等）是CIS Benchmark的标准检查项；B关闭Telnet等不安全服务减少攻击面；C密码策略检查（长度≥8、包含大小写数字特殊字符、90天过期等）是基本安全要求。D CPU使用率属于性能监控指标，不属于安全基线范畴。CWP基线检查参考CIS Benchmark和等保标准，自动扫描并给出修复建议。",
     "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.4_%E6%9E%84%E5%BB%BA%E5%AE%89%E5%85%A8%E8%AE%A1%E7%AE%97%E7%8E%AF%E5%A2%83%E5%8F%8A%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86%E4%B8%AD%E5%BF%83/",
     "difficulty": 2
+  },
+  {
+    "id": "ch4-mlps-100",
+    "stem": "我国网络安全等级保护制度（等保 2.0）将信息系统安全保护等级从低到高划分为几级？",
+    "options": [
+      {
+        "label": "A",
+        "text": "两级（合格/不合格）"
+      },
+      {
+        "label": "B",
+        "text": "三级"
+      },
+      {
+        "label": "C",
+        "text": "五级（第一级到第五级，级别越高要求越严）"
+      },
+      {
+        "label": "D",
+        "text": "十级"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 4,
+    "subChapter": "ch4-mlps",
+    "tags": [
+      "等保2.0",
+      "分级"
+    ],
+    "analysis": "等保 2.0 将系统分为一到五级，级别越高保护要求与监管越严格，常见的关键信息系统多定为第三级。三级、两级、十级均为错误说法。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.1_%E5%9B%BD%E5%AE%B6%E5%AE%89%E5%85%A8%E7%AD%89%E7%BA%A7%E4%BF%9D%E6%8A%A4/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch4-mlps-101",
+    "stem": "相比等保 1.0，等保 2.0 的重要变化之一是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "取消了对任何系统的安全要求，该做法不符合最小权限与纵深防御原则"
+      },
+      {
+        "label": "B",
+        "text": "将云计算、大数据、物联网、移动互联等新技术纳入保护对象并提出扩展要求"
+      },
+      {
+        "label": "C",
+        "text": "把安全责任完全交给云厂商，用户无责，这类配置会遗留明显的安全敞口"
+      },
+      {
+        "label": "D",
+        "text": "仅适用于传统单机系统，不覆盖云，实践中偶尔会被误用为默认做法，这是需要重点甄别的说法"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 4,
+    "subChapter": "ch4-mlps",
+    "tags": [
+      "等保2.0",
+      "扩展要求"
+    ],
+    "analysis": "等保 2.0 在通用要求外新增云计算、大数据、物联网、移动互联、工业控制等安全扩展要求，覆盖新技术形态。它并未取消安全要求，恰恰覆盖云，且强调云上安全是责任共担而非全推给厂商。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.1_%E5%9B%BD%E5%AE%B6%E5%AE%89%E5%85%A8%E7%AD%89%E7%BA%A7%E4%BF%9D%E6%8A%A4/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch4-mlps-102",
+    "stem": "在云上落实等级保护时，下列哪些属于用户与云服务商“责任共担”的正确理解？（多选）",
+    "options": [
+      {
+        "label": "A",
+        "text": "云服务商需为用户的弱口令和越权配置负全责"
+      },
+      {
+        "label": "B",
+        "text": "用户购买了云服务后无需承担任何安全责任"
+      },
+      {
+        "label": "C",
+        "text": "用户负责其上承载的操作系统、应用与数据的安全配置"
+      },
+      {
+        "label": "D",
+        "text": "云服务商负责云平台自身及物理/基础设施层安全"
+      }
+    ],
+    "answer": [
+      "C",
+      "D"
+    ],
+    "type": "multiple",
+    "chapter": 4,
+    "subChapter": "ch4-mlps",
+    "tags": [
+      "等保2.0",
+      "责任共担"
+    ],
+    "analysis": "责任共担模型下，云商保障平台与基础设施安全，用户负责自身系统、应用、数据及访问配置的安全。用户并非“零责任”，弱口令、越权等用户侧配置问题应由用户负责，而非云商全担。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.1_%E5%9B%BD%E5%AE%B6%E5%AE%89%E5%85%A8%E7%AD%89%E7%BA%A7%E4%BF%9D%E6%8A%A4/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch4-mlps-103",
+    "stem": "等级保护测评（等保测评）的主要目的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "统计公司员工人数，这一理解常见于早期资料"
+      },
+      {
+        "label": "B",
+        "text": "评估服务器硬件外观是否美观"
+      },
+      {
+        "label": "C",
+        "text": "评估信息系统的安全保护能力是否达到相应等级要求"
+      },
+      {
+        "label": "D",
+        "text": "为系统做性能压力测试，该做法不符合最小权限与纵深防御原则"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 4,
+    "subChapter": "ch4-mlps",
+    "tags": [
+      "等保2.0",
+      "测评"
+    ],
+    "analysis": "等保测评由具备资质的机构对系统按其定级要求进行安全能力符合性评估，发现差距并整改。它与硬件外观、人数统计、性能压测无关。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.1_%E5%9B%BD%E5%AE%B6%E5%AE%89%E5%85%A8%E7%AD%89%E7%BA%A7%E4%BF%9D%E6%8A%A4/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch4-mlps-104",
+    "stem": "某系统定级为等保三级，下列哪项通常是三级相较二级新增强化的典型要求？",
+    "options": [
+      {
+        "label": "A",
+        "text": "增加安全审计、入侵防范、集中管控等更严格的技术与管理措施"
+      },
+      {
+        "label": "B",
+        "text": "允许弱口令以方便运维，这一提法缺乏官方文档支撑"
+      },
+      {
+        "label": "C",
+        "text": "降低对访问控制的要求，这属于容易混淆的一种表述"
+      },
+      {
+        "label": "D",
+        "text": "不再需要任何日志留存，这一理解常见于早期资料，此说法与等保合规要求存在出入"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 4,
+    "subChapter": "ch4-mlps",
+    "tags": [
+      "等保2.0",
+      "三级"
+    ],
+    "analysis": "等级越高要求越严，三级相较二级在访问控制、安全审计、入侵防范、集中安全管理等方面提出更强要求。降低访问控制、取消日志、允许弱口令都与“更严格”背道而驰。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.1_%E5%9B%BD%E5%AE%B6%E5%AE%89%E5%85%A8%E7%AD%89%E7%BA%A7%E4%BF%9D%E6%8A%A4/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch4-mlps-105",
+    "stem": "日志审计留存在等保合规中的意义主要是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "记录并可追溯操作与安全事件，满足合规并支撑事后取证"
+      },
+      {
+        "label": "B",
+        "text": "单纯占用存储没有实际用途，实践中偶尔会被误用为默认做法"
+      },
+      {
+        "label": "C",
+        "text": "可以随意伪造以美化报告，此观点在讨论中时有出现"
+      },
+      {
+        "label": "D",
+        "text": "仅用于给运维人员计算工资"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 4,
+    "subChapter": "ch4-mlps",
+    "tags": [
+      "等保2.0",
+      "日志审计"
+    ],
+    "analysis": "完整、可信、留存足够时长的审计日志用于追溯操作与安全事件、满足合规要求并支撑事后取证。它并非无用占存储，与计薪无关，且日志必须真实防篡改，不能伪造。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.1_%E5%9B%BD%E5%AE%B6%E5%AE%89%E5%85%A8%E7%AD%89%E7%BA%A7%E4%BF%9D%E6%8A%A4/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch4-mlps-106",
+    "stem": "下列关于系统“定级”的说法，正确的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "级别可由运维随意填写无需依据，这属于容易混淆的一种表述"
+      },
+      {
+        "label": "B",
+        "text": "所有系统一律定为最高级，这类配置会遗留明显的安全敞口"
+      },
+      {
+        "label": "C",
+        "text": "按服务器采购价格高低来定级，这一提法缺乏官方文档支撑，该表述与实际配置存在偏差"
+      },
+      {
+        "label": "D",
+        "text": "根据系统受破坏后对国家、社会、公民合法权益的危害程度确定级别"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "type": "single",
+    "chapter": 4,
+    "subChapter": "ch4-mlps",
+    "tags": [
+      "等保2.0",
+      "定级"
+    ],
+    "analysis": "定级依据是系统一旦遭破坏对国家安全、社会秩序、公共利益及公民/法人权益的危害程度，危害越大级别越高。它不以采购价格为准、不能随意填写、也无需一律最高级（应按实际危害合理定级）。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.1_%E5%9B%BD%E5%AE%B6%E5%AE%89%E5%85%A8%E7%AD%89%E7%BA%A7%E4%BF%9D%E6%8A%A4/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch4-standard-100",
+    "stem": "信息安全“CIA 三要素”指的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "成本、速度、外观，该说法需结合具体业务判断，实践中偶尔会被误用为默认做法"
+      },
+      {
+        "label": "B",
+        "text": "机密性（Confidentiality）、完整性（Integrity）、可用性（Availability）"
+      },
+      {
+        "label": "C",
+        "text": "缓存、索引、备份，这是需要重点甄别的说法，这属于容易混淆的一种表述，该做法不符合最小权限与纵深防御原则"
+      },
+      {
+        "label": "D",
+        "text": "中央、地方、边缘，此观点在讨论中时有出现，此说法与等保合规要求存在出入，这一提法缺乏官方文档支撑"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 4,
+    "subChapter": "ch4-standard",
+    "tags": [
+      "安全标准",
+      "CIA"
+    ],
+    "analysis": "CIA 三要素是信息安全的核心目标：机密性（防泄露）、完整性（防篡改）、可用性（保障可用）。其余选项均与安全三要素无关，属干扰项。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.2_%E4%BA%91%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB%E4%B8%8E%E6%A0%87%E5%87%86/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch4-standard-101",
+    "stem": "云原生安全理念 CNAPP（云原生应用保护平台）强调的核心思想之一是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "将安全左移并贯穿构建-部署-运行全生命周期，统一保护云原生应用"
+      },
+      {
+        "label": "B",
+        "text": "只在系统上线后才考虑安全，这一理解常见于早期资料，该做法不符合最小权限与纵深防御原则"
+      },
+      {
+        "label": "C",
+        "text": "放弃对容器和微服务的安全防护，这类配置会遗留明显的安全敞口"
+      },
+      {
+        "label": "D",
+        "text": "用一堆彼此割裂的工具各管一段，此说法与等保合规要求存在出入"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 4,
+    "subChapter": "ch4-standard",
+    "tags": [
+      "安全标准",
+      "CNAPP",
+      "安全左移"
+    ],
+    "analysis": "CNAPP 主张安全左移、覆盖从代码构建到运行时的全生命周期，并将 CSPM、CWPP、镜像扫描等能力统一整合以保护云原生应用。事后补救、工具割裂、放弃容器防护都与其理念相反。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.2_%E4%BA%91%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB%E4%B8%8E%E6%A0%87%E5%87%86/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch4-standard-102",
+    "stem": "关于“纵深防御（Defense in Depth）”策略，其核心含义是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "设置多层次、多角度的安全防护，单层被突破仍有后续防线"
+      },
+      {
+        "label": "B",
+        "text": "把所有防护集中在一个点上，这属于容易混淆的一种表述"
+      },
+      {
+        "label": "C",
+        "text": "安全完全依赖单一密码，这类配置会遗留明显的安全敞口"
+      },
+      {
+        "label": "D",
+        "text": "只在网络边界部署唯一一道防火墙，该表述与实际配置存在偏差"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 4,
+    "subChapter": "ch4-standard",
+    "tags": [
+      "安全标准",
+      "纵深防御"
+    ],
+    "analysis": "纵深防御通过网络、主机、应用、数据、身份等多层防护叠加，任一层被攻破仍有其他防线，降低整体被攻陷概率。仅靠单一边界防火墙、单点防护或单一密码都不符合纵深防御思想。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.2_%E4%BA%91%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB%E4%B8%8E%E6%A0%87%E5%87%86/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch4-standard-103",
+    "stem": "关于“零信任（Zero Trust）”安全模型，下列说法正确的有？（多选）",
+    "options": [
+      {
+        "label": "A",
+        "text": "一次认证后永久放行不再校验"
+      },
+      {
+        "label": "B",
+        "text": "强调最小权限与按需授权"
+      },
+      {
+        "label": "C",
+        "text": "只要进入内网就默认完全信任"
+      },
+      {
+        "label": "D",
+        "text": "默认不信任任何主体，持续验证身份与权限"
+      }
+    ],
+    "answer": [
+      "B",
+      "D"
+    ],
+    "type": "multiple",
+    "chapter": 4,
+    "subChapter": "ch4-standard",
+    "tags": [
+      "安全标准",
+      "零信任"
+    ],
+    "analysis": "零信任的核心是“从不信任、持续验证”，无论内外网都需验证身份、评估上下文并授予最小权限。“进内网即信任”“一次认证永久放行”正是零信任要摒弃的传统边界信任假设。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.2_%E4%BA%91%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB%E4%B8%8E%E6%A0%87%E5%87%86/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch4-standard-104",
+    "stem": "关于数据加密，“传输加密”与“存储加密”分别防护的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "两者作用完全相同，任选其一即可"
+      },
+      {
+        "label": "B",
+        "text": "传输加密防链路窃听，存储加密防落盘数据被非法读取"
+      },
+      {
+        "label": "C",
+        "text": "传输加密防落盘泄露，存储加密防链路窃听（相反）"
+      },
+      {
+        "label": "D",
+        "text": "二者都只用于提升传输速度"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 4,
+    "subChapter": "ch4-standard",
+    "tags": [
+      "安全标准",
+      "加密"
+    ],
+    "analysis": "传输加密（如 TLS）保护数据在网络传输途中不被窃听篡改；存储加密保护静态落盘数据即使介质失窃也无法被读取。二者防护环节不同、互补，题中“相反”与“提升速度”的说法均错误。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.2_%E4%BA%91%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB%E4%B8%8E%E6%A0%87%E5%87%86/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch4-standard-105",
+    "stem": "下列哪一项属于良好的口令（密码）安全实践？",
+    "options": [
+      {
+        "label": "A",
+        "text": "所有系统统一使用同一个简单口令，这属于容易混淆的一种表述"
+      },
+      {
+        "label": "B",
+        "text": "口令永不更换且从不加密存储，这是需要重点甄别的说法，这类配置会遗留明显的安全敞口"
+      },
+      {
+        "label": "C",
+        "text": "使用高强度且各系统不复用的口令，并启用多因素认证（MFA）"
+      },
+      {
+        "label": "D",
+        "text": "把口令明文写在便利贴贴在显示器上，这一理解常见于早期资料"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 4,
+    "subChapter": "ch4-standard",
+    "tags": [
+      "安全标准",
+      "口令安全",
+      "MFA"
+    ],
+    "analysis": "高强度、不复用口令加 MFA 可显著提升账户安全。统一简单口令一旦泄露全线沦陷，明文便利贴、永不更换且明文存储都是严重的安全恶习。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.2_%E4%BA%91%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB%E4%B8%8E%E6%A0%87%E5%87%86/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch4-standard-106",
+    "stem": "关于安全领域“最小权限原则（Least Privilege）”，正确的实践是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "所有人共用一个超级管理员账号"
+      },
+      {
+        "label": "B",
+        "text": "只授予主体完成其工作所必需的最小权限，避免过度授权"
+      },
+      {
+        "label": "C",
+        "text": "权限只增不减，从不回收，这类配置会遗留明显的安全敞口"
+      },
+      {
+        "label": "D",
+        "text": "为方便起见给每个账号都授予管理员权限"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 4,
+    "subChapter": "ch4-standard",
+    "tags": [
+      "安全标准",
+      "最小权限"
+    ],
+    "analysis": "最小权限要求按需授予刚好够用的权限并及时回收，缩小被滥用/被盗用的影响面。默认给管理员权限、权限只增不减、共用超管账号都会极大放大安全风险。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.2_%E4%BA%91%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB%E4%B8%8E%E6%A0%87%E5%87%86/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch4-network-100",
+    "stem": "Web 应用防火墙（WAF）主要防护的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "硬盘的机械故障，此观点在讨论中时有出现"
+      },
+      {
+        "label": "B",
+        "text": "网络层的大流量 DDoS 洪水攻击，该表述与实际配置存在偏差"
+      },
+      {
+        "label": "C",
+        "text": "SQL 注入、XSS、恶意爬虫等应用层（七层）攻击"
+      },
+      {
+        "label": "D",
+        "text": "服务器的物理盗窃，这是需要重点甄别的说法"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 4,
+    "subChapter": "ch4-network",
+    "tags": [
+      "网络安全",
+      "WAF"
+    ],
+    "analysis": "WAF 工作在应用层，识别并拦截 SQL 注入、XSS、Webshell、恶意爬虫等针对 Web 应用的攻击。大流量 DDoS 由 Anti-DDoS 防护，物理盗窃、硬盘故障属物理/硬件范畴，非 WAF 职责。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.3_%E6%9E%84%E5%BB%BA%E5%AE%89%E5%85%A8%E9%80%9A%E4%BF%A1%E7%BD%91%E7%BB%9C%E5%8F%8A%E5%AE%89%E5%85%A8%E5%8C%BA%E5%9F%9F%E8%BE%B9%E7%95%8C/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch4-network-101",
+    "stem": "针对大流量 DDoS（分布式拒绝服务）攻击，最有效的防护手段是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "把服务器关机等攻击自己停止，此说法与等保合规要求存在出入"
+      },
+      {
+        "label": "B",
+        "text": "接入抗 DDoS 防护（高防 IP/高防包），通过大带宽清洗恶意流量"
+      },
+      {
+        "label": "C",
+        "text": "调高应用日志级别，该表述与实际配置存在偏差，此观点在讨论中时有出现"
+      },
+      {
+        "label": "D",
+        "text": "仅靠单机防火墙硬扛，这一提法缺乏官方文档支撑，这属于容易混淆的一种表述"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 4,
+    "subChapter": "ch4-network",
+    "tags": [
+      "网络安全",
+      "DDoS",
+      "Anti-DDoS"
+    ],
+    "analysis": "大流量 DDoS 需借助具备大带宽和流量清洗能力的抗 DDoS 服务（高防）将恶意流量清洗后回注正常流量。关机等于让攻击得逞，单机防火墙带宽有限扛不住，调日志级别与防护无关。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.3_%E6%9E%84%E5%BB%BA%E5%AE%89%E5%85%A8%E9%80%9A%E4%BF%A1%E7%BD%91%E7%BB%9C%E5%8F%8A%E5%AE%89%E5%85%A8%E5%8C%BA%E5%9F%9F%E8%BE%B9%E7%95%8C/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch4-network-102",
+    "stem": "关于安全组（有状态）与网络 ACL（无状态）在防护中的配合，正确的理解是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "二者都无法限制端口，该表述与实际配置存在偏差，此说法与等保合规要求存在出入"
+      },
+      {
+        "label": "B",
+        "text": "安全组无状态、ACL 有状态，该说法需结合具体业务判断，这类配置会遗留明显的安全敞口"
+      },
+      {
+        "label": "C",
+        "text": "安全组作用于实例做精细放通，网络 ACL 作用于子网做粗粒度进出控制，二者可分层配合"
+      },
+      {
+        "label": "D",
+        "text": "两者只能二选一，不能同时使用，该做法不符合最小权限与纵深防御原则"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 4,
+    "subChapter": "ch4-network",
+    "tags": [
+      "网络安全",
+      "安全组",
+      "网络ACL"
+    ],
+    "analysis": "安全组绑定实例、有状态、常做精细化放行；网络 ACL 绑定子网、无状态、做子网级粗粒度进出过滤，二者可分层叠加形成纵深防御。它们可同时使用；状态特性题中写反；两者都能基于端口做控制。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.3_%E6%9E%84%E5%BB%BA%E5%AE%89%E5%85%A8%E9%80%9A%E4%BF%A1%E7%BD%91%E7%BB%9C%E5%8F%8A%E5%AE%89%E5%85%A8%E5%8C%BA%E5%9F%9F%E8%BE%B9%E7%95%8C/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch4-network-103",
+    "stem": "下列哪些是收缩云上网络攻击面的有效做法？（多选）",
+    "options": [
+      {
+        "label": "A",
+        "text": "把数据库直接绑定公网 IP 供任意来源访问"
+      },
+      {
+        "label": "B",
+        "text": "最小化对公网暴露的端口，非必要不开放公网访问"
+      },
+      {
+        "label": "C",
+        "text": "对所有端口开放 0.0.0.0/0 以图方便"
+      },
+      {
+        "label": "D",
+        "text": "通过堡垒机/跳板集中管控运维入口并审计"
+      }
+    ],
+    "answer": [
+      "B",
+      "D"
+    ],
+    "type": "multiple",
+    "chapter": 4,
+    "subChapter": "ch4-network",
+    "tags": [
+      "网络安全",
+      "攻击面",
+      "堡垒机"
+    ],
+    "analysis": "关闭非必要公网端口、用堡垒机集中管控并审计运维访问都能显著收缩攻击面。数据库直接暴露公网、对全网开放所有端口会极大增加被攻击风险，是典型的高危配置。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.3_%E6%9E%84%E5%BB%BA%E5%AE%89%E5%85%A8%E9%80%9A%E4%BF%A1%E7%BD%91%E7%BB%9C%E5%8F%8A%E5%AE%89%E5%85%A8%E5%8C%BA%E5%9F%9F%E8%BE%B9%E7%95%8C/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch4-network-104",
+    "stem": "运维人员需要远程登录内网服务器进行维护，为兼顾安全与可审计，推荐的方式是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "把每台服务器都开放公网 SSH 且用弱口令"
+      },
+      {
+        "label": "B",
+        "text": "关闭所有登录审计"
+      },
+      {
+        "label": "C",
+        "text": "通过堡垒机（跳板机）统一接入并记录操作审计"
+      },
+      {
+        "label": "D",
+        "text": "直接用 root 明文密码在公网暴露登录"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 4,
+    "subChapter": "ch4-network",
+    "tags": [
+      "网络安全",
+      "堡垒机"
+    ],
+    "analysis": "堡垒机作为唯一运维入口，统一认证、授权与全程操作审计，既收敛入口又可追溯。逐台开放公网 SSH+弱口令、公网暴露 root 明文登录、关闭审计都会带来严重安全与合规风险。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.3_%E6%9E%84%E5%BB%BA%E5%AE%89%E5%85%A8%E9%80%9A%E4%BF%A1%E7%BD%91%E7%BB%9C%E5%8F%8A%E5%AE%89%E5%85%A8%E5%8C%BA%E5%9F%9F%E8%BE%B9%E7%95%8C/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch4-network-105",
+    "stem": "下列关于防火墙的说法，正确的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "防火墙可替代数据备份，此说法与等保合规要求存在出入"
+      },
+      {
+        "label": "B",
+        "text": "防火墙依据规则对进出流量进行过滤，控制网络访问"
+      },
+      {
+        "label": "C",
+        "text": "防火墙能自动修复应用程序的所有漏洞"
+      },
+      {
+        "label": "D",
+        "text": "防火墙的作用是加速网络传输"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 4,
+    "subChapter": "ch4-network",
+    "tags": [
+      "网络安全",
+      "防火墙"
+    ],
+    "analysis": "防火墙基于预设规则对进出流量做允许/拒绝的过滤，控制网络访问边界。它不能修复应用漏洞、不是加速工具，更不能替代数据备份。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.3_%E6%9E%84%E5%BB%BA%E5%AE%89%E5%85%A8%E9%80%9A%E4%BF%A1%E7%BD%91%E7%BB%9C%E5%8F%8A%E5%AE%89%E5%85%A8%E5%8C%BA%E5%9F%9F%E8%BE%B9%E7%95%8C/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch4-network-106",
+    "stem": "某业务遭遇 CC 攻击（大量看似正常的 HTTP 请求耗尽后端资源）。相较普通网络层 DDoS，更有针对性的防护是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "关闭 HTTPS 减少加密开销，这是需要重点甄别的说法"
+      },
+      {
+        "label": "B",
+        "text": "仅靠增加带宽即可完全解决，该说法需结合具体业务判断，这一理解常见于早期资料"
+      },
+      {
+        "label": "C",
+        "text": "结合 WAF/CC 防护策略，做人机识别、频率限制和特征拦截"
+      },
+      {
+        "label": "D",
+        "text": "把网站直接下线以避免请求，这一提法缺乏官方文档支撑"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 4,
+    "subChapter": "ch4-network",
+    "tags": [
+      "网络安全",
+      "CC攻击",
+      "WAF"
+    ],
+    "analysis": "CC 攻击是应用层攻击，请求“看似正常”，需用 WAF/CC 防护做人机验证、访问频率限制、行为与特征识别等针对性拦截。单纯加带宽对应用层资源耗尽无效，下线即业务不可用，关 HTTPS 无助防护。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.3_%E6%9E%84%E5%BB%BA%E5%AE%89%E5%85%A8%E9%80%9A%E4%BF%A1%E7%BD%91%E7%BB%9C%E5%8F%8A%E5%AE%89%E5%85%A8%E5%8C%BA%E5%9F%9F%E8%BE%B9%E7%95%8C/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch4-compute-100",
+    "stem": "访问管理 CAM 的核心作用是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "替代数据库存储业务数据，实践中偶尔会被误用为默认做法"
+      },
+      {
+        "label": "B",
+        "text": "管理用户/角色的身份认证与对云资源的权限授权（谁能对哪些资源做什么）"
+      },
+      {
+        "label": "C",
+        "text": "为对象存储提供 CDN 加速，这一提法缺乏官方文档支撑"
+      },
+      {
+        "label": "D",
+        "text": "加速云服务器的计算速度，此说法与等保合规要求存在出入，这是需要重点甄别的说法"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 4,
+    "subChapter": "ch4-compute",
+    "tags": [
+      "计算安全",
+      "CAM",
+      "权限管理"
+    ],
+    "analysis": "CAM（Cloud Access Management）管理身份与访问控制，通过用户、用户组、角色和策略精细授权，实现最小权限。它与算力加速、CDN、数据库存储无关。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.4_%E6%9E%84%E5%BB%BA%E5%AE%89%E5%85%A8%E8%AE%A1%E7%AE%97%E7%8E%AF%E5%A2%83%E5%8F%8A%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86%E4%B8%AD%E5%BF%83/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch4-compute-101",
+    "stem": "密钥管理服务 KMS 的一个重要安全实践是定期“密钥轮换”，其主要目的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "限制单个密钥的使用寿命，降低密钥一旦泄露造成的影响范围"
+      },
+      {
+        "label": "B",
+        "text": "让密钥永远不需要备份，这属于容易混淆的一种表述"
+      },
+      {
+        "label": "C",
+        "text": "提升数据加解密的计算速度"
+      },
+      {
+        "label": "D",
+        "text": "使加密数据无法再被解密，该做法不符合最小权限与纵深防御原则"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 4,
+    "subChapter": "ch4-compute",
+    "tags": [
+      "计算安全",
+      "KMS",
+      "密钥轮换"
+    ],
+    "analysis": "定期轮换密钥可缩短单个密钥的暴露窗口，即使某密钥泄露，其影响也被限制在有限时间/数据范围内。轮换目的不是提速，仍需妥善管理密钥版本以解密历史数据，而非让数据不可解密。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.4_%E6%9E%84%E5%BB%BA%E5%AE%89%E5%85%A8%E8%AE%A1%E7%AE%97%E7%8E%AF%E5%A2%83%E5%8F%8A%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86%E4%B8%AD%E5%BF%83/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch4-compute-102",
+    "stem": "主机安全（如 CWP）产品的典型能力是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "检测木马病毒、异常登录、漏洞与基线风险，保护云上主机"
+      },
+      {
+        "label": "B",
+        "text": "为主机提供额外的 CPU 算力"
+      },
+      {
+        "label": "C",
+        "text": "为域名提供解析，这一理解常见于早期资料"
+      },
+      {
+        "label": "D",
+        "text": "替代负载均衡分发流量，该做法不符合最小权限与纵深防御原则"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 4,
+    "subChapter": "ch4-compute",
+    "tags": [
+      "计算安全",
+      "主机安全",
+      "CWP"
+    ],
+    "analysis": "主机安全产品面向服务器工作负载，提供病毒木马查杀、异常登录检测、漏洞管理、安全基线核查、入侵检测等能力。它不提供算力、不做流量分发、也不负责域名解析。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.4_%E6%9E%84%E5%BB%BA%E5%AE%89%E5%85%A8%E8%AE%A1%E7%AE%97%E7%8E%AF%E5%A2%83%E5%8F%8A%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86%E4%B8%AD%E5%BF%83/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch4-compute-103",
+    "stem": "关于云上凭证（AccessKey/密钥）的安全管理，下列做法正确的有？（多选）",
+    "options": [
+      {
+        "label": "A",
+        "text": "优先使用角色/临时凭证并遵循最小权限"
+      },
+      {
+        "label": "B",
+        "text": "将 AccessKey 提交到公开的代码托管平台"
+      },
+      {
+        "label": "C",
+        "text": "避免将密钥硬编码在代码或公开仓库中"
+      },
+      {
+        "label": "D",
+        "text": "把主账号密钥直接分发给所有开发人员"
+      }
+    ],
+    "answer": [
+      "A",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 4,
+    "subChapter": "ch4-compute",
+    "tags": [
+      "计算安全",
+      "凭证管理",
+      "AccessKey"
+    ],
+    "analysis": "密钥不应硬编码或提交到公开仓库，应使用角色扮演/临时凭证并遵循最小权限、定期轮换。直接分发主账号密钥、把 AccessKey 推到公开平台都是导致大规模泄露的严重错误。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.4_%E6%9E%84%E5%BB%BA%E5%AE%89%E5%85%A8%E8%AE%A1%E7%AE%97%E7%8E%AF%E5%A2%83%E5%8F%8A%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86%E4%B8%AD%E5%BF%83/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch4-compute-104",
+    "stem": "为云账号开启多因素认证（MFA）的主要意义是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "免除设置口令的必要，这是需要重点甄别的说法"
+      },
+      {
+        "label": "B",
+        "text": "提升服务器的运行性能，该说法需结合具体业务判断"
+      },
+      {
+        "label": "C",
+        "text": "在口令之外增加一层动态验证，即使口令泄露也难被登录"
+      },
+      {
+        "label": "D",
+        "text": "让账号无需任何认证即可访问，该表述与实际配置存在偏差"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 4,
+    "subChapter": "ch4-compute",
+    "tags": [
+      "计算安全",
+      "MFA"
+    ],
+    "analysis": "MFA 在静态口令之外叠加动态令牌/短信等第二因子，即便口令泄露，攻击者缺少第二因子仍难以登录，显著提升账号安全。它与性能无关，不能取代口令，更不是免认证。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.4_%E6%9E%84%E5%BB%BA%E5%AE%89%E5%85%A8%E8%AE%A1%E7%AE%97%E7%8E%AF%E5%A2%83%E5%8F%8A%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86%E4%B8%AD%E5%BF%83/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch4-compute-105",
+    "stem": "为满足合规和安全审计，需要记录云上账号对资源的操作行为（谁在何时做了什么）。应使用的能力是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "操作审计（云审计 CloudAudit），记录 API 调用与操作日志"
+      },
+      {
+        "label": "B",
+        "text": "负载均衡的会话保持，这类配置会遗留明显的安全敞口，在部分场景下也有人这样描述"
+      },
+      {
+        "label": "C",
+        "text": "对象存储的图片压缩，这是需要重点甄别的说法，此观点在讨论中时有出现"
+      },
+      {
+        "label": "D",
+        "text": "CDN 的缓存刷新，该说法需结合具体业务判断，这一理解常见于早期资料"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 4,
+    "subChapter": "ch4-compute",
+    "tags": [
+      "计算安全",
+      "操作审计"
+    ],
+    "analysis": "操作审计（云审计）记录账号对云资源的 API 调用、操作时间、来源等，支撑安全分析、合规审计与事后追溯。图片压缩、会话保持、缓存刷新分别属存储/负载均衡/CDN 功能，与操作审计无关。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.4_%E6%9E%84%E5%BB%BA%E5%AE%89%E5%85%A8%E8%AE%A1%E7%AE%97%E7%8E%AF%E5%A2%83%E5%8F%8A%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86%E4%B8%AD%E5%BF%83/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch4-compute-106",
+    "stem": "某公司多个团队共用一个云账号，希望隔离资源、独立计费并限制各团队权限边界。较合适的做法是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "所有团队共用主账号密钥且不做任何隔离"
+      },
+      {
+        "label": "B",
+        "text": "使用多账号/组织管理 + CAM 策略进行资源与权限隔离"
+      },
+      {
+        "label": "C",
+        "text": "关闭权限管理以简化协作，该做法不符合最小权限与纵深防御原则"
+      },
+      {
+        "label": "D",
+        "text": "给每个人都授予主账号完整权限"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 4,
+    "subChapter": "ch4-compute",
+    "tags": [
+      "计算安全",
+      "多账号",
+      "权限隔离"
+    ],
+    "analysis": "通过多账号（组织/企业组织）结合 CAM 策略，可实现资源隔离、独立计费与团队级权限边界，符合最小权限与职责分离。共用主账号密钥、人人主账号权限、关闭权限管理都会造成越权与安全失控。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter4/4.4_%E6%9E%84%E5%BB%BA%E5%AE%89%E5%85%A8%E8%AE%A1%E7%AE%97%E7%8E%AF%E5%A2%83%E5%8F%8A%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86%E4%B8%AD%E5%BF%83/",
+    "difficulty": 3
   }
 ]

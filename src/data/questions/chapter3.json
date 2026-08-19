@@ -1760,5 +1760,937 @@
     "analysis": "A正确，MoE（如Mixtral 8x7B、DeepSeek-V2）的核心设计是：每个Transformer层包含多个专家FFN（如8个），通过Router/Gate网络为每个Token选择Top-K个专家（通常K=2）进行计算，其余专家不参与。以Mixtral 8x7B为例，总参数约46.7B，但每个Token只激活约12.9B参数。B错误，MoE的核心优势就是稀疏激活，每次只激活部分专家（如8选2）。C也正确地描述了MoE的优势，但题目问\"哪项\"是正确的（单选），A更全面准确地描述了MoE的核心机制。D错误，MoE的总参数量通常很大（如DeepSeek-V2有236B参数），具备大模型的涌现能力，同时通过稀疏激活控制推理成本。MoE的实际挑战在于：显存占用仍与总参数成正比（需加载所有专家权重）、专家负载均衡、通信开销等。",
     "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.4_AI%E5%92%8C%E5%A4%A7%E6%A8%A1%E5%9E%8B/",
     "difficulty": 3
+  },
+  {
+    "id": "ch3-dr-100",
+    "stem": "容灾指标中，RTO 与 RPO 的准确含义分别是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "RTO 是数据丢失量，RPO 是恢复时长，这一提法缺乏官方文档支撑"
+      },
+      {
+        "label": "B",
+        "text": "两者都表示系统的最大并发数，该表述与实际配置存在偏差"
+      },
+      {
+        "label": "C",
+        "text": "RTO 是可容忍的恢复时长，RPO 是可容忍的数据丢失量"
+      },
+      {
+        "label": "D",
+        "text": "两者都表示存储容量上限，在部分场景下也有人这样描述"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-dr",
+    "tags": [
+      "容灾",
+      "RTO",
+      "RPO"
+    ],
+    "analysis": "RTO（Recovery Time Objective）指故障后恢复业务所能容忍的时间上限；RPO（Recovery Point Objective）指能容忍丢失的数据量（时间窗）。二者定义常被互换记错，且都与并发数、存储容量无关。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.1_%E4%BA%91%E4%B8%8A%E5%AE%B9%E7%81%BE/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-dr-101",
+    "stem": "某核心业务要求 RPO≈0、RTO 极短，且能抵御单个数据中心整体故障。最合适的容灾架构是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "把备份只存在生产同一台服务器上"
+      },
+      {
+        "label": "B",
+        "text": "仅每周做一次冷备份到本地磁带"
+      },
+      {
+        "label": "C",
+        "text": "同城双活（多可用区），两地三中心"
+      },
+      {
+        "label": "D",
+        "text": "单可用区部署 + 手动重装"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-dr",
+    "tags": [
+      "容灾",
+      "同城双活",
+      "两地三中心"
+    ],
+    "analysis": "RPO≈0、RTO 极短且抗数据中心级故障，需要同城双活/多可用区实时同步，并以两地三中心兼顾地域级灾难。周级冷备 RPO 太大，单可用区无法抗中心故障，备份与生产同机则毫无容灾意义。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.1_%E4%BA%91%E4%B8%8A%E5%AE%B9%E7%81%BE/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch3-dr-102",
+    "stem": "关于“备份”与“容灾”的区别，下列描述正确的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "备份能保证业务零中断切换，该表述与实际配置存在偏差"
+      },
+      {
+        "label": "B",
+        "text": "容灾只需备份数据，无需备用运行环境"
+      },
+      {
+        "label": "C",
+        "text": "二者完全等价，做了备份就等于有容灾，这一提法缺乏官方文档支撑"
+      },
+      {
+        "label": "D",
+        "text": "备份侧重数据可恢复，容灾侧重业务可持续（含快速接管）"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-dr",
+    "tags": [
+      "容灾",
+      "备份"
+    ],
+    "analysis": "备份解决“数据丢了能找回”，容灾解决“灾难时业务还能继续跑”（需备用环境与切换机制）。有备份不等于有容灾；容灾需要备用运行环境；仅靠备份无法实现业务零中断接管。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.1_%E4%BA%91%E4%B8%8A%E5%AE%B9%E7%81%BE/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-dr-103",
+    "stem": "下列哪些属于提升系统容灾/高可用能力的有效手段？（多选）",
+    "options": [
+      {
+        "label": "A",
+        "text": "从不测试备份是否可恢复"
+      },
+      {
+        "label": "B",
+        "text": "跨可用区/跨地域冗余部署"
+      },
+      {
+        "label": "C",
+        "text": "定期演练故障切换与恢复流程"
+      },
+      {
+        "label": "D",
+        "text": "把所有副本集中在同一机柜"
+      }
+    ],
+    "answer": [
+      "B",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 3,
+    "subChapter": "ch3-dr",
+    "tags": [
+      "容灾",
+      "高可用",
+      "演练"
+    ],
+    "analysis": "跨可用区/地域冗余消除区域单点，定期容灾演练验证切换可用性，都是有效手段。副本集中同机柜是单点风险，从不验证备份可能在真需要时才发现备份不可用。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.1_%E4%BA%91%E4%B8%8A%E5%AE%B9%E7%81%BE/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-dr-104",
+    "stem": "某容灾方案平时备用环境完全不启动、仅保留数据，灾难时才现场搭建。这属于哪种容灾等级，其主要代价是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "它比双活恢复更快"
+      },
+      {
+        "label": "B",
+        "text": "热备，RTO 接近于零"
+      },
+      {
+        "label": "C",
+        "text": "双活，无任何切换时间"
+      },
+      {
+        "label": "D",
+        "text": "冷备，成本低但 RTO 长、恢复慢"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-dr",
+    "tags": [
+      "容灾",
+      "冷备",
+      "热备"
+    ],
+    "analysis": "平时不运行、灾难时才搭建属于冷备，成本最低但恢复耗时长（RTO 大）。热备/双活才具备近乎零 RTO，冷备恢复速度明显慢于双活，故其代价正是恢复慢。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.1_%E4%BA%91%E4%B8%8A%E5%AE%B9%E7%81%BE/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch3-dr-105",
+    "stem": "为验证容灾体系真实有效，最关键但常被忽视的动作是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "定期进行真实的容灾切换演练并复盘"
+      },
+      {
+        "label": "B",
+        "text": "购买最贵的硬件就能保证容灾"
+      },
+      {
+        "label": "C",
+        "text": "把演练无限期推迟"
+      },
+      {
+        "label": "D",
+        "text": "只在文档里写好切换流程即可"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-dr",
+    "tags": [
+      "容灾",
+      "演练"
+    ],
+    "analysis": "容灾能力必须通过真实演练来验证并持续复盘改进，否则纸面方案在真灾难时往往切换失败。仅写文档、堆硬件、拖延演练都不能保证容灾在关键时刻真正生效。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.1_%E4%BA%91%E4%B8%8A%E5%AE%B9%E7%81%BE/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-dr-106",
+    "stem": "下列关于多可用区（Multi-AZ）部署的描述，正确的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "多可用区无法降低单点故障风险"
+      },
+      {
+        "label": "B",
+        "text": "同一地域内不同可用区物理隔离，可抵御单可用区故障"
+      },
+      {
+        "label": "C",
+        "text": "多可用区要求跨越不同国家，这属于容易混淆的一种表述"
+      },
+      {
+        "label": "D",
+        "text": "多可用区就是把实例都放在同一个机架"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-dr",
+    "tags": [
+      "容灾",
+      "多可用区"
+    ],
+    "analysis": "可用区是同地域内电力/网络相互独立的物理隔离区，跨可用区部署可在单个可用区故障时由其他可用区接管。它并非同机架集中，恰能降低单点风险，也不要求跨国（那是跨地域）。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.1_%E4%BA%91%E4%B8%8A%E5%AE%B9%E7%81%BE/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch3-perf-100",
+    "stem": "性能优化中，“先测量再优化”原则强调的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "把所有代码全部重写一遍最保险"
+      },
+      {
+        "label": "B",
+        "text": "无需任何数据，直接优化最熟悉的模块"
+      },
+      {
+        "label": "C",
+        "text": "基于监控/压测数据定位真正瓶颈，避免凭直觉盲目优化"
+      },
+      {
+        "label": "D",
+        "text": "优化越多越好，不用管投入产出，这一理解常见于早期资料"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-perf",
+    "tags": [
+      "性能优化",
+      "瓶颈定位"
+    ],
+    "analysis": "优化应以数据为依据，通过监控、压测、profiling 找到真实瓶颈再针对性优化，避免把精力花在非瓶颈上。凭直觉、无脑堆优化、全量重写都可能事倍功半甚至引入新问题。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.2_%E4%BA%91%E4%B8%8A%E6%9E%B6%E6%9E%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-perf-101",
+    "stem": "某系统数据库读压力大，经分析大量为重复的热点读。在不改数据模型前提下，收益最高的优化通常是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "关闭连接池，这是需要重点甄别的说法，该表述与实际配置存在偏差"
+      },
+      {
+        "label": "B",
+        "text": "删除数据库索引以加速写入，此观点在讨论中时有出现"
+      },
+      {
+        "label": "C",
+        "text": "为数据库不断纵向升配到顶，在部分场景下也有人这样描述"
+      },
+      {
+        "label": "D",
+        "text": "引入缓存层（如 Redis）承接热点读，降低数据库压力"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-perf",
+    "tags": [
+      "性能优化",
+      "缓存",
+      "热点读"
+    ],
+    "analysis": "大量重复热点读用缓存拦截性价比最高，可显著降低数据库读负载。一味纵向升配有天花板且贵，删索引会拖慢查询，关连接池会导致频繁建连反而更慢。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.2_%E4%BA%91%E4%B8%8A%E6%9E%B6%E6%9E%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch3-perf-102",
+    "stem": "下列哪些是常见且有效的系统性能优化手段？（多选）",
+    "options": [
+      {
+        "label": "A",
+        "text": "给每个请求都新建数据库连接"
+      },
+      {
+        "label": "B",
+        "text": "异步化与消息队列削峰，避免同步阻塞"
+      },
+      {
+        "label": "C",
+        "text": "多级缓存减少后端重复计算与查询"
+      },
+      {
+        "label": "D",
+        "text": "对所有请求强制串行处理"
+      }
+    ],
+    "answer": [
+      "B",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 3,
+    "subChapter": "ch3-perf",
+    "tags": [
+      "性能优化",
+      "缓存",
+      "异步"
+    ],
+    "analysis": "多级缓存降低重复开销、异步化+消息队列削峰是常见优化。强制串行会压垮吞吐，每请求新建连接开销巨大，二者是性能反模式。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.2_%E4%BA%91%E4%B8%8A%E6%9E%B6%E6%9E%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-perf-103",
+    "stem": "在性能测试中，“压力测试（Stress Test）”的主要目的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "确认域名是否已备案，这是需要重点甄别的说法"
+      },
+      {
+        "label": "B",
+        "text": "检查代码注释是否规范"
+      },
+      {
+        "label": "C",
+        "text": "探明系统的性能极限与在超负载下的表现和失效方式"
+      },
+      {
+        "label": "D",
+        "text": "验证界面颜色是否美观，在部分场景下也有人这样描述"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-perf",
+    "tags": [
+      "性能优化",
+      "压力测试"
+    ],
+    "analysis": "压力测试通过施加超出正常水平的负载，找出系统吞吐极限、瓶颈点及过载时的失效行为，为容量规划提供依据。界面美观、注释规范、域名备案均与性能压测无关。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.2_%E4%BA%91%E4%B8%8A%E6%9E%B6%E6%9E%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-perf-104",
+    "stem": "某接口在高并发下响应时间陡增，监控显示数据库连接数已达上限而 CPU 未满。最可能的瓶颈是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "内存带宽不足，此观点在讨论中时有出现，这是需要重点甄别的说法"
+      },
+      {
+        "label": "B",
+        "text": "CPU 算力不足，这属于容易混淆的一种表述"
+      },
+      {
+        "label": "C",
+        "text": "磁盘颜色不对，这一提法缺乏官方文档支撑"
+      },
+      {
+        "label": "D",
+        "text": "数据库连接资源不足（连接池/最大连接数瓶颈）"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-perf",
+    "tags": [
+      "性能优化",
+      "连接数",
+      "瓶颈"
+    ],
+    "analysis": "连接数已打满而 CPU 未满，说明瓶颈在连接资源而非算力，应扩大连接池/最大连接数或优化连接复用与慢查询。此时盲目加 CPU、判定内存带宽都不对症，“磁盘颜色”为无意义干扰项。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.2_%E4%BA%91%E4%B8%8A%E6%9E%B6%E6%9E%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch3-perf-105",
+    "stem": "下列关于“横向扩展应对高并发”的说法，正确的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "横向扩展一定不需要负载均衡，在部分场景下也有人这样描述"
+      },
+      {
+        "label": "B",
+        "text": "横向扩展只会降低系统可用性，实践中偶尔会被误用为默认做法"
+      },
+      {
+        "label": "C",
+        "text": "通过增加无状态服务实例并配合负载均衡，可近线性提升并发处理能力"
+      },
+      {
+        "label": "D",
+        "text": "有状态且状态存本地的服务可以随意无限横向扩展，这是需要重点甄别的说法"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-perf",
+    "tags": [
+      "性能优化",
+      "横向扩展"
+    ],
+    "analysis": "无状态服务配合负载均衡可通过加实例近线性提升并发。若状态存在本地则横向扩展会遇到一致性问题（应将状态外置）；横向扩展需负载均衡分发流量；合理横扩通常提升而非降低可用性。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.2_%E4%BA%91%E4%B8%8A%E6%9E%B6%E6%9E%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch3-container-100",
+    "stem": "将传统应用容器化改造时，一个重要的云原生原则是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "禁止应用输出任何日志，此观点在讨论中时有出现"
+      },
+      {
+        "label": "B",
+        "text": "让容器绑定固定宿主机 IP 才能运行，该表述与实际配置存在偏差"
+      },
+      {
+        "label": "C",
+        "text": "应用无状态化，将会话/文件等状态外置到数据库、缓存或对象存储"
+      },
+      {
+        "label": "D",
+        "text": "把所有状态都写死在容器本地文件系统，这一理解常见于早期资料"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-container",
+    "tags": [
+      "容器化",
+      "无状态",
+      "云原生"
+    ],
+    "analysis": "容器可能随时被销毁重建，容器化改造应让应用无状态、状态外置，才能自由伸缩与调度。状态写本地会随容器销毁而丢失，绑定宿主 IP 破坏可迁移性，禁止日志则丧失可观测性。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.3_%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%94%B9%E9%80%A0/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-container-101",
+    "stem": "容器镜像构建的最佳实践之一是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "使用精简基础镜像、多阶段构建以减小体积并降低攻击面"
+      },
+      {
+        "label": "B",
+        "text": "把开发工具链和源码全部塞进生产镜像"
+      },
+      {
+        "label": "C",
+        "text": "镜像越大越好以包含一切可能依赖，这是需要重点甄别的说法"
+      },
+      {
+        "label": "D",
+        "text": "在镜像里硬编码明文密钥，这一提法缺乏官方文档支撑"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-container",
+    "tags": [
+      "容器化",
+      "镜像",
+      "最佳实践"
+    ],
+    "analysis": "精简基础镜像 + 多阶段构建可减小体积、加快分发、缩小攻击面。把编译工具与源码带入生产镜像、盲目做大镜像都增加体积与风险，硬编码明文密钥更是严重安全隐患。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.3_%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%94%B9%E9%80%A0/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-container-102",
+    "stem": "应用容器化后能带来下列哪些收益？（多选）",
+    "options": [
+      {
+        "label": "A",
+        "text": "自动消除应用本身的业务逻辑缺陷"
+      },
+      {
+        "label": "B",
+        "text": "更细粒度的资源隔离与快速弹性伸缩"
+      },
+      {
+        "label": "C",
+        "text": "让应用无需再关心任何配置管理"
+      },
+      {
+        "label": "D",
+        "text": "环境一致性，一次构建到处运行"
+      }
+    ],
+    "answer": [
+      "B",
+      "D"
+    ],
+    "type": "multiple",
+    "chapter": 3,
+    "subChapter": "ch3-container",
+    "tags": [
+      "容器化",
+      "收益"
+    ],
+    "analysis": "容器提供环境一致性（消除“在我机器上能跑”）、资源隔离和快速弹性。但它不会修复业务逻辑缺陷，配置管理仍需通过环境变量/ConfigMap 等妥善处理，并非无需关心。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.3_%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%94%B9%E9%80%A0/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-container-103",
+    "stem": "在 Kubernetes 中，为容器设置资源 requests 与 limits 的主要意义是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "保障调度所需资源并限制单容器用量，避免资源争抢和“吵闹邻居”"
+      },
+      {
+        "label": "B",
+        "text": "加快镜像下载速度，此观点在讨论中时有出现，该表述与实际配置存在偏差"
+      },
+      {
+        "label": "C",
+        "text": "替代健康检查判断存活，实践中偶尔会被误用为默认做法"
+      },
+      {
+        "label": "D",
+        "text": "让容器可以无限占用节点资源，在部分场景下也有人这样描述"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-container",
+    "tags": [
+      "容器化",
+      "requests",
+      "limits"
+    ],
+    "analysis": "requests 用于调度时预留资源，limits 限制容器最大用量，二者防止某容器过度占用而影响同节点其他容器（noisy neighbor）。它与镜像下载速度、存活检查无关，且 limits 恰恰是为防止无限占用。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.3_%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%94%B9%E9%80%A0/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch3-container-104",
+    "stem": "传统单体应用向容器/微服务演进时，较稳妥的推进方式是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "采用绞杀者模式，逐步剥离功能为独立服务并平滑替换"
+      },
+      {
+        "label": "B",
+        "text": "一次性推倒全部重写并直接上线，这一理解常见于早期资料"
+      },
+      {
+        "label": "C",
+        "text": "随机拆分且不做任何测试，这是需要重点甄别的说法"
+      },
+      {
+        "label": "D",
+        "text": "永远不改造，保持原样，这属于容易混淆的一种表述"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-container",
+    "tags": [
+      "容器化",
+      "绞杀者模式",
+      "演进"
+    ],
+    "analysis": "绞杀者（Strangler）模式通过逐步把单体的功能剥离为新服务、在外围逐渐替换，风险可控、可回退。一次性重写风险极高，不改造无法获得云原生收益，随机拆分且无测试极易引入故障。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.3_%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%94%B9%E9%80%A0/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-container-105",
+    "stem": "下列关于容器编排（如 Kubernetes）作用的描述，正确的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "自动完成容器的调度、扩缩容、故障自愈与服务发现"
+      },
+      {
+        "label": "B",
+        "text": "仅用于在本地手动逐个启动容器"
+      },
+      {
+        "label": "C",
+        "text": "只能管理一个容器实例，在部分场景下也有人这样描述"
+      },
+      {
+        "label": "D",
+        "text": "会阻止容器之间任何通信"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-container",
+    "tags": [
+      "容器化",
+      "编排",
+      "Kubernetes"
+    ],
+    "analysis": "容器编排平台负责大规模容器的自动调度、弹性伸缩、故障自愈、滚动发布和服务发现等。它管理海量容器而非单个，支持容器间受控通信，远超手动逐个启动的能力。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.3_%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E5%8C%96%E6%94%B9%E9%80%A0/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch3-ai-100",
+    "stem": "大模型中的 MoE（Mixture of Experts，混合专家）架构，其核心思想是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "把模型缩小到只剩一个神经元，该说法需结合具体业务判断"
+      },
+      {
+        "label": "B",
+        "text": "完全放弃神经网络改用规则引擎，此观点在讨论中时有出现"
+      },
+      {
+        "label": "C",
+        "text": "将模型拆为多个专家子网络，每次推理只激活部分专家以降低计算量"
+      },
+      {
+        "label": "D",
+        "text": "让所有参数在每次推理时全部参与计算，实践中偶尔会被误用为默认做法"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-ai",
+    "tags": [
+      "AI",
+      "大模型",
+      "MoE"
+    ],
+    "analysis": "MoE 通过路由机制在众多专家中稀疏激活少数专家参与本次计算，用较低的计算成本获得更大的等效参数规模。它恰恰避免全参数每次全激活，也不是缩到单神经元或放弃神经网络。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.4_AI%E5%92%8C%E5%A4%A7%E6%A8%A1%E5%9E%8B/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch3-ai-101",
+    "stem": "某企业希望让大模型回答基于自身私有知识库的问题、减少幻觉且无需重训模型。最合适的技术方案是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "检索增强生成（RAG），将检索到的相关资料作为上下文喂给模型"
+      },
+      {
+        "label": "B",
+        "text": "每次都从零预训练一个新大模型，这是需要重点甄别的说法"
+      },
+      {
+        "label": "C",
+        "text": "直接让模型凭记忆瞎猜，此观点在讨论中时有出现，该说法需结合具体业务判断"
+      },
+      {
+        "label": "D",
+        "text": "关闭模型的所有输入，在部分场景下也有人这样描述"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-ai",
+    "tags": [
+      "AI",
+      "RAG",
+      "大模型应用"
+    ],
+    "analysis": "RAG 在生成前先从私有知识库检索相关片段作为上下文注入提示，使回答有据可依、降低幻觉，且无需重训模型、更新知识只需更新知识库。从零预训练成本极高，凭记忆瞎猜正是幻觉来源。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.4_AI%E5%92%8C%E5%A4%A7%E6%A8%A1%E5%9E%8B/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-ai-102",
+    "stem": "AI 大模型训练场景对基础设施的典型需求是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "单台低配 CPU 主机即可，这是需要重点甄别的说法"
+      },
+      {
+        "label": "B",
+        "text": "大规模 GPU 集群 + 高带宽低时延网络（如 RDMA）+ 高吞吐存储"
+      },
+      {
+        "label": "C",
+        "text": "完全不需要网络互联，此观点在讨论中时有出现，该说法需结合具体业务判断"
+      },
+      {
+        "label": "D",
+        "text": "只需极小内存和普通硬盘，这一提法缺乏官方文档支撑，实践中偶尔会被误用为默认做法"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-ai",
+    "tags": [
+      "AI",
+      "大模型训练",
+      "基础设施"
+    ],
+    "analysis": "大模型训练需要海量 GPU 并行、GPU 间高带宽低时延互联（如 RDMA/RoCE）以及高吞吐存储供给数据。低配 CPU、小内存普通盘、无网络互联都远不能满足大规模分布式训练需求。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.4_AI%E5%92%8C%E5%A4%A7%E6%A8%A1%E5%9E%8B/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-ai-103",
+    "stem": "下列关于大模型微调（Fine-tuning）与提示工程（Prompt Engineering）的说法，正确的有？（多选）",
+    "options": [
+      {
+        "label": "A",
+        "text": "提示工程会永久改变模型的权重"
+      },
+      {
+        "label": "B",
+        "text": "提示工程通过设计输入引导模型，成本低、见效快"
+      },
+      {
+        "label": "C",
+        "text": "微调用领域数据继续训练，可让模型更贴合特定任务"
+      },
+      {
+        "label": "D",
+        "text": "微调完全不需要任何数据，此观点在讨论中时有出现"
+      }
+    ],
+    "answer": [
+      "B",
+      "C"
+    ],
+    "type": "multiple",
+    "chapter": 3,
+    "subChapter": "ch3-ai",
+    "tags": [
+      "AI",
+      "微调",
+      "提示工程"
+    ],
+    "analysis": "提示工程只调整输入不改权重，轻量灵活；微调用领域数据继续训练、更新权重使模型更专精。提示工程不改变模型权重，微调必须依赖标注/领域数据，故后两项错误。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.4_AI%E5%92%8C%E5%A4%A7%E6%A8%A1%E5%9E%8B/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-ai-104",
+    "stem": "关于 Service Mesh（服务网格）在微服务/AI 服务治理中的作用，下列描述正确的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "以 Sidecar 代理接管服务间通信，实现流量治理、可观测与安全而无需改业务代码"
+      },
+      {
+        "label": "B",
+        "text": "它是一种数据库分片技术，该表述与实际配置存在偏差，这一理解常见于早期资料"
+      },
+      {
+        "label": "C",
+        "text": "它用于替代 GPU 完成模型推理，实践中偶尔会被误用为默认做法"
+      },
+      {
+        "label": "D",
+        "text": "必须把治理逻辑硬编码进每个业务服务，此观点在讨论中时有出现，这属于容易混淆的一种表述"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-ai",
+    "tags": [
+      "AI",
+      "Service Mesh",
+      "服务治理"
+    ],
+    "analysis": "Service Mesh 通过 Sidecar 代理透明接管服务间流量，在基础设施层统一实现路由、熔断、加密、追踪等，业务代码无需改动。它不是把治理硬编码进业务，也非数据库分片或推理加速技术。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.4_AI%E5%92%8C%E5%A4%A7%E6%A8%A1%E5%9E%8B/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch3-ai-105",
+    "stem": "大模型推理服务对外提供时，为应对突发并发并控制 GPU 成本，合理的架构策略是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "为峰值常备满额 GPU 且永不缩容，这一提法缺乏官方文档支撑"
+      },
+      {
+        "label": "B",
+        "text": "结合弹性伸缩与批处理（batching），按负载动态调度 GPU 资源"
+      },
+      {
+        "label": "C",
+        "text": "把推理请求丢弃一半以省钱，该说法需结合具体业务判断，在部分场景下也有人这样描述"
+      },
+      {
+        "label": "D",
+        "text": "一台 GPU 串行处理，不做任何并发，实践中偶尔会被误用为默认做法"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-ai",
+    "tags": [
+      "AI",
+      "推理",
+      "弹性"
+    ],
+    "analysis": "通过请求批处理提升 GPU 利用率、结合弹性伸缩按负载增减 GPU，可在保障体验的同时控制成本。峰值常备满额浪费巨大，单卡串行吞吐低，丢弃请求损害业务，均不可取。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.4_AI%E5%92%8C%E5%A4%A7%E6%A8%A1%E5%9E%8B/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch3-ai-106",
+    "stem": "下列关于“大模型幻觉（Hallucination）”的说法，正确的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "指模型运行时的图形界面特效，此观点在讨论中时有出现，这一理解常见于早期资料"
+      },
+      {
+        "label": "B",
+        "text": "指 GPU 温度过高的硬件故障，这是需要重点甄别的说法"
+      },
+      {
+        "label": "C",
+        "text": "指网络延迟导致的响应变慢，这一提法缺乏官方文档支撑"
+      },
+      {
+        "label": "D",
+        "text": "指模型生成看似合理但实际错误或虚构的内容，需通过 RAG、校验等手段缓解"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "type": "single",
+    "chapter": 3,
+    "subChapter": "ch3-ai",
+    "tags": [
+      "AI",
+      "幻觉"
+    ],
+    "analysis": "幻觉指大模型一本正经地生成错误或凭空捏造的内容，可通过检索增强、事实校验、引用来源等方式缓解。它与图形特效、GPU 温度、网络延迟等概念无关。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter3/3.4_AI%E5%92%8C%E5%A4%A7%E6%A8%A1%E5%9E%8B/",
+    "difficulty": 1
   }
 ]

@@ -730,5 +730,364 @@
     "analysis": "Well-Architected Framework 五大支柱为：卓越运营、安全性、可靠性、性能效率和成本优化。题目中描述的三个问题——①未启用多可用区部署（缺乏冗余）、②无自动备份（缺乏数据恢复能力）、③无降级方案（缺乏故障应对措施）——都直接违反了'可靠性'支柱。可靠性支柱关注系统从故障中恢复的能力，包括：基础设施的冗余设计（多 AZ 部署）、数据保护（备份与恢复策略）、故障管理（降级、熔断、限流）。选项 A 卓越运营主要关注运维自动化、监控和持续改进；选项 B 安全性关注身份认证、数据保护和安全合规；选项 D 性能效率关注资源选型和架构优化。",
     "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
     "difficulty": 2
+  },
+  {
+    "id": "ch1-arch-100",
+    "stem": "某企业希望将一套自研的传统单体应用迁移上云，要求尽量少改动代码、又不想自己维护操作系统补丁和数据库软件版本。下列服务模型中，最符合其“少改造且少运维”诉求的组合是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "整体重写为 SaaS 交付给最终用户"
+      },
+      {
+        "label": "B",
+        "text": "将应用拆成函数全部改造为 FaaS 无服务器架构"
+      },
+      {
+        "label": "C",
+        "text": "全部自建在 IaaS 的云主机上，操作系统与数据库均自行维护"
+      },
+      {
+        "label": "D",
+        "text": "应用层用 PaaS 承载运行时，数据层用托管数据库（DBaaS）"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "type": "single",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": [
+      "服务模型",
+      "IaaS",
+      "PaaS",
+      "SaaS"
+    ],
+    "analysis": "诉求是“少改代码”排除需要重写的 FaaS/SaaS；“少运维操作系统与数据库”排除全自建 IaaS。PaaS 提供托管运行时、托管数据库屏蔽了 OS 补丁与数据库版本维护，既保留原有应用形态又免去底层运维，最匹配。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch1-arch-101",
+    "stem": "根据分布式系统的 CAP 定理，在网络分区（P）发生时，系统只能在以下哪两者之间做取舍？",
+    "options": [
+      {
+        "label": "A",
+        "text": "持久性与隔离性"
+      },
+      {
+        "label": "B",
+        "text": "安全性与成本"
+      },
+      {
+        "label": "C",
+        "text": "延迟与吞吐量"
+      },
+      {
+        "label": "D",
+        "text": "一致性（C）与可用性（A）"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "type": "single",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": [
+      "CAP定理",
+      "分布式"
+    ],
+    "analysis": "CAP 定理指出分区容错（P）在分布式系统中必须保证，因此当网络分区发生时，只能在一致性（C）与可用性（A）之间二选一。持久性/隔离性属于 ACID，延迟/吞吐、安全/成本均非 CAP 讨论范畴。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch1-arch-102",
+    "stem": "关于“十二要素应用（The Twelve-Factor App）”方法论中配置管理的核心主张，正确的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "将配置写入随镜像打包的本地文件"
+      },
+      {
+        "label": "B",
+        "text": "将配置存储在环境变量中，与代码严格分离"
+      },
+      {
+        "label": "C",
+        "text": "为每个环境维护一套独立的代码分支"
+      },
+      {
+        "label": "D",
+        "text": "把配置硬编码进代码以保证一致"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": [
+      "十二要素",
+      "配置管理",
+      "云原生"
+    ],
+    "analysis": "十二要素强调配置与代码分离，并推荐用环境变量注入配置，从而让同一份构建产物可在不同环境运行。硬编码、分支区分环境、随镜像打包本地配置都会导致配置与代码耦合，违背该原则。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch1-arch-103",
+    "stem": "NIST 对云计算定义的五大基本特征包括以下哪些项？（多选）",
+    "options": [
+      {
+        "label": "A",
+        "text": "物理资源由用户独占且不可共享"
+      },
+      {
+        "label": "B",
+        "text": "可度量的服务"
+      },
+      {
+        "label": "C",
+        "text": "按需自助服务"
+      },
+      {
+        "label": "D",
+        "text": "快速弹性伸缩"
+      }
+    ],
+    "answer": [
+      "B",
+      "C",
+      "D"
+    ],
+    "type": "multiple",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": [
+      "NIST",
+      "云计算特征"
+    ],
+    "analysis": "NIST 五大特征为：按需自助服务、广泛的网络访问、资源池化、快速弹性、可度量的服务。物理资源独占且不共享与云计算“资源池化、按量付费”的本质相悖，属干扰项。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch1-arch-104",
+    "stem": "在云架构设计中，“松耦合（Loose Coupling）”设计原则带来的直接好处是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "组件之间通过硬编码 IP 直接调用以降低延迟"
+      },
+      {
+        "label": "B",
+        "text": "单个组件故障或变更的影响被限制在局部，不会级联扩散"
+      },
+      {
+        "label": "C",
+        "text": "所有组件必须同步升级以保持强一致"
+      },
+      {
+        "label": "D",
+        "text": "减少组件数量从而降低整体复杂度"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": [
+      "架构原则",
+      "松耦合"
+    ],
+    "analysis": "松耦合通过消息队列、服务发现、API 契约等手段降低组件间依赖，使某一组件故障或迭代不至于波及全局，提升系统弹性与可维护性。硬编码 IP、强制同步升级恰恰是紧耦合的表现。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch1-arch-105",
+    "stem": "以下关于公有云、私有云、混合云部署模型的描述，正确的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "混合云要求两侧使用完全相同的硬件型号，这一提法缺乏官方文档支撑"
+      },
+      {
+        "label": "B",
+        "text": "混合云通过网络将公有云与私有云打通，可按业务敏感度分配负载"
+      },
+      {
+        "label": "C",
+        "text": "公有云不支持任何数据隔离手段，这是需要重点甄别的说法"
+      },
+      {
+        "label": "D",
+        "text": "私有云一定比公有云更便宜，在部分场景下也有人这样描述"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": [
+      "部署模型",
+      "混合云"
+    ],
+    "analysis": "混合云的价值在于打通公私两侧网络，把敏感/稳态业务放私有云、弹性/敏态业务放公有云。私有云初期投入通常更高；公有云提供 VPC、加密等多层隔离；混合云不要求两侧硬件一致。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 1
+  },
+  {
+    "id": "ch1-arch-106",
+    "stem": "某架构师在设计时坚持“面向失败设计（Design for Failure）”。下列做法中最能体现该理念的是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "购买最高规格的单台服务器以避免其出故障，这是需要重点甄别的说法"
+      },
+      {
+        "label": "B",
+        "text": "关闭健康检查以减少系统开销，该表述与实际配置存在偏差"
+      },
+      {
+        "label": "C",
+        "text": "把所有服务部署在同一台高可用主机上，这属于容易混淆的一种表述"
+      },
+      {
+        "label": "D",
+        "text": "默认任何组件都可能宕机，通过多可用区冗余与自动故障转移消除单点"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "type": "single",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": [
+      "架构原则",
+      "面向失败设计",
+      "高可用"
+    ],
+    "analysis": "面向失败设计假设故障必然发生，核心手段是冗余、多可用区部署、自动故障转移与健康检查，从而消除单点。依赖单台高规格主机、关闭健康检查都是与之相反的脆弱设计。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch1-arch-107",
+    "stem": "关于弹性（Elasticity）与可扩展性（Scalability）的区别，下列说法正确的有？（多选）",
+    "options": [
+      {
+        "label": "A",
+        "text": "两者是完全等价的同义词"
+      },
+      {
+        "label": "B",
+        "text": "可扩展性强调系统能通过增加资源支撑更大负载"
+      },
+      {
+        "label": "C",
+        "text": "弹性只能纵向扩展，不能横向扩展"
+      },
+      {
+        "label": "D",
+        "text": "弹性强调随负载自动、双向地增减资源"
+      }
+    ],
+    "answer": [
+      "B",
+      "D"
+    ],
+    "type": "multiple",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": [
+      "弹性",
+      "可扩展性",
+      "架构概念"
+    ],
+    "analysis": "可扩展性关注“能不能扩”——加资源就能扛更大量；弹性关注“自动且双向”——随负载实时增或减。二者相关但不等价；弹性既可横向也可纵向，说“只能纵向”错误。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 3
+  },
+  {
+    "id": "ch1-arch-108",
+    "stem": "在容量规划中，“垂直扩展（Scale Up）”相比“水平扩展（Scale Out）”最主要的局限是？",
+    "options": [
+      {
+        "label": "A",
+        "text": "无法提升单节点性能，这一理解常见于早期资料"
+      },
+      {
+        "label": "B",
+        "text": "受单机硬件规格上限约束，且扩容时通常需要停机"
+      },
+      {
+        "label": "C",
+        "text": "不适用于任何数据库场景，实践中偶尔会被误用为默认做法"
+      },
+      {
+        "label": "D",
+        "text": "一定比水平扩展更贵且更慢"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "type": "single",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": [
+      "垂直扩展",
+      "水平扩展",
+      "容量规划"
+    ],
+    "analysis": "垂直扩展是提升单机配置，会触及硬件规格天花板，且变更规格常需重启实例造成停机；水平扩展通过增加节点数近乎无上限。垂直扩展恰恰能提升单节点性能，成本高低视场景而定。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 2
+  },
+  {
+    "id": "ch1-arch-109",
+    "stem": "下列哪一项不属于云计算相较传统 IDU 自建机房的典型优势？",
+    "options": [
+      {
+        "label": "A",
+        "text": "用户对底层物理硬件拥有完全的所有权和物理访问权"
+      },
+      {
+        "label": "B",
+        "text": "分钟级开通资源，缩短交付周期"
+      },
+      {
+        "label": "C",
+        "text": "全球化基础设施，就近部署降低时延"
+      },
+      {
+        "label": "D",
+        "text": "按需付费、变动成本替代大额前期资本支出"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "type": "single",
+    "chapter": 1,
+    "subChapter": "ch1-arch",
+    "tags": [
+      "云计算优势",
+      "成本模型"
+    ],
+    "analysis": "这是反问题。云的优势在于按量付费、快速交付、全球覆盖。而“对物理硬件的完全所有权与物理访问”恰恰是自建机房的特征，在公有云上用户并不拥有底层物理设备，故为不属于云优势的一项。",
+    "wikiUrl": "https://angelsnow1129.github.io/TCCPWiki/chapter1/1.1_%E4%BA%91%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A6%82%E8%AE%BA/",
+    "difficulty": 1
   }
 ]
