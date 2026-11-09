@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import usePractice from '../hooks/usePractice';
 import { chapters } from '../data/chapters';
 import { getQuestionsByChapter, getQuestionsBySubChapter } from '../data';
@@ -12,6 +13,18 @@ export default function PracticePage() {
   const [selectedChapter, setSelectedChapter] = useState<number | null>(null);
   const [selectedSub, setSelectedSub] = useState<string | null>(null);
   const [expandedChapters, setExpandedChapters] = useState<Set<number>>(new Set());
+  const [params] = useSearchParams();
+  const setQuestions = practice.setQuestions;
+  useEffect(() => {
+    const chapter = chapters.find(ch => ch.id === Number(params.get('chapter')));
+    if (!chapter) return;
+    const sub = params.get('sub');
+    const validSub = chapter.subChapters.some(item => item.id === sub) ? sub : null;
+    setSelectedChapter(chapter.id);
+    setSelectedSub(validSub);
+    setExpandedChapters(new Set([chapter.id]));
+    setQuestions(validSub ? getQuestionsBySubChapter(validSub) : getQuestionsByChapter(chapter.id));
+  }, [params, setQuestions]);
 
   const toggleExpand = (chId: number) => {
     setExpandedChapters(prev => {
@@ -38,10 +51,7 @@ export default function PracticePage() {
 
   const handleSubmit = () => {
     if (practice.userAnswer.length === 0) return;
-    const correct = practice.submitAnswer();
-    if (correct && practice.currentIndex < practice.questions.length - 1) {
-      setTimeout(() => practice.goNext(), 1000);
-    }
+    practice.submitAnswer();
   };
 
   const handleNext = () => {
@@ -51,9 +61,9 @@ export default function PracticePage() {
   };
 
   return (
-    <div className="flex gap-6 animate-fade-in">
+    <div className="flex flex-col lg:flex-row gap-6 animate-fade-in">
       {/* Left sidebar - Chapter tree */}
-      <div className="w-64 flex-shrink-0">
+      <div className="w-full lg:w-64 flex-shrink-0">
         <div className="card-glow rounded-xl bg-bg-secondary p-4 sticky top-24">
           <h3 className="text-sm font-semibold text-text-primary mb-4">章节选择</h3>
           <div className="space-y-1">

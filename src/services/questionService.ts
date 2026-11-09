@@ -48,6 +48,22 @@ export function getRandomQuestions(
   return shuffled.slice(0, Math.min(count, shuffled.length));
 }
 
+// 计算指定来源 + 题型下可抽取的题目总数（用于「全部」选项）
+export function getAvailableCount(
+  ids: string[] | null,
+  type?: 'single' | 'multiple' | 'mixed'
+): number {
+  let pool = ids ? getQuestionsByIds(ids) : getAllQuestions();
+
+  if (type === 'single') {
+    pool = pool.filter(q => q.type === 'single');
+  } else if (type === 'multiple') {
+    pool = pool.filter(q => q.type === 'multiple');
+  }
+
+  return pool.length;
+}
+
 // 从指定 ID 集合中随机抽题（用于错题/收藏随机练习）
 export function getRandomQuestionsFromIds(
   ids: string[],
@@ -129,6 +145,7 @@ const questionService = {
   getQuestionsByType,
   getRandomQuestions,
   getRandomQuestionsFromIds,
+  getAvailableCount,
   getExamQuestions,
   getQuestionById,
   getQuestionsByIds,

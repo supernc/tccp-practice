@@ -1,11 +1,10 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
+import { loadRandomSession, saveRandomSession } from '../services/practiceSession';
 import { Question } from '../types';
 import { isAnswerCorrect } from '../services/examService';
 import {
-  addWrongQuestion,
-  removeWrongQuestion,
-  recordDailyAnswer,
-  saveAnswerRecord,
+  recordAnswerResult,
+  getField,
   toggleFavorite as toggleFav,
   getFavorites,
 } from '../services/storage';
@@ -19,6 +18,7 @@ interface PracticeReturn {
   isCorrect: boolean;
   stats: { answered: number; correct: number };
   favorites: Set<string>;
+  submittedIds: Set<string>;
   setQuestions: (qs: Question[]) => void;
   answerQuestion: (answer: string[]) => void;
   submitAnswer: () => boolean;
@@ -30,12 +30,28 @@ interface PracticeReturn {
 }
 
 export default function usePractice(mode: 'practice' | 'random' = 'practice'): PracticeReturn {
-  const [questions, setQuestionsState] = useState<Question[]>([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, string[]>>({});
-  const [submittedSet, setSubmittedSet] = useState<Set<string>>(new Set());
-  const [stats, setStats] = useState({ answered: 0, correct: 0 });
-  const [favorites, setFavorites] = useState<Set<string>>(getFavorites());
+  const [restored] = useState(() => mode === 'random' ? loadRandomSession() : null);
+  const [questions, setQuestionsState] = useState<Question[]>(restored?.questions || []);
+  const [currentIndex, setCurrentIndex] = useState(restored?.currentIndex || 0);
+  const [answers, setAnswers] = useState<Record<string, string[]>>(restored?.answers || {});
+  const [submittedSet, setSubmittedSet] = useState<Set<string>>(() => new Set(restored?.submitted));
+  const submittedRef = useRef(new Set(restored?.submitted));
+  const [stats, setStats] = useState(() => ({
+    answered: restored?.submitted.length || 0,
+    correct: restored?.questions.filter(q => restored.submitted.includes(q.id) &&
+      isAnswerCorrect(restored.answers[q.id] || [], q.answer, q.type)).length || 0,
+  }));
+  const [favorites, setFavorites] = useState<Set<string>>(getFavorites);
+  const advanceTimer = useRef<number | null>(null);
+  const cancelAutoAdvance = useCallback(() => {
+    if (advanceTimer.current !== null) window.clearTimeout(advanceTimer.current);
+    advanceTimer.current = null;
+  }, []);
+  useEffect(() => cancelAutoAdvance, [cancelAutoAdvance]);
+
+  useEffect(() => {
+    if (mode === 'random') saveRandomSession({ questions, currentIndex, answers, submitted: [...submittedSet] });
+  }, [mode, questions, currentIndex, answers, submittedSet]);
 
   const currentQuestion = questions[currentIndex] || null;
   const userAnswer = currentQuestion ? (answers[currentQuestion.id] || []) : [];
@@ -45,12 +61,14 @@ export default function usePractice(mode: 'practice' | 'random' = 'practice'): P
     : false;
 
   const setQuestions = useCallback((qs: Question[]) => {
+    cancelAutoAdvance();
     setQuestionsState(qs);
     setCurrentIndex(0);
     setAnswers({});
     setSubmittedSet(new Set());
+    submittedRef.current = new Set();
     setStats({ answered: 0, correct: 0 });
-  }, []);
+  }, [cancelAutoAdvance]);
 
   const answerQuestion = useCallback((answer: string[]) => {
     if (!currentQuestion || isSubmitted) return;
@@ -58,11 +76,12 @@ export default function usePractice(mode: 'practice' | 'random' = 'practice'): P
   }, [currentQuestion, isSubmitted]);
 
   const submitAnswer = useCallback((): boolean => {
-    if (!currentQuestion || isSubmitted) return false;
+    if (!currentQuestion || submittedRef.current.has(currentQuestion.id)) return false;
     const ans = answers[currentQuestion.id] || [];
     if (ans.length === 0) return false;
 
     const correct = isAnswerCorrect(ans, currentQuestion.answer, currentQuestion.type);
+    submittedRef.current.add(currentQuestion.id);
 
     setSubmittedSet(prev => new Set(prev).add(currentQuestion.id));
     setStats(prev => ({
@@ -71,7 +90,7 @@ export default function usePractice(mode: 'practice' | 'random' = 'practice'): P
     }));
 
     // 记录答题
-    saveAnswerRecord({
+    recordAnswerResult({
       questionId: currentQuestion.id,
       userAnswer: ans,
       isCorrect: correct,
@@ -79,34 +98,38 @@ export default function usePractice(mode: 'practice' | 'random' = 'practice'): P
       mode,
     });
 
-    recordDailyAnswer(correct);
-
-    if (correct) {
-      removeWrongQuestion(currentQuestion.id);
-    } else {
-      addWrongQuestion(currentQuestion.id);
+    if (correct && getField('autoAdvanceOnCorrect') === true && currentIndex < questions.length - 1) {
+      cancelAutoAdvance();
+      const submittedIndex = currentIndex;
+      advanceTimer.current = window.setTimeout(() => {
+        setCurrentIndex(index => index === submittedIndex ? index + 1 : index);
+        advanceTimer.current = null;
+      }, 1000);
     }
 
     return correct;
-  }, [currentQuestion, isSubmitted, answers, mode]);
+  }, [currentQuestion, isSubmitted, answers, mode, currentIndex, questions.length, cancelAutoAdvance]);
 
   const goNext = useCallback(() => {
+    cancelAutoAdvance();
     if (currentIndex < questions.length - 1) {
-      setCurrentIndex(prev => prev + 1);
+      setCurrentIndex(prev => Math.min(prev + 1, questions.length - 1));
     }
-  }, [currentIndex, questions.length]);
+  }, [currentIndex, questions.length, cancelAutoAdvance]);
 
   const goPrev = useCallback(() => {
+    cancelAutoAdvance();
     if (currentIndex > 0) {
-      setCurrentIndex(prev => prev - 1);
+      setCurrentIndex(prev => Math.max(prev - 1, 0));
     }
-  }, [currentIndex]);
+  }, [currentIndex, cancelAutoAdvance]);
 
   const goTo = useCallback((index: number) => {
+    cancelAutoAdvance();
     if (index >= 0 && index < questions.length) {
       setCurrentIndex(index);
     }
-  }, [questions.length]);
+  }, [questions.length, cancelAutoAdvance]);
 
   const toggleFavorite = useCallback((questionId: string) => {
     const isFav = toggleFav(questionId);
@@ -114,11 +137,14 @@ export default function usePractice(mode: 'practice' | 'random' = 'practice'): P
   }, []);
 
   const reset = useCallback(() => {
+    cancelAutoAdvance();
+    setQuestionsState([]);
     setCurrentIndex(0);
     setAnswers({});
     setSubmittedSet(new Set());
+    submittedRef.current = new Set();
     setStats({ answered: 0, correct: 0 });
-  }, []);
+  }, [cancelAutoAdvance]);
 
   return {
     questions,
@@ -129,6 +155,7 @@ export default function usePractice(mode: 'practice' | 'random' = 'practice'): P
     isCorrect,
     stats,
     favorites,
+    submittedIds: submittedSet,
     setQuestions,
     answerQuestion,
     submitAnswer,

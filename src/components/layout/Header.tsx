@@ -1,7 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import { CalendarDays, Zap } from 'lucide-react';
-import { getTodayStats } from '../../services/statsService';
-import { getField } from '../../services/storage';
+import useStats from '../../hooks/useStats';
 
 const pageTitles: Record<string, string> = {
   '/': '学习仪表盘',
@@ -11,17 +10,19 @@ const pageTitles: Record<string, string> = {
   '/wrong': '错题本',
   '/favorites': '收藏夹',
   '/stats': '数据看板',
+  '/practical': '实操模拟题',
+  '/data': '数据管理',
+  '/settings': '学习设置',
 };
 
 export default function Header() {
   const location = useLocation();
   const title = pageTitles[location.pathname] || 'TCCP 练习系统';
-  const todayStats = getTodayStats();
-  const streakDays = getField('streakDays');
+  const { todayStats, streakDays } = useStats();
 
   return (
-    <header className="h-16 bg-bg-secondary/80 backdrop-blur-md border-b border-white/5 flex items-center justify-between px-6 sticky top-0 z-40">
-      <h2 className="text-lg font-bold text-text-primary">{title}</h2>
+    <header className="h-16 bg-bg-secondary/80 backdrop-blur-md border-b border-white/5 flex items-center justify-between gap-2 px-3 sm:px-6 sticky top-0 z-40">
+      <h2 className="text-sm sm:text-lg font-bold text-text-primary">{title}</h2>
 
       <div className="flex items-center gap-4">
         {/* 今日做题 */}
@@ -34,7 +35,7 @@ export default function Header() {
 
         {/* 连续学习 */}
         {streakDays > 0 && (
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-bg-card border border-white/5">
+          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-bg-card border border-white/5">
             <CalendarDays size={14} className="text-primary-cyan" />
             <span className="text-xs text-text-secondary">
               连续 <span className="text-primary-cyan font-semibold">{streakDays}</span> 天

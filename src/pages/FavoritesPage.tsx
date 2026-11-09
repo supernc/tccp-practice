@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 export default function FavoritesPage() {
   const navigate = useNavigate();
   useEffect(() => {
-    navigate('/wrong', { replace: true });
+    navigate('/wrong?tab=favorites', { replace: true });
   }, [navigate]);
   return null;
 }

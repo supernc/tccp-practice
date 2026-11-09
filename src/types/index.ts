@@ -122,6 +122,8 @@ export interface PracticeState {
 
 // 存储数据结构
 export interface StorageData {
+  dailyGoal?: number;
+  autoAdvanceOnCorrect?: boolean;
   answerRecords: AnswerRecord[];
   wrongQuestions: string[];     // questionId array (JSON不支持Set)
   favorites: string[];          // questionId array
@@ -140,6 +142,7 @@ export interface StatsData {
   chapterStats: Record<number, {
     name: string;
     answered: number;
+    uniqueAnswered: number;
     correct: number;
     rate: number;
     total: number;

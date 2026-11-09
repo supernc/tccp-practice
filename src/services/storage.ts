@@ -1,4 +1,7 @@
 import { StorageData } from '../types';
+import { localDateKey, daysAgoKey } from './date';
+
+export const DATA_CHANGED_EVENT = 'tccp-data-changed';
 
 const STORAGE_KEY = 'tccp-practice-data';
 const CURRENT_VERSION = 1;
@@ -18,7 +21,7 @@ const defaultData: StorageData = {
 // 获取完整存储数据
 function getData(): StorageData {
   const raw = localStorage.getItem(STORAGE_KEY);
-  if (!raw) return { ...defaultData };
+  if (!raw) return structuredClone(defaultData);
   const parsed = JSON.parse(raw) as StorageData;
   // 版本迁移
   if (!parsed.version || parsed.version < CURRENT_VERSION) {
@@ -30,11 +33,12 @@ function getData(): StorageData {
 // 保存完整存储数据
 function setData(data: StorageData): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  window.dispatchEvent(new Event(DATA_CHANGED_EVENT));
 }
 
 // 版本迁移
 function migrateData(data: StorageData): StorageData {
-  const migrated = { ...defaultData, ...data, version: CURRENT_VERSION };
+  const migrated = { ...structuredClone(defaultData), ...data, version: CURRENT_VERSION };
   setData(migrated);
   return migrated;
 }
@@ -64,7 +68,7 @@ export function addWrongQuestion(questionId: string): void {
   }
 }
 
-// 移除错题（做对后自动移除）
+// Only an explicit action in the wrong-question book removes a question.
 export function removeWrongQuestion(questionId: string): void {
   const wrongs = getField('wrongQuestions');
   setField('wrongQuestions', wrongs.filter(id => id !== questionId));
@@ -101,7 +105,7 @@ export function saveExamRecord(record: StorageData['examHistory'][0]): void {
 
 // 记录今日答题
 export function recordDailyAnswer(isCorrect: boolean): void {
-  const today = new Date().toISOString().split('T')[0];
+  const today = localDateKey();
   const dailyStats = getField('dailyStats');
   if (!dailyStats[today]) {
     dailyStats[today] = { answered: 0, correct: 0 };
@@ -119,9 +123,7 @@ function updateStreak(today: string): void {
   const lastDate = getField('lastStudyDate');
   if (lastDate === today) return;
 
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  const yesterdayStr = yesterday.toISOString().split('T')[0];
+  const yesterdayStr = daysAgoKey(1);
 
   if (lastDate === yesterdayStr) {
     setField('streakDays', getField('streakDays') + 1);
@@ -147,9 +149,26 @@ export function getAnswerRecords() {
   return getField('answerRecords');
 }
 
+// Answering correctly never removes an existing wrong question.
+export function recordAnswerResult(record: StorageData['answerRecords'][0]): void {
+  saveAnswerRecord(record);
+  recordDailyAnswer(record.isCorrect);
+  if (!record.isCorrect) addWrongQuestion(record.questionId);
+}
+
+export function restoreWrongQuestionsFromHistory(): number {
+  const previous = getWrongQuestions();
+  const recovered = new Set([...previous, ...getAnswerRecords().filter(r => !r.isCorrect).map(r => r.questionId)]);
+  setField('wrongQuestions', [...recovered]);
+  return recovered.size - previous.size;
+}
+
 // 清除所有数据
 export function clearAllData(): void {
   localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(NOTES_KEY);
+  sessionStorage.removeItem('tccp-random-session');
+  window.dispatchEvent(new Event(DATA_CHANGED_EVENT));
 }
 
 // ======= 备注功能 =======
@@ -186,6 +205,7 @@ export function exportData(): string {
       version: CURRENT_VERSION,
     },
     data,
+    notes: getNotes(),
   };
   return JSON.stringify(exportPayload, null, 2);
 }
@@ -237,10 +257,45 @@ export function importData(jsonStr: string, mode: 'merge' | 'overwrite' = 'merge
       return { success: false, message: '数据格式不完整，缺少必要字段' };
     }
 
+    const importedNotes = parsed.notes;
+    if (importedNotes !== undefined && (!importedNotes || typeof importedNotes !== 'object' ||
+        Array.isArray(importedNotes) || Object.values(importedNotes).some(note => typeof note !== 'string'))) {
+      return { success: false, message: '备注数据格式有误，未导入任何数据' };
+    }
+    importedData = { ...structuredClone(defaultData), ...importedData };
+    if (!Array.isArray(importedData.examHistory) || !importedData.dailyStats ||
+        typeof importedData.dailyStats !== 'object' || Array.isArray(importedData.dailyStats)) {
+      return { success: false, message: '考试记录或每日统计格式有误，未导入任何数据' };
+    }
+    if (importedData.answerRecords.some(r => !r || typeof r.questionId !== 'string' ||
+          !Number.isFinite(r.timestamp) || typeof r.isCorrect !== 'boolean' ||
+          !Array.isArray(r.userAnswer) || r.userAnswer.some(a => typeof a !== 'string') ||
+          !['exam', 'practice', 'random'].includes(r.mode)) ||
+        [...importedData.wrongQuestions, ...importedData.favorites].some(id => typeof id !== 'string') ||
+        importedData.examHistory.some(e => !e || typeof e.id !== 'string' || !Number.isFinite(e.startTime) ||
+          !Number.isFinite(e.score) || !Number.isFinite(e.totalQuestions) || !Number.isFinite(e.correctCount) ||
+          !e.answers || !e.chapterScores) ||
+        Object.entries(importedData.dailyStats).some(([date, stat]) => !/^\d{4}-\d{2}-\d{2}$/.test(date) ||
+          !stat || !Number.isInteger(stat.answered) || !Number.isInteger(stat.correct) ||
+          stat.correct < 0 || stat.answered < stat.correct)) {
+      return { success: false, message: '学习记录格式有误，未导入任何数据' };
+    }
+    if (importedData.dailyGoal !== undefined && (!Number.isInteger(importedData.dailyGoal) ||
+        importedData.dailyGoal < 5 || importedData.dailyGoal > 100)) delete importedData.dailyGoal;
+    if (typeof importedData.autoAdvanceOnCorrect !== 'boolean') delete importedData.autoAdvanceOnCorrect;
+
+    const restoreNotes = () => {
+      // Older backups do not contain notes. Keep local notes in that case.
+      if (importedNotes === undefined) return;
+      const notes = mode === 'overwrite' ? importedNotes : { ...importedNotes, ...getNotes() };
+      localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
+    };
+
     if (mode === 'overwrite') {
       // 直接覆盖
       const migrated = { ...defaultData, ...importedData, version: CURRENT_VERSION };
       setData(migrated);
+      restoreNotes();
       return {
         success: true,
         message: '数据已完全覆盖导入',
@@ -268,9 +323,12 @@ export function importData(jsonStr: string, mode: 'merge' | 'overwrite' = 'merge
     const existingRecordKeys = new Set(
       current.answerRecords.map(r => `${r.questionId}_${r.timestamp}`)
     );
-    const newRecords = (importedData.answerRecords || []).filter(
-      r => !existingRecordKeys.has(`${r.questionId}_${r.timestamp}`)
-    );
+    const newRecords = importedData.answerRecords.filter(r => {
+      const key = `${r.questionId}_${r.timestamp}`;
+      if (existingRecordKeys.has(key)) return false;
+      existingRecordKeys.add(key);
+      return true;
+    });
     current.answerRecords = [...current.answerRecords, ...newRecords];
     // 按时间排序并限制 5000 条
     current.answerRecords.sort((a, b) => a.timestamp - b.timestamp);
@@ -291,7 +349,11 @@ export function importData(jsonStr: string, mode: 'merge' | 'overwrite' = 'merge
 
     // 4. 合并考试历史（按 id 去重）
     const existingExamIds = new Set(current.examHistory.map(e => e.id));
-    const newExams = (importedData.examHistory || []).filter(e => !existingExamIds.has(e.id));
+    const newExams = importedData.examHistory.filter(e => {
+      if (existingExamIds.has(e.id)) return false;
+      existingExamIds.add(e.id);
+      return true;
+    });
     current.examHistory = [...current.examHistory, ...newExams];
     current.examHistory.sort((a, b) => a.startTime - b.startTime);
     stats.examHistory.after = current.examHistory.length;
@@ -317,7 +379,15 @@ export function importData(jsonStr: string, mode: 'merge' | 'overwrite' = 'merge
     current.streakDays = Math.max(current.streakDays, importedData.streakDays || 0);
 
     current.version = CURRENT_VERSION;
+    if (current.autoAdvanceOnCorrect === undefined && importedData.autoAdvanceOnCorrect !== undefined) {
+      current.autoAdvanceOnCorrect = importedData.autoAdvanceOnCorrect;
+    }
+    if (current.dailyGoal === undefined && Number.isInteger(importedData.dailyGoal) &&
+        importedData.dailyGoal! >= 5 && importedData.dailyGoal! <= 100) {
+      current.dailyGoal = importedData.dailyGoal;
+    }
     setData(current);
+    restoreNotes();
 
     const totalNew = (stats.answerRecords.after - stats.answerRecords.before) +
                      (stats.wrongQuestions.after - stats.wrongQuestions.before) +
@@ -328,7 +398,7 @@ export function importData(jsonStr: string, mode: 'merge' | 'overwrite' = 'merge
       success: true,
       message: totalNew > 0
         ? `合并完成，新增 ${totalNew} 条数据（已自动去重）`
-        : '合并完成，所有数据已存在（无新增）',
+        : '合并完成，已保留本机已有记录和设置',
       stats,
     };
   } catch {
@@ -347,6 +417,8 @@ export function getDataSummary() {
     dailyStats: Object.keys(data.dailyStats).length,
     lastStudyDate: data.lastStudyDate,
     streakDays: data.streakDays,
+    notes: Object.keys(getNotes()).length,
+    hasSettings: data.dailyGoal !== undefined || data.autoAdvanceOnCorrect !== undefined,
   };
 }
 

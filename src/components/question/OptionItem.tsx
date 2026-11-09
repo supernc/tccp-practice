@@ -37,6 +37,7 @@ export default function OptionItem({
 
   return (
     <button
+      aria-pressed={selected}
       onClick={onClick}
       disabled={disabled}
       className={twMerge(

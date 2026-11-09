@@ -1,140 +1,82 @@
-import { useState, useMemo } from 'react';
-import { getWrongQuestions, getFavorites, removeWrongQuestion, toggleFavorite as toggleFav } from '../services/storage';
+import { useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { getWrongQuestions, getFavorites, removeWrongQuestion, toggleFavorite, restoreWrongQuestionsFromHistory, getAnswerRecords } from '../services/storage';
 import { getQuestionsByIds } from '../services/questionService';
 import { chapters } from '../data/chapters';
+import useStats from '../hooks/useStats';
 import QuestionCard from '../components/question/QuestionCard';
-import Button from '../components/common/Button';
 import Badge from '../components/common/Badge';
-import { ChevronLeft, ChevronRight, RotateCcw, Trash2, BookOpen, Star } from 'lucide-react';
-
-type TabType = 'wrong' | 'favorites';
+import { RotateCcw, Trash2, BookOpen, Star, Play, ChevronDown } from 'lucide-react';
 
 export default function WrongBookPage() {
-  const [tab, setTab] = useState<TabType>('wrong');
+  useStats(); // React to new answers, explicit removals, imports and other browser tabs.
+  const navigate = useNavigate();
+  const [params, setParams] = useSearchParams();
+  const tab = params.get('tab') === 'favorites' ? 'favorites' : 'wrong';
   const [filterChapter, setFilterChapter] = useState<number | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  const [refreshKey, setRefreshKey] = useState(0);
-
-  const wrongIds = useMemo(() => Array.from(getWrongQuestions()), [refreshKey]);
-  const favIds = useMemo(() => Array.from(getFavorites()), [refreshKey]);
-
+  const [message, setMessage] = useState('');
+  const wrongIds = [...getWrongQuestions()];
+  const favIds = [...getFavorites()];
   const ids = tab === 'wrong' ? wrongIds : favIds;
-  const questions = useMemo(() => {
-    let qs = getQuestionsByIds(ids);
-    if (filterChapter) {
-      qs = qs.filter(q => q.chapter === filterChapter);
-    }
-    return qs;
-  }, [ids, filterChapter]);
+  const allQuestions = getQuestionsByIds(ids);
+  const questions = allQuestions.filter(q => !filterChapter || q.chapter === filterChapter);
+  const records = getAnswerRecords();
+  const historyCanRestore = records.some(r => !r.isCorrect && !wrongIds.includes(r.questionId));
 
-  const handleToggleFav = (qId: string) => {
-    toggleFav(qId);
-    setRefreshKey(k => k + 1);
-  };
-
-  const handleRemoveWrong = (qId: string) => {
-    removeWrongQuestion(qId);
-    setRefreshKey(k => k + 1);
-  };
+  function removeWrong(id: string) {
+    removeWrongQuestion(id);
+    setMessage('已从错题集移除。以后再次答错时会重新收录。');
+  }
 
   return (
-    <div className="max-w-4xl mx-auto animate-fade-in">
-      {/* Tab switch */}
-      <div className="flex items-center gap-2 mb-6">
-        <button
-          onClick={() => setTab('wrong')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all cursor-pointer ${
-            tab === 'wrong' ? 'bg-danger/15 text-danger border border-danger/20' : 'bg-bg-card text-text-secondary border border-white/10 hover:border-white/20'
-          }`}
-        >
-          <BookOpen size={16} /> 错题本 <Badge variant={tab === 'wrong' ? 'danger' : 'default'}>{String(wrongIds.length)}</Badge>
-        </button>
-        <button
-          onClick={() => setTab('favorites')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all cursor-pointer ${
-            tab === 'favorites' ? 'bg-warning/15 text-warning border border-warning/20' : 'bg-bg-card text-text-secondary border border-white/10 hover:border-white/20'
-          }`}
-        >
-          <Star size={16} /> 收藏夹 <Badge variant={tab === 'favorites' ? 'warning' : 'default'}>{String(favIds.length)}</Badge>
+    <div className="max-w-4xl mx-auto space-y-4 animate-fade-in">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap gap-2">
+          {([
+            { value: 'wrong', label: '错题本', count: wrongIds.length, icon: BookOpen },
+            { value: 'favorites', label: '收藏夹', count: favIds.length, icon: Star },
+          ] as const).map(({ value, label, count, icon: Icon }) => <button key={value} onClick={() => { setParams(value === 'favorites' ? {tab: value} : {}); setMessage(''); }}
+            aria-pressed={tab === value} className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm border ${tab === value ? 'bg-primary/15 text-primary-light border-primary/30' : 'bg-bg-card text-text-secondary border-white/10'}`}>
+            <Icon size={16} />{label}<span className="text-xs">{count}</span>
+          </button>)}
+        </div>
+        <button onClick={() => navigate(`/random?source=${tab === 'wrong' ? 'wrong' : 'favorites'}`)} disabled={!allQuestions.length}
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-white text-sm disabled:opacity-40 disabled:cursor-not-allowed">
+          <Play size={15} />{tab === 'wrong' ? '练习错题' : '练习收藏'}
         </button>
       </div>
-
-      {/* Filter */}
-      <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-2">
-        <button
-          onClick={() => setFilterChapter(null)}
-          className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all cursor-pointer ${
-            !filterChapter ? 'bg-primary/15 text-primary-light' : 'bg-bg-card text-text-secondary hover:text-text-primary'
-          }`}
-        >
-          全部
-        </button>
-        {chapters.map(ch => (
-          <button
-            key={ch.id}
-            onClick={() => setFilterChapter(ch.id)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all cursor-pointer ${
-              filterChapter === ch.id ? 'bg-primary/15 text-primary-light' : 'bg-bg-card text-text-secondary hover:text-text-primary'
-            }`}
-          >
-            Ch{ch.id} {ch.name}
-          </button>
-        ))}
+      <p className="text-xs text-text-secondary leading-relaxed">{tab === 'wrong' ? '错题持续累积，刷新或答对后都会保留。掌握后点击“移除”，由你决定何时移出错题集。' : '收藏的重点题目会一直保留，可在题目中点击星标取消。'}</p>
+      {tab === 'wrong' && historyCanRestore && <div className="flex flex-wrap justify-between gap-3 rounded-xl bg-bg-card/60 border border-white/5 p-4">
+        <p className="text-xs text-text-secondary leading-relaxed flex-1">如果以前的错题被自动移除了，可以从保留的答题记录中补回。也会补回你曾手动移除的历史错题。</p>
+        <button onClick={() => setMessage(`已从答题记录中补回 ${restoreWrongQuestionsFromHistory()} 道错题。`)} className="inline-flex gap-1.5 items-center text-xs text-primary-light"><RotateCcw size={14} />补回历史错题</button>
+      </div>}
+      {message && <p role="status" className="text-xs text-primary-light rounded-lg bg-primary/10 p-3">{message}</p>}
+      <div className="flex gap-2 overflow-x-auto pb-2" role="group" aria-label="章节筛选">
+        {[{id: 0, name: '全部'}, ...chapters].map(ch => <button key={ch.id} onClick={() => setFilterChapter(ch.id || null)} aria-pressed={(filterChapter || 0) === ch.id}
+          className={`px-3 py-1.5 rounded-lg text-xs whitespace-nowrap ${((filterChapter || 0) === ch.id) ? 'bg-primary/15 text-primary-light' : 'bg-bg-card text-text-secondary'}`}>
+          {ch.id ? `Ch${ch.id} ${ch.name}` : ch.name}
+        </button>)}
       </div>
-
-      {/* Question list */}
-      {questions.length === 0 ? (
-        <div className="card-glow rounded-2xl bg-bg-secondary p-12 text-center">
-          <div className="text-4xl mb-4">{tab === 'wrong' ? '🎉' : '⭐'}</div>
-          <h3 className="text-lg font-bold text-text-primary mb-2">
-            {tab === 'wrong' ? '暂无错题，继续保持！' : '暂无收藏题目'}
-          </h3>
-          <p className="text-sm text-text-secondary">
-            {tab === 'wrong' ? '做题时答错的题目会自动出现在这里' : '练习时点击星标可以收藏题目'}
-          </p>
-        </div>
-      ) : (
-        <div className="space-y-3">
-          {questions.map((q, i) => (
-            <div key={q.id}>
-              <button
-                onClick={() => setExpandedId(expandedId === q.id ? null : q.id)}
-                className="w-full card-glow rounded-xl bg-bg-secondary p-4 text-left transition-all cursor-pointer hover:border-white/20"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-xs text-text-muted w-8">#{i + 1}</span>
-                  <Badge variant="info" size="sm">{q.type === 'single' ? '单选' : '多选'}</Badge>
-                  <Badge variant="primary" size="sm">Ch{q.chapter}</Badge>
-                  <span className="text-sm text-text-primary truncate flex-1">{q.stem}</span>
-                  {tab === 'wrong' && (
-                    <button
-                      onClick={(e) => { e.stopPropagation(); handleRemoveWrong(q.id); }}
-                      className="p-1 rounded text-text-muted hover:text-danger transition-colors cursor-pointer"
-                      title="移除错题"
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  )}
-                </div>
-              </button>
-              {expandedId === q.id && (
-                <div className="mt-2 animate-slide-up">
-                  <QuestionCard
-                    question={q}
-                    index={i}
-                    total={questions.length}
-                    userAnswer={q.answer}
-                    onAnswer={() => {}}
-                    showResult={true}
-                    isFavorited={getFavorites().has(q.id)}
-                    onToggleFavorite={handleToggleFav}
-                  />
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
+      {!questions.length ? <div className="card-glow rounded-2xl bg-bg-secondary p-8 text-center">
+        <BookOpen size={32} className="mx-auto text-primary-light mb-3" /><h2 className="text-lg font-bold mb-2">{filterChapter ? '这个章节暂时没有题目' : tab === 'wrong' ? '暂无错题，继续保持' : '暂无收藏题目'}</h2>
+        <p className="text-sm text-text-secondary">{filterChapter ? '可以切换到其他章节或查看全部。' : tab === 'wrong' ? '练习和模考中答错的题会自动收录到这里。' : '练习时点击星标，可以收藏重点题。'}</p>
+      </div> : <div className="space-y-3">
+        {questions.map((q, i) => <div key={q.id}>
+          <div className="card-glow rounded-xl bg-bg-secondary flex items-center p-3 gap-2">
+            <button onClick={() => setExpandedId(expandedId === q.id ? null : q.id)} aria-expanded={expandedId === q.id}
+              className="flex items-center gap-2 flex-1 min-w-0 text-left p-1">
+              <span className="text-xs text-text-secondary shrink-0">{i + 1}</span>
+              <Badge variant="primary" size="sm">Ch{q.chapter}</Badge>
+              <span className="text-sm text-text-primary truncate flex-1">{q.stem}</span>
+              <ChevronDown size={15} className={`text-text-secondary shrink-0 ${expandedId === q.id ? 'rotate-180' : ''}`} />
+            </button>
+            {tab === 'wrong' && <button onClick={() => removeWrong(q.id)} aria-label={`移除错题：${q.stem}`} className="flex items-center gap-1 text-xs text-text-secondary hover:text-danger rounded-lg px-2 py-2 hover:bg-danger/10 shrink-0"><Trash2 size={14} />移除</button>}
+          </div>
+          {expandedId === q.id && <div className="mt-2 animate-slide-up"><QuestionCard question={q} index={i} total={questions.length} userAnswer={q.answer} onAnswer={() => {}} showResult
+            isFavorited={getFavorites().has(q.id)} onToggleFavorite={toggleFavorite} /></div>}
+        </div>)}
+      </div>}
     </div>
   );
 }

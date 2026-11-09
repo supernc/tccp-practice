@@ -10,6 +10,7 @@ import WrongBookPage from './pages/WrongBookPage'
 import FavoritesPage from './pages/FavoritesPage'
 import StatsPage from './pages/StatsPage'
 import DataManagePage from './pages/DataManagePage'
+import SettingsPage from './pages/SettingsPage'
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path="favorites" element={<FavoritesPage />} />
             <Route path="stats" element={<StatsPage />} />
             <Route path="data" element={<DataManagePage />} />
+            <Route path="settings" element={<SettingsPage />} />
           </Route>
         </Routes>
       </HashRouter>

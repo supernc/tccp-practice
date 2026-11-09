@@ -2,13 +2,15 @@ import { StatsData, AnswerRecord } from '../types';
 import { getField, getAnswerRecords, getExamHistory } from './storage';
 import { getChapterCounts } from './questionService';
 import { chapters } from '../data/chapters';
+import { daysAgoKey, localDateKey } from './date';
+import { getAllQuestions } from '../data';
 
 // 计算完整统计数据
 export function getStatsData(): StatsData {
   const records = getAnswerRecords();
   const examHistory = getExamHistory();
   const dailyStats = getField('dailyStats');
-  const streakDays = getField('streakDays');
+  const streakDays = getCurrentStreak();
   const chapterCounts = getChapterCounts();
 
   // 总体统计
@@ -48,11 +50,10 @@ function calculateChapterStats(
 ): StatsData['chapterStats'] {
   const stats: StatsData['chapterStats'] = {};
 
-  // 需要从题目 ID 解析章节（id 格式: ch1-xxx-001）
+  const questionMap = new Map(getAllQuestions().map(q => [q.id, q]));
   for (const chapter of chapters) {
     const chapterRecords = records.filter(r => {
-      const chNum = parseInt(r.questionId.split('-')[0].replace('ch', ''));
-      return chNum === chapter.id;
+      return questionMap.get(r.questionId)?.chapter === chapter.id;
     });
 
     const answered = chapterRecords.length;
@@ -61,6 +62,7 @@ function calculateChapterStats(
     stats[chapter.id] = {
       name: chapter.name,
       answered,
+      uniqueAnswered: new Set(chapterRecords.map(r => r.questionId)).size,
       correct,
       rate: answered > 0 ? Math.round((correct / answered) * 100) : 0,
       total: chapterCounts[chapter.id] || 0,
@@ -74,11 +76,12 @@ function calculateChapterStats(
 function findWeakPoints(records: AnswerRecord[]): StatsData['weakPoints'] {
   const subChapterStats: Record<string, { correct: number; total: number; chapter: number; name: string }> = {};
 
+  const questionMap = new Map(getAllQuestions().map(q => [q.id, q]));
   for (const record of records) {
-    // 从题目ID解析子章节（格式: ch2-cvm-001）
-    const parts = record.questionId.split('-');
-    const chNum = parseInt(parts[0].replace('ch', ''));
-    const subCh = parts.slice(0, 2).join('-');
+    const question = questionMap.get(record.questionId);
+    if (!question) continue;
+    const chNum = question.chapter;
+    const subCh = question.subChapter;
 
     if (!subChapterStats[subCh]) {
       const chapterInfo = chapters.find(c => c.id === chNum);
@@ -110,7 +113,7 @@ function findWeakPoints(records: AnswerRecord[]): StatsData['weakPoints'] {
 
 // 获取今日统计
 export function getTodayStats(): { answered: number; correct: number } {
-  const today = new Date().toISOString().split('T')[0];
+  const today = localDateKey();
   const dailyStats = getField('dailyStats');
   return dailyStats[today] || { answered: 0, correct: 0 };
 }
@@ -124,7 +127,7 @@ export function getRecentDailyStats(days: number): Record<string, { answered: nu
   for (let i = 0; i < days; i++) {
     const date = new Date(today);
     date.setDate(date.getDate() - i);
-    const dateStr = date.toISOString().split('T')[0];
+    const dateStr = localDateKey(date);
     result[dateStr] = dailyStats[dateStr] || { answered: 0, correct: 0 };
   }
 
@@ -136,5 +139,10 @@ const statsService = {
   getTodayStats,
   getRecentDailyStats,
 };
+
+export function getCurrentStreak(): number {
+  const lastDate = getField('lastStudyDate');
+  return lastDate === localDateKey() || lastDate === daysAgoKey(1) ? getField('streakDays') : 0;
+}
 
 export default statsService;

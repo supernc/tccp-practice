@@ -18,7 +18,7 @@ export default function StatsPage() {
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Stats cards */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
         <StatsCard
           icon={<Hash size={22} className="text-primary-light" />}
           label="总做题数"
@@ -48,7 +48,7 @@ export default function StatsPage() {
       </div>
 
       {/* Charts row */}
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Radar */}
         <div className="card-glow rounded-xl bg-bg-secondary p-5">
           <h3 className="text-sm font-semibold text-text-primary mb-4">章节掌握度</h3>

@@ -96,6 +96,8 @@ export default function QuestionCard({
 
         {onToggleFavorite && (
           <button
+            aria-label={isFavorited ? "取消收藏" : "收藏题目"}
+            aria-pressed={isFavorited}
             onClick={() => onToggleFavorite(question.id)}
             className={`p-1.5 rounded-lg transition-all cursor-pointer ${
               isFavorited
@@ -171,6 +173,7 @@ export default function QuestionCard({
           value={noteText}
           onChange={(e) => setNoteText(e.target.value)}
           onBlur={handleNoteBlur}
+          aria-label="我的备注"
           placeholder="在此输入备注内容..."
           className="w-full min-h-[60px] px-3 py-2 rounded-lg bg-bg-primary border border-white/10 text-sm text-text-primary placeholder-text-muted resize-y focus:outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20 transition-all"
         />

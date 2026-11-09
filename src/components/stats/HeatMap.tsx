@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { localDateKey } from '../../services/date';
 
 interface HeatMapProps {
   dailyStats: Record<string, { answered: number; correct: number }>;
@@ -13,7 +14,7 @@ export default function HeatMap({ dailyStats, days = 90 }: HeatMapProps) {
     for (let i = days - 1; i >= 0; i--) {
       const d = new Date(today);
       d.setDate(d.getDate() - i);
-      const dateStr = d.toISOString().split('T')[0];
+      const dateStr = localDateKey(d);
       const count = dailyStats[dateStr]?.answered || 0;
 
       let level = 0;
@@ -38,7 +39,7 @@ export default function HeatMap({ dailyStats, days = 90 }: HeatMapProps) {
   // 按周分组
   const weeks: typeof cells[] = [];
   let currentWeek: typeof cells = [];
-  const startDay = new Date(cells[0]?.date || '').getDay();
+  const startDay = new Date(`${cells[0]?.date}T12:00:00`).getDay();
   // 填充第一周前面的空白
   for (let i = 0; i < startDay; i++) {
     currentWeek.push({ date: '', count: 0, level: -1 });

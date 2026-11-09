@@ -1,5 +1,4 @@
 import { useEffect, useId, useRef, useState } from 'react';
-import mermaid from 'mermaid';
 
 interface MermaidDiagramProps {
   code: string;
@@ -8,9 +7,11 @@ interface MermaidDiagramProps {
 }
 
 let initialized = false;
+let mermaidPromise: Promise<typeof import('mermaid')> | undefined;
 
-function ensureInitialized() {
-  if (initialized) return;
+async function ensureInitialized() {
+  const { default: mermaid } = await (mermaidPromise ??= import('mermaid'));
+  if (initialized) return mermaid;
   mermaid.initialize({
     startOnLoad: false,
     theme: 'dark',
@@ -37,6 +38,7 @@ function ensureInitialized() {
     },
   });
   initialized = true;
+  return mermaid;
 }
 
 /**
@@ -52,13 +54,15 @@ export default function MermaidDiagram({ code, id, className }: MermaidDiagramPr
 
   useEffect(() => {
     let cancelled = false;
-    ensureInitialized();
+    setError(null);
 
     const safeBase = (id ?? reactId).replace(/[^a-zA-Z0-9_-]/g, '_');
     const renderId = `mermaid-${safeBase}-${Date.now()}`;
 
     (async () => {
       try {
+        const mermaid = await ensureInitialized();
+        if (cancelled) return;
         const { svg } = await mermaid.render(renderId, code);
         if (cancelled) return;
         if (containerRef.current) {

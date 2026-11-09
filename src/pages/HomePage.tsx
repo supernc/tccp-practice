@@ -4,6 +4,7 @@ import { getTotalCount } from '../services/questionService';
 import { FileText, BookOpen, Shuffle, ArrowRight, Trophy, AlertTriangle, Wrench } from 'lucide-react';
 import { chapters } from '../data/chapters';
 import { getPracticalQuestions } from '../data';
+import StudyPlan from '../components/stats/StudyPlan';
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -58,6 +59,8 @@ export default function HomePage() {
         </p>
       </div>
 
+      <StudyPlan todayAnswered={stats.todayStats.answered} chapterStats={stats.chapterStats} />
+
       {/* Quick actions */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {quickActions.map(({ label, desc, icon: Icon, color, path }) => (
@@ -79,7 +82,7 @@ export default function HomePage() {
       </div>
 
       {/* Bottom row */}
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Today summary */}
         <div className="card-glow rounded-xl bg-bg-secondary p-5">
           <h3 className="text-sm font-semibold text-text-primary mb-4">今日学习</h3>
@@ -146,9 +149,9 @@ export default function HomePage() {
           </div>
           <div className="flex flex-wrap gap-2">
             {stats.weakPoints.slice(0, 6).map(wp => (
-              <span key={wp.subChapter} className="px-3 py-1.5 rounded-lg bg-danger/10 text-danger text-xs border border-danger/20">
+              <button key={wp.subChapter} onClick={() => navigate(`/practice?chapter=${wp.chapter}&sub=${encodeURIComponent(wp.subChapter)}`)} className="px-3 py-1.5 rounded-lg bg-danger/10 text-danger text-xs border border-danger/20 hover:bg-danger/20">
                 {wp.name}（{wp.rate}%）
-              </span>
+              </button>
             ))}
           </div>
         </div>

@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { Question, ExamRecord, ExamState } from '../types';
 import { generateExam, submitExam, isAnswerCorrect } from '../services/examService';
-import { addWrongQuestion, removeWrongQuestion, recordDailyAnswer, saveAnswerRecord } from '../services/storage';
+import { recordAnswerResult } from '../services/storage';
 
 const EXAM_STATE_KEY = 'tccp-exam-state';
 const EXAM_TIME = 120 * 60; // 120分钟 = 7200秒
@@ -127,7 +127,7 @@ export default function useExam() {
       const userAns = state.answers[q.id] || [];
       const correct = isAnswerCorrect(userAns, q.answer, q.type);
 
-      saveAnswerRecord({
+      recordAnswerResult({
         questionId: q.id,
         userAnswer: userAns,
         isCorrect: correct,
@@ -135,13 +135,6 @@ export default function useExam() {
         mode: 'exam',
       });
 
-      recordDailyAnswer(correct);
-
-      if (correct) {
-        removeWrongQuestion(q.id);
-      } else {
-        addWrongQuestion(q.id);
-      }
     });
 
     setState(prev => ({ ...prev, status: 'submitted' }));

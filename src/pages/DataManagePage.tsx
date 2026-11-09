@@ -100,7 +100,7 @@ export default function DataManagePage() {
   };
 
   const hasData = summary.answerRecords > 0 || summary.wrongQuestions > 0 ||
-                  summary.favorites > 0 || summary.examHistory > 0;
+                  summary.favorites > 0 || summary.examHistory > 0 || summary.notes > 0 || summary.dailyStats > 0 || summary.hasSettings;
 
   return (
     <div className="space-y-6 animate-fade-in max-w-4xl">
@@ -121,7 +121,7 @@ export default function DataManagePage() {
           <Info size={16} className="text-primary-light" />
           当前数据概览
         </h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
           <DataStatItem
             icon={<FileText size={18} className="text-primary-light" />}
             label="答题记录"
@@ -142,6 +142,7 @@ export default function DataManagePage() {
             label="考试记录"
             value={summary.examHistory}
           />
+          <DataStatItem icon={<FileText size={18} className="text-warning" />} label="题目备注" value={summary.notes} />
           <DataStatItem
             icon={<Calendar size={18} className="text-success" />}
             label="学习天数"
@@ -159,7 +160,7 @@ export default function DataManagePage() {
             导出数据
           </h3>
           <p className="text-xs text-text-secondary mb-4">
-            将所有学习数据（答题记录、错题、收藏、考试历史、统计）导出为 JSON 文件
+            将所有学习数据（答题记录、错题、收藏、考试历史、统计、学习设置和备注）导出为 JSON 文件
           </p>
           <button
             onClick={handleExport}
@@ -181,7 +182,7 @@ export default function DataManagePage() {
             导入数据
           </h3>
           <p className="text-xs text-text-secondary mb-4">
-            从其他设备导出的 JSON 文件导入，自动去重合并（不会覆盖已有数据）
+            从其他设备导出的 JSON 文件导入，自动去重合并（同题备注优先保留本机版本）
           </p>
           <div
             onDragOver={handleDragOver}
